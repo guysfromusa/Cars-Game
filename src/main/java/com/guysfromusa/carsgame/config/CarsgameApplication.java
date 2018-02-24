@@ -1,4 +1,4 @@
-package com.guysfromusa.carsgame;
+package com.guysfromusa.carsgame.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
