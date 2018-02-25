@@ -11,6 +11,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
@@ -28,6 +29,12 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-hateoas')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('javax.inject:javax.inject:1')
+	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9')
+	compile('org.apache.commons:commons-lang3:3.7')
+	compile('org.assertj:assertj-core:3.9.1')
+	compile('com.google.guava:guava:24.0-jre')
+	compile('io.vavr:vavr:0.9.2')
 	runtime('com.h2database:h2')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
