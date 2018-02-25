@@ -20,12 +20,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
 public class GamesResourceTest {
 
-
     @Inject
     private TestRestTemplate template;
 
     @Test
-    public void gamesRestIsWorking() {
+    public void whenActionSuccessfulShouldReturnCarPositions() {
         //when
         ResponseEntity<String> response = template.getForEntity("/v1/games", String.class);
 
