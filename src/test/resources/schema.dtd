@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-        <!ELEMENT dataset (MAP*)>
+        <!ELEMENT dataset (CAR*, MAP*)>
+
+        <!--CarEntity-->
+        <!ELEMENT CAR EMPTY>
+        <!ATTLIST CAR ID CDATA #REQUIRED>
+        <!ATTLIST CAR NAME CDATA #REQUIRED>
 
         <!--MapEntity-->
         <!ELEMENT MAP EMPTY>

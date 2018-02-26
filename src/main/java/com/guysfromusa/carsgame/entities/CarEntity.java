@@ -10,7 +10,7 @@ import javax.persistence.Id;
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
-@Entity
+@Entity( name = "CAR")
 @NoArgsConstructor
 public class CarEntity {
 
