@@ -16,7 +16,7 @@ public class Map {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
     public Map() {
