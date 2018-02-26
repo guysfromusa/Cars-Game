@@ -15,7 +15,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * Created by Sebastian Mikucki, 25.02.18
  */
 @RestController
-@RequestMapping(value = "/v1/games/maps", produces = APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/v1/maps", produces = APPLICATION_JSON_UTF8_VALUE)
 public class MapResource {
 
     private final MapService mapService;
@@ -26,7 +26,7 @@ public class MapResource {
     }
 
     @RequestMapping(method = GET)
-    public Iterable<Map> restIsWorking() {
+    public Iterable<Map> findAllMaps() {
         return mapService.findAll();
     }
 
