@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.config;
 
-import com.guysfromusa.carsgame.entities.Map;
+import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,7 +19,7 @@ public class DbConfiguration {
     @Bean
     public CommandLineRunner populate(MapRepository mapRepository) {
         return args -> {
-            Map map = new Map("map1");
+            MapEntity map = new MapEntity("map1");
             mapRepository.save(map);
         };
     }

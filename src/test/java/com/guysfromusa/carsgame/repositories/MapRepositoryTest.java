@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.repositories;
 
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
-import com.guysfromusa.carsgame.entities.Map;
+import com.guysfromusa.carsgame.entities.MapEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,9 +24,9 @@ public class MapRepositoryTest {
     @Test
     public void shouldSaveMapToDb() {
         //given
-        Map map = new Map("testMap");
+        MapEntity map = new MapEntity("testMap");
         //when
-        Map savedMap = mapRepository.save(map);
+        MapEntity savedMap = mapRepository.save(map);
         //then
         assertThat(savedMap.getName()).isEqualTo("testMap");
     }

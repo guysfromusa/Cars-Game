@@ -1,10 +1,12 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.entities.Map;
+import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+
+import java.util.List;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -21,7 +23,19 @@ public class MapService {
         this.mapRepository = notNull(mapRepository);
     }
 
-    public Iterable<Map> findAll() {
+    public List<MapEntity> findAll() {
         return mapRepository.findAll();
+    }
+
+    public MapEntity create(MapEntity map) {
+        return mapRepository.save(map);
+    }
+
+    public void delete(Long id) {
+        mapRepository.delete(id);
+    }
+
+    public MapEntity findById(Long id) {
+        return mapRepository.findOne(id);
     }
 }

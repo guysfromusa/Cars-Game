@@ -1,0 +1,19 @@
+package com.guysfromusa.carsgame.v1.converters;
+
+import com.guysfromusa.carsgame.entities.MapEntity;
+import com.guysfromusa.carsgame.v1.model.Map;
+import org.springframework.stereotype.Component;
+
+/**
+ * Created by Robert Mycek, 2018-02-26
+ */
+@Component
+public class MapConverter {
+    public MapEntity toEntity(Map map) {
+        return new MapEntity(map.getName(), map.getContent());
+    }
+
+    public Map fromEntity(MapEntity mapEntity) {
+        return new Map(mapEntity.getName(), mapEntity.getContent());
+    }
+}

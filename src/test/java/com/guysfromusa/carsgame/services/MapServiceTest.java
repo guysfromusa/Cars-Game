@@ -1,13 +1,15 @@
 package com.guysfromusa.carsgame.services;
 
 import com.google.common.collect.Lists;
-import com.guysfromusa.carsgame.entities.Map;
+import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -27,14 +29,14 @@ public class MapServiceTest {
     @Test
     public void shouldFindAllMaps() {
         //given
-        Iterable<Map> collection = Lists.newArrayList(new Map("testMap"));
+        List<MapEntity> collection = Lists.newArrayList(new MapEntity("testMap"));
         when(mapRepository.findAll()).thenReturn(collection);
         //when
-        Iterable<Map> result = mapService.findAll();
+        Iterable<MapEntity> result = mapService.findAll();
         //then
         assertThat(result)
                 .hasSize(1)
-                .extracting(Map::getName)
+                .extracting(MapEntity::getName)
                 .containsOnly("testMap");
     }
 }
