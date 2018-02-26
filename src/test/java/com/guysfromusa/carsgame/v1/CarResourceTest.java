@@ -35,8 +35,7 @@ public class CarResourceTest {
         ResponseEntity<Iterable> response = template.getForEntity("/v1/cars/get-all", Iterable.class);
 
         //then
-        assertThat(response.getBody())
-                .isEqualTo(CollectionUtils.emptyCollection());
+        assertThat(response.getBody()).isEmpty();
     }
 
     @Test
