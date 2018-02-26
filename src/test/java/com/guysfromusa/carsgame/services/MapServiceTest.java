@@ -33,7 +33,6 @@ public class MapServiceTest {
         Iterable<Map> result = mapService.findAll();
         //then
         assertThat(result)
-                .hasSize(1)
                 .extracting(Map::getName)
                 .containsOnly("testMap");
     }
