@@ -10,9 +10,12 @@ import javax.inject.Inject;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
+/**
+ * Created by Tomasz Bradlo, 25.02.18
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CarsgameApplicationTests {
+public class CarsGameApplicationTests {
 
 	@Inject
 	private GamesResource gamesResource;
