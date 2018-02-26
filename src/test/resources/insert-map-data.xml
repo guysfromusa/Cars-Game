@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
 <dataset>
     <MAP ID="1" NAME="testMap1"/>
     <MAP ID="2" NAME="testMap2"/>
