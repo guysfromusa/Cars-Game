@@ -29,6 +29,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-hateoas')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile("org.springframework.boot:spring-boot-devtools")
 	compile('javax.inject:javax.inject:1')
 	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9')
 	compile('org.apache.commons:commons-lang3:3.7')
