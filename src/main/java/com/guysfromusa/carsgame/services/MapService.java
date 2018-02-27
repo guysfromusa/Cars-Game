@@ -30,21 +30,13 @@ public class MapService {
     }
 
     public MapEntity create(MapEntity map) {
-
         return mapRepository.save(map);
+        // TODO: handle just one map with name and deleted = false
     }
 
-    public Optional<MapEntity> markAsDeleted(String name) {
-        Optional<MapEntity> map = mapRepository.findByNameAndDeleted(name, false);
-        map.ifPresent(m -> m.setDeleted(true));
-        return map;
-    }
-
-    public void delete(MapEntity map) {
-        mapRepository.deleteByName(map.getName());
-    }
-
-    public MapEntity findById(Long id) {
-        return mapRepository.findOne(id);
+    public void deleteByName(String name) {
+        mapRepository.deleteByName(name);
+        mapRepository.findByNameAndDeleted(name, false)
+                .ifPresent(m -> m.setDeleted(true));
     }
 }

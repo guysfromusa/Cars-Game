@@ -1,0 +1,4 @@
+<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
+<dataset>
+    <MAP ID="333" NAME="map" DELETED="true" CONTENT="1,1"/>
+</dataset>

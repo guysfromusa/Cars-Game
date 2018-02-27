@@ -5,6 +5,7 @@
         <!ELEMENT GAME EMPTY>
         <!ATTLIST GAME ID CDATA #REQUIRED>
         <!ATTLIST GAME NAME CDATA #REQUIRED>
+        <!ATTLIST GAME MAP_ID CDATA #REQUIRED>
 
         <!--CarEntity-->
         <!ELEMENT CAR EMPTY>

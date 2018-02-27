@@ -55,7 +55,7 @@ public class MapsResource {
 
     @DeleteMapping(value = "/{name}")
     public ResponseEntity<?> deleteMap(@PathVariable String name) {
-        mapService.markAsDeleted(name).ifPresent(mapService::delete);
+        mapService.deleteByName(name);
         return new ResponseEntity<>(NO_CONTENT);
     }
 }

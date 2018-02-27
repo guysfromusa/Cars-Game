@@ -16,9 +16,12 @@ public class MapRepositoryTest extends BaseRepositoryTest {
     @Inject
     private MapRepository mapRepository;
 
+    @Inject
+    private GameRepository gameRepository;
+
     @Test
-    @DatabaseSetup("/insert-map-data.xml")
-    public void shouldSaveMapToDb() {
+    @DatabaseSetup("/mapRepository_shouldSaveMap.xml")
+    public void shouldSaveMap() {
         //given
         MapEntity map = new MapEntity("testMap3", "1,1");
         //when
@@ -28,5 +31,27 @@ public class MapRepositoryTest extends BaseRepositoryTest {
         assertThat(savedMaps)
                 .extracting(MapEntity::getName)
                 .containsOnly("testMap1", "testMap2", "testMap3");
+    }
+
+    @Test
+    @DatabaseSetup("/mapRepository_shouldDeleteMapEntity.xml")
+    public void shouldDeleteMapEntity() {
+        //when
+        mapRepository.deleteByName("map");
+
+        //then
+        Iterable<MapEntity> savedMaps = mapRepository.findAll();
+        assertThat(savedMaps).isEmpty();
+    }
+
+    @Test
+    @DatabaseSetup("/mapRepository_shouldNotDeleteMapEntityWhenUsedByGame.xml")
+    public void shouldNotDeleteMapEntityWhenUsedByGame() {
+        //when
+        mapRepository.deleteByName("map");
+
+        //then
+        Iterable<MapEntity> savedMaps = mapRepository.findAll();
+        assertThat(savedMaps).extracting(MapEntity::getName).contains("map");
     }
 }
