@@ -5,7 +5,6 @@ import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.services.CarService;
-import com.guysfromusa.carsgame.v1.converters.CarConverter;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
