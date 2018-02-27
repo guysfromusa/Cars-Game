@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.data.geo.Point;
@@ -14,17 +13,19 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 import static com.guysfromusa.carsgame.entities.MovementsHistoryEntity.withPosition;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringContextConfiguration.class)
 @Transactional
-public class MovementsHistoryEntityRepositoryTest extends BaseRepositoryTest{
+public class MovementsHistoryEntityRepositoryTest extends BaseRepositoryTest {
 
     @Inject
     private MovementsHistoryRepository repository;
@@ -49,7 +50,7 @@ public class MovementsHistoryEntityRepositoryTest extends BaseRepositoryTest{
     @DatabaseSetup("/insert-movements-history.xml")
     public void shouldFindThreeByCarName() {
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements( "", "FIAT", 0);
+        List<MovementsHistoryEntity> result = repository.findMovements( emptyList(), asList("FIAT"), 0);
 
         //then
         assertThat(result).hasSize(1);
@@ -58,7 +59,7 @@ public class MovementsHistoryEntityRepositoryTest extends BaseRepositoryTest{
     @Test
     public void shouldFindThreeByCarAndMapName() {
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements( "", "", 0);
+        List<MovementsHistoryEntity> result = repository.findMovements( emptyList(), emptyList(), 0);
 
         //then
         assertThat(result).hasSize(3);
@@ -67,7 +68,7 @@ public class MovementsHistoryEntityRepositoryTest extends BaseRepositoryTest{
     @Test
     public void shouldFindLastTwoMovements() {
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements( "", "", 2);
+        List<MovementsHistoryEntity> result = repository.findMovements( emptyList(), emptyList(), 2);
 
         //then
       //  assertThat(result).hasSize(2).extracting(MovementsHistoryEntity::getPosition).contains(THRID_POINT, SECOND_POINT);

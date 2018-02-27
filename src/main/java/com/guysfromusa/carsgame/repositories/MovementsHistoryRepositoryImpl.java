@@ -7,7 +7,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Repository
-@Transactional(readOnly = true)
 public class MovementsHistoryRepositoryImpl implements MovementsHistoryRepositoryCustom {
 
     private final EntityManager entityManager;
@@ -26,18 +24,18 @@ public class MovementsHistoryRepositoryImpl implements MovementsHistoryRepositor
     }
 
     @Override
-    public List<MovementsHistoryEntity> findMovements(String gameId, String carName, int limitOfRecentStep){
+    public List<MovementsHistoryEntity> findMovements(List<String> gameIds, List<String> carNames, int limitOfRecentStep){
 
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(MovementsHistoryEntity.class, "movementHistory");
         criteria.createAlias("movementHistory.car", "car");
         criteria.createAlias("movementHistory.game", "game");
 
-        if(!carName.isEmpty()) criteria.add(Restrictions.eq("car.name", carName));
-       // if(!gameId.isEmpty()) criteria.add(Restrictions.eq("gameId", gameId));
+        if(!carNames.isEmpty()) criteria.add(Restrictions.in("car.name", carNames));
+        if(!gameIds.isEmpty()) criteria.add(Restrictions.in("game.id", gameIds));
 
         if(limitOfRecentStep != 0) {
-            criteria.addOrder(Order.desc("id"));
+            criteria.addOrder(Order.desc("createDateTime"));
             criteria.setMaxResults(limitOfRecentStep);
         }
 

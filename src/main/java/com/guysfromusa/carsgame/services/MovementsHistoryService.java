@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.MovementHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Service
+@Transactional(readOnly = true)
 public class MovementsHistoryService {
 
     private final MovementsHistoryRepository repository;
@@ -25,9 +27,10 @@ public class MovementsHistoryService {
         this.repository = notNull(repository);
     }
 
-    public List<MovementHistory> findMovementsHistory(String gameId, String carName, int limitOfRecentStep){
+    public List<MovementHistory> findMovementsHistory(List<String> gameIds, List<String> carNames, int limitOfRecentStep){
 
-        List<MovementsHistoryEntity> result = repository.findMovements(gameId, carName, limitOfRecentStep);
+        List<MovementsHistoryEntity> result = repository.findMovements(gameIds, carNames, limitOfRecentStep);
+        //TODO : FIXME
         return Collections.emptyList();
     }
 }

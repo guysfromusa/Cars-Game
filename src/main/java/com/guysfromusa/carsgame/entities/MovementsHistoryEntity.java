@@ -1,5 +1,7 @@
 package com.guysfromusa.carsgame.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.geo.Point;
 
 import javax.persistence.CascadeType;
@@ -28,13 +30,19 @@ public class MovementsHistoryEntity {
 
     @OneToOne(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
     @JoinColumn(name="GAME_ID", referencedColumnName = "ID")
+    @Getter
+    @Setter
     private GameEntity game;
 
     @OneToOne(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
     @JoinColumn(name="CAR_ID", referencedColumnName = "ID")
+    @Getter
+    @Setter
     private CarEntity car;
 
     @Column(name="POSITION", nullable = false)
+    @Getter
+    @Setter
     private Point position;
 
     private LocalDateTime createDateTime;
@@ -57,35 +65,4 @@ public class MovementsHistoryEntity {
         return new MovementsHistoryEntity(movementsHistoryEntity.game, movementsHistoryEntity.car, position);
     }
 
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
-    public GameEntity getGame() {
-        return game;
-    }
-
-    public void setGame(GameEntity game) {
-        this.game = game;
-    }
-
-    public CarEntity getCar() {
-        return car;
-    }
-
-    public void setCar(CarEntity car) {
-        this.car = car;
-    }
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public void setCreateDateTime(LocalDateTime createDateTime) {
-        this.createDateTime = createDateTime;
-    }
 }
