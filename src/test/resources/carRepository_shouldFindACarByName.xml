@@ -1,0 +1,6 @@
+<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
+<dataset>
+    <CAR ID="1" NAME="carName1" />
+    <CAR ID="2" NAME="carName2" />
+    <CAR ID="3" NAME="carName1" />
+</dataset>
