@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -36,10 +37,10 @@ public class CarServiceTest {
         String carName = "My-First-CarEntity-Added";
 
         //when
-        CarEntity addedCar = addCar(monsterCarType, carName);
+        Long addedCarId = addCar(monsterCarType, carName);
 
         //then
-        assertEquals(addedCar.getName(), carName);
+        assertThat(addedCarId).isGreaterThan(0);
     }
 
     @Test
@@ -67,11 +68,11 @@ public class CarServiceTest {
         Iterable<CarEntity> carEntities = carService.loadAllCars();
 
         //then
-        Assertions.assertThat(carEntities).isNotEmpty();
+        assertThat(carEntities).isNotEmpty();
 
     }
 
-    private CarEntity addCar(CarType carType, String carName){
+    private Long addCar(CarType carType, String carName){
         return carService.addCar(carType, carName);
     }
 

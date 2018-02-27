@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.geo.Point;
 
 /**
  * Created by Tomasz Bradlo, 25.02.18
@@ -20,5 +19,8 @@ public class Car {
 
     @Getter @Setter
     private Direction direction;
+
+    @Getter @Setter
+    private String type;
 
 }

@@ -4,13 +4,15 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.services.CarService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.guysfromusa.carsgame.v1.converters.CarConverter;
+import com.guysfromusa.carsgame.v1.model.Car;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
@@ -25,20 +27,19 @@ public class CarResource {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/get-all")
-    public Iterable<CarEntity> getAllCars(){
-        return carService.loadAllCars();
+    public List<Car> getAllCars(){
+        List<CarEntity> carEntities = this.carService.loadAllCars();
+        return CarConverter.toCars(carEntities);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/new")
+    @RequestMapping(method = RequestMethod.POST, path = "{name}/new/{type}/car")
     public Long addCar(@PathVariable("name") String name, @PathVariable("type") String type){
         CarType carType = CarType.valueOf(type);
 
-        CarEntity newCar = carService.addCar(carType, name);
-
-        return newCar.getId();
+        return carService.addCar(carType, name);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path= "/delete")
+    @RequestMapping(method = RequestMethod.DELETE, path= "{name}/delete")
     public Long removeCar(@PathVariable("name") String name){
         return carService.deleteCarByName(name);
     }

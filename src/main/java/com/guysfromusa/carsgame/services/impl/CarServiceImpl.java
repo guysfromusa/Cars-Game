@@ -2,12 +2,18 @@ package com.guysfromusa.carsgame.services.impl;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.v1.converters.CarConverter;
+import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 @Service
 @Transactional
@@ -26,16 +32,35 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarEntity addCar(CarType carType, String name) {
+    public Long addCar(CarType carType, String name) {
         CarEntity car = new CarEntity();
         car.setCarType(carType);
         car.setName(name);
-        return carRepository.save(car);
+
+        CarEntity newCar = carRepository.save(car);
+        return newCar.getId();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Iterable<CarEntity> loadAllCars() {
-        return carRepository.findAll();
+    public List<CarEntity> loadAllCars() {
+        Iterable<CarEntity> allCarEntities = carRepository.findAll();
+        return IteratorUtils.toList(allCarEntities.iterator());
+    }
+
+    @javax.transaction.Transactional
+    @Override
+    public List<CarEntity> findCars(String game) {
+        return singletonList(new CarEntity(){{ //FIXME implement me
+            this.setName("car1");
+        }});
+    }
+
+    @javax.transaction.Transactional
+    @Override
+    public void turnCar(String game, String carName, TurnSide turnSide) {
+        //TODO implement me
+        //update cars
+        //update movements
     }
 }
