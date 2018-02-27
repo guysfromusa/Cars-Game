@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
+import static org.apache.commons.collections4.IteratorUtils.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -26,6 +28,28 @@ public class CarService {
     public CarService(CarRepository carRepository){
         this.carRepository = notNull(carRepository);
     }
+
+    @Transactional
+    public Long deleteCarByName(String name) {
+        return carRepository.deleteByName(name);
+    }
+
+    @Transactional
+    public Long addCar(CarType carType, String name) {
+        CarEntity car = new CarEntity();
+        car.setCarType(carType);
+        car.setName(name);
+
+        CarEntity newCar = carRepository.save(car);
+        return newCar.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CarEntity> loadAllCars() {
+        Iterable<CarEntity> allCarEntities = carRepository.findAll();
+        return toList(allCarEntities.iterator());
+    }
+
 
     @Transactional(readOnly = true)
     public List<CarEntity> findCars(String game) {

@@ -3,7 +3,6 @@ package com.guysfromusa.carsgame.v1.converters;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
-import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
