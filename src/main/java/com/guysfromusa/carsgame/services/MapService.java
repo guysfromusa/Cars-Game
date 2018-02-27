@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -28,6 +27,8 @@ public class MapService {
     public List<MapEntity> findAll() {
         return mapRepository.findAll();
     }
+
+
 
     public MapEntity create(MapEntity map) {
         return mapRepository.save(map);

@@ -19,4 +19,5 @@ public interface CarRepository extends CrudRepository<CarEntity, Long> {
             "and c.game.name = :gameName")
     CarEntity findByGameAndName(@Param("gameName") String game, @Param("name") String name);
 
+    Long deleteByName(String name);
 }
