@@ -18,6 +18,6 @@ public interface MapRepository extends JpaRepository<MapEntity, Long> {
     @Modifying
     @Query("delete from MapEntity m " +
             "where m.name = :name " +
-            "and not exists (select g from GameEntity g where g.map = m)")
+            "and not exists (select g.id from GameEntity g where g.map.id = m.id)")
     void deleteByName(@Param("name") String name);
 }
