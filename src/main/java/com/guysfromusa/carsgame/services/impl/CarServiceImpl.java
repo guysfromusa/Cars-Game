@@ -48,7 +48,7 @@ public class CarServiceImpl implements CarService {
         return IteratorUtils.toList(allCarEntities.iterator());
     }
 
-    @javax.transaction.Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<CarEntity> findCars(String game) {
         return singletonList(new CarEntity(){{ //FIXME implement me
@@ -56,11 +56,20 @@ public class CarServiceImpl implements CarService {
         }});
     }
 
-    @javax.transaction.Transactional
+    @Transactional
     @Override
     public void turnCar(String game, String carName, TurnSide turnSide) {
         //TODO implement me
-        //update cars
+        //uncomment me once adding cars will be reedy
+        /*
+        //FIXME handle car not found
+
+        Function<Direction, Direction> turnF = turnSide == LEFT ? Direction::turnLeft : Direction::turnRight;
+
+        Direction newDirection = turnF.apply(car.getDirection());
+        car.setDirection(newDirection);
+        */
+
         //update movements
     }
 }
