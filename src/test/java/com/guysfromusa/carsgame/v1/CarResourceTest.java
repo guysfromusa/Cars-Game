@@ -1,6 +1,8 @@
 package com.guysfromusa.carsgame.v1;
 
+import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
@@ -8,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,12 +37,12 @@ public class CarResourceTest {
         Awaitility.await().atMost(Duration.FIVE_SECONDS).until(() -> addNewCar(name, monsterType) > 0);
 
         //when
-        ResponseEntity<Car[]> response = template.getForEntity("/v1/cars/get-all", Car[].class);
+        ResponseEntity<Car[]> response = template.getForEntity("/v1/cars", Car[].class);
 
         //then
         assertThat(response.getBody())
                 .extracting(Car::getName, Car::getType)
-                .contains(tuple(name, monsterType));
+                .contains(tuple(name, CarType.MONSTER));
     }
 
     @Test
@@ -62,7 +65,7 @@ public class CarResourceTest {
         String name = "My-Sweet-Car";
         String monsterType = "MONSTER";
 
-        String url = String.join("/", "/v1/cars", name, "delete");
+        String url = String.join("/", "/v1/cars", name);
         Awaitility.await().atMost(Duration.FIVE_SECONDS).until(() -> addNewCar(name, monsterType) > 0);
 
         //when
@@ -74,10 +77,10 @@ public class CarResourceTest {
     }
 
     private Long addNewCar(String name, String type){
+        HttpEntity<Object> requestEntity = new RequestBuilder<>().body(type).build();
+        String url = String.join("/", "/v1/cars", name);
 
-        String url = String.join("/", "/v1/cars", name, "new", type, "car");
-
-        ResponseEntity<Long> newCarIdResponse = template.exchange(url, POST, null, Long.class);
+        ResponseEntity<Long> newCarIdResponse = template.exchange(url, POST, requestEntity, Long.class);
 
         return newCarIdResponse.getBody();
     }

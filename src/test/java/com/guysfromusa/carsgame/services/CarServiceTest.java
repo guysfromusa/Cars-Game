@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringContextConfiguration.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CarServiceTest {
 
     @Inject
@@ -46,7 +45,7 @@ public class CarServiceTest {
     @Test
     public void shouldDeleteCar(){
         //given
-        String carName = "My-First-CarEntity-Added";
+        String carName = "My-First-To-Be-Deleted";
         CarType monsterCarType = CarType.MONSTER;
 
         //when
@@ -60,7 +59,7 @@ public class CarServiceTest {
     @Test
     public void shouldLoadAtLeastOneCar(){
         //given
-        String carName = "My-First-CarEntity-Added";
+        String carName = "My-Second-Car";
         CarType monsterCarType = CarType.MONSTER;
 
         //when

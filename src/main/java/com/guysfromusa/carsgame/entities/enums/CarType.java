@@ -6,13 +6,13 @@ public enum CarType {
     MONSTER(1),
     RACER(2);
 
-    private Integer maxStepsPerRequest;
+    private int stepsPerMove;
 
-    CarType(Integer maxStepsPerRequest) {
-        this.maxStepsPerRequest = maxStepsPerRequest;
+    CarType(Integer stepsPerMove) {
+        this.stepsPerMove = stepsPerMove;
     }
 
-    public Integer getMaxStepsPerRequest() {
-        return maxStepsPerRequest;
+    public Integer getStepsPerMove() {
+        return stepsPerMove;
     }
 }

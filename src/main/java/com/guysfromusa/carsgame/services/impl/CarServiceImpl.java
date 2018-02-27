@@ -26,7 +26,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public long deleteCarByName(String name) {
+    public Long deleteCarByName(String name) {
         return carRepository.deleteByName(name);
     }
 
@@ -55,7 +55,6 @@ public class CarServiceImpl implements CarService {
         }});
     }
 
-    @Transactional
     @Override
     public void turnCar(String game, String carName, TurnSide turnSide) {
         //TODO implement me

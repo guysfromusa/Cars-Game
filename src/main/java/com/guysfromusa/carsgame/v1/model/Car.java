@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.v1.model;
 
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,6 @@ public class Car {
     private Direction direction;
 
     @Getter @Setter
-    private String type;
+    private CarType type;
 
 }

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
@@ -23,23 +24,23 @@ public class CarResource {
 
     @Inject
     public CarResource(CarService carService) {
-        this.carService = carService;
+        this.carService = notNull(carService);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/get-all")
+    @GetMapping()
     public List<Car> getAllCars(){
         List<CarEntity> carEntities = this.carService.loadAllCars();
         return CarConverter.toCars(carEntities);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "{name}/new/{type}/car")
-    public Long addCar(@PathVariable("name") String name, @PathVariable("type") String type){
+    @PostMapping(path = "{name}")
+    public Long addCar(@PathVariable("name") String name, @RequestBody String type){
         CarType carType = CarType.valueOf(type);
 
         return carService.addCar(carType, name);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path= "{name}/delete")
+    @DeleteMapping(path= "{name}")
     public Long removeCar(@PathVariable("name") String name){
         return carService.deleteCarByName(name);
     }

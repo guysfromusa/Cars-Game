@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CarService {
 
-    long deleteCarByName(String name);
+    Long deleteCarByName(String name);
 
     Long addCar(CarType carType, String name);
 
