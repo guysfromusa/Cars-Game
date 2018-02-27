@@ -1,14 +1,19 @@
 package com.guysfromusa.carsgame.entities;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.geo.Point;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import java.time.LocalDateTime;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import static java.time.LocalDateTime.now;
 
 /**
  * Created by Dominik Zurek, 26.02.18
@@ -21,58 +26,35 @@ public class MovementsHistoryEntity {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private String gameId;
+    @OneToOne(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
+    @JoinColumn(name="GAME_ID", referencedColumnName = "ID")
+    private GameEntity game;
 
-    @Column(nullable = false)
-    private String carName;
+    @OneToOne(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
+    @JoinColumn(name="CAR_ID", referencedColumnName = "ID")
+    private CarEntity car;
 
-    @Column(nullable = false)
-    private String mapName;
-
-    @Column(nullable = false)
+    @Column(name="POSITION", nullable = false)
     private Point position;
+
+    private LocalDateTime createDateTime;
 
     public MovementsHistoryEntity() {
     }
 
-    public MovementsHistoryEntity(String gameId, String mapName, String carName, Point position) {
-        this.gameId = gameId;
-        this.mapName = mapName;
-        this.carName = carName;
+    @PrePersist
+    void createAt(){
+        createDateTime = now();
+    }
+
+    public MovementsHistoryEntity(GameEntity game, CarEntity car, Point position) {
+        this.game = game;
+        this.car = car;
         this.position = position;
     }
 
     public static MovementsHistoryEntity withPosition(MovementsHistoryEntity movementsHistoryEntity, Point position){
-        return new MovementsHistoryEntity(movementsHistoryEntity.gameId, movementsHistoryEntity.mapName, movementsHistoryEntity.carName, position);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public String getCarName() {
-        return carName;
-    }
-
-    public void setCarName(String carName) {
-        this.carName = carName;
-    }
-
-    public String getMapName() {
-        return mapName;
-    }
-
-    public void setMapName(String mapName) {
-        this.mapName = mapName;
+        return new MovementsHistoryEntity(movementsHistoryEntity.game, movementsHistoryEntity.car, position);
     }
 
     public Point getPosition() {
@@ -83,13 +65,27 @@ public class MovementsHistoryEntity {
         this.position = position;
     }
 
-    @Override
-    public String toString() {
-        return  new ToStringBuilder(this, SHORT_PREFIX_STYLE)
-                .append("gameId", gameId)
-                .append("carName", carName)
-                .append("mapName", mapName)
-                .append("postition", position)
-                .toString();
+    public GameEntity getGame() {
+        return game;
+    }
+
+    public void setGame(GameEntity game) {
+        this.game = game;
+    }
+
+    public CarEntity getCar() {
+        return car;
+    }
+
+    public void setCar(CarEntity car) {
+        this.car = car;
+    }
+
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
     }
 }

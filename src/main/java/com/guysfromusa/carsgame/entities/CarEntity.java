@@ -6,11 +6,13 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
-@Entity
+@Entity(name="CAR")
 @NoArgsConstructor
 public class CarEntity {
 
@@ -20,6 +22,11 @@ public class CarEntity {
 
     @Getter @Setter
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name="GAME_ID", referencedColumnName = "ID")
+    private GameEntity game;
+
 
     //TODO finish
 }

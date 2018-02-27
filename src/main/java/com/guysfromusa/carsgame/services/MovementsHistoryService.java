@@ -25,9 +25,9 @@ public class MovementsHistoryService {
         this.repository = notNull(repository);
     }
 
-    public List<MovementHistory> findMovementsHistory(String gameId, String mapName, String carName, int limitOfRecentStep){
+    public List<MovementHistory> findMovementsHistory(String gameId, String carName, int limitOfRecentStep){
 
-        List<MovementsHistoryEntity> result = repository.findMovements(gameId, mapName, carName, limitOfRecentStep);
+        List<MovementsHistoryEntity> result = repository.findMovements(gameId, carName, limitOfRecentStep);
         return Collections.emptyList();
     }
 }

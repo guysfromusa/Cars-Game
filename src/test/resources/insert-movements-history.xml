@@ -1,0 +1,8 @@
+<!--<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">-->
+<dataset>
+    <CAR ID="-1" NAME="FIAT"></CAR>
+
+    <GAME ID="-2"></GAME>
+
+    <MOVEMENT_HISTORY ID="-3" CAR_ID="-1" GAME_ID="-2" POSITION="1"></MOVEMENT_HISTORY>
+</dataset>

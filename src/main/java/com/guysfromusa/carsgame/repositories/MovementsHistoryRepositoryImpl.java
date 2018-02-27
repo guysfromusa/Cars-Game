@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
 import static org.apache.commons.lang3.Validate.notNull;
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Repository
 @Transactional(readOnly = true)
@@ -29,19 +26,15 @@ public class MovementsHistoryRepositoryImpl implements MovementsHistoryRepositor
     }
 
     @Override
-    public List<MovementsHistoryEntity> findMovements(String gameId, String mapName, String carName, int limitOfRecentStep){
+    public List<MovementsHistoryEntity> findMovements(String gameId, String carName, int limitOfRecentStep){
 
         Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(MovementsHistoryEntity.class);
+        Criteria criteria = session.createCriteria(MovementsHistoryEntity.class, "movementHistory");
+        criteria.createAlias("movementHistory.car", "car");
+        criteria.createAlias("movementHistory.game", "game");
 
-        Case($(!isEmpty(carName)), criteria.add(Restrictions.eq("carName", carName)) );
-        Case($(!isEmpty(mapName)), criteria.add(Restrictions.eq("mapName", mapName)) );
-        Case($(!isEmpty(gameId)), criteria.add(Restrictions.eq("gameId", gameId)) );
-
-
-//        if(!carName.isEmpty()) criteria.add(Restrictions.eq("carName", carName));
-//        if(!mapName.isEmpty()) criteria.add(Restrictions.eq("mapName", mapName));
-//        if(!gameId.isEmpty()) criteria.add(Restrictions.eq("gameId", gameId));
+        if(!carName.isEmpty()) criteria.add(Restrictions.eq("car.name", carName));
+       // if(!gameId.isEmpty()) criteria.add(Restrictions.eq("gameId", gameId));
 
         if(limitOfRecentStep != 0) {
             criteria.addOrder(Order.desc("id"));
