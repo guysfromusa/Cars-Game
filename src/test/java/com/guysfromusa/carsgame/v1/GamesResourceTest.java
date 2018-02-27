@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Movement;
+import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,8 +47,8 @@ public class GamesResourceTest {
 
         //then
         assertThat(response.getBody())
-                .extracting(Car::getName, Car::getDirection, Car::getPosition)
-                .containsExactly(tuple("car1", WEST, null));
+                .extracting(Car::getName, Car::getDirection)
+                .containsExactly(tuple("car1", WEST));
     }
 
 }

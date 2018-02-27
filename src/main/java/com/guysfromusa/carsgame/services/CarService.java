@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
@@ -41,7 +42,7 @@ public class CarService {
         car.setName(name);
 
         CarEntity newCar = carRepository.save(car);
-        return newCar.getId();
+        return Optional.ofNullable(newCar).map(CarEntity::getId).orElse(null);
     }
 
     @Transactional(readOnly = true)
