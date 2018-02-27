@@ -28,8 +28,6 @@ public class MapService {
         return mapRepository.findAll();
     }
 
-
-
     public MapEntity create(MapEntity map) {
         return mapRepository.save(map);
         // TODO: handle just one map with name and deleted = false
