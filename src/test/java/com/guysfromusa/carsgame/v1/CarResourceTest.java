@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.tuple;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -50,10 +51,12 @@ public class CarResourceTest {
         Awaitility.await().atMost(Duration.FIVE_SECONDS).until(() -> addNewCar(name, monsterType) > 0);
 
         //when
-        ResponseEntity<CarEntity[]> response = template.getForEntity("/v1/cars/get-all", CarEntity[].class);
+        ResponseEntity<Car[]> response = template.getForEntity("/v1/cars/get-all", Car[].class);
 
         //then
-        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody())
+                .extracting(Car::getName, Car::getType)
+                .contains(tuple(name, monsterType));
     }
 
     @Test

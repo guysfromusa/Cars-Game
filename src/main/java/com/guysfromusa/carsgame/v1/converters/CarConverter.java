@@ -19,7 +19,7 @@ public class CarConverter {
     public static Car toCar(CarEntity carEntity){
         Car car = new Car();
         car.setName(carEntity.getName());
-        car.setType(car.getType());
+        car.setType(carEntity.getCarType().name());
 
         Integer positionX = carEntity.getPositionX();
         Integer positionY = carEntity.getPositionY();
