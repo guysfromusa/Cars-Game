@@ -2,12 +2,10 @@ package com.guysfromusa.carsgame.entities;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "MAP")
 public class MapEntity {
 
     @Id
@@ -21,7 +19,7 @@ public class MapEntity {
     private String content;
 
     @Column
-    private boolean deleted;
+    private Boolean deleted;
 
     public MapEntity() {
     }

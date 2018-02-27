@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.repositories;
 
-import com.guysfromusa.carsgame.entities.MapEntity;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.guysfromusa.carsgame.entities.MapEntity;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ public class MapRepositoryTest extends BaseRepositoryTest {
     @DatabaseSetup("/insert-map-data.xml")
     public void shouldSaveMapToDb() {
         //given
-        MapEntity map = new MapEntity("testMap");
+        MapEntity map = new MapEntity("testMap3");
         //when
         MapEntity savedMap = mapRepository.save(map);
         //then

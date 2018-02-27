@@ -2,15 +2,12 @@ package com.guysfromusa.carsgame.services;
 
 import com.google.common.collect.Lists;
 import com.guysfromusa.carsgame.entities.MapEntity;
-import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.List;
 
 import java.util.List;
 
