@@ -9,10 +9,7 @@ import org.apache.commons.collections.iterators.SingletonListIterator;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,13 +49,11 @@ public class CarServiceTest {
         addCar(monsterCarType, carName);
 
         //then
-        Mockito.verify(carRepository).save(argThat(new ArgumentMatcher<CarEntity>() {
-            @Override
-            public boolean matches(Object argument) {
-                CarEntity carEntity = (CarEntity) argument;
-                return Objects.equals(carEntity.getName(), carName) && Objects.equals(carEntity.getCarType(), MONSTER);
-            }
-        }));
+        ArgumentCaptor<CarEntity> carEntityArgumentCaptor = ArgumentCaptor.forClass(CarEntity.class);
+        Mockito.verify(carRepository).save(carEntityArgumentCaptor.capture());
+
+        CarEntity capturedCarEntity = carEntityArgumentCaptor.getValue();
+        assertEquals(carName, capturedCarEntity.getName());
     }
 
     @Test
@@ -70,13 +65,11 @@ public class CarServiceTest {
         carService.deleteCarByName(givenCarName);
 
         //then
-        Mockito.verify(carRepository).deleteByName(argThat(new ArgumentMatcher<String>() {
-            @Override
-            public boolean matches(Object argument) {
-                String carName = (String) argument;
-                return Objects.equals(carName, givenCarName);
-            }
-        }));
+        ArgumentCaptor<String> carNameArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        Mockito.verify(carRepository).deleteByName(carNameArgumentCaptor.capture());
+        String capturedCarName = carNameArgumentCaptor.getValue();
+
+        assertEquals(givenCarName, capturedCarName);
     }
 
     @Test
