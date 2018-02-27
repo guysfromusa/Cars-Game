@@ -1,0 +1,11 @@
+<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
+<dataset>
+
+    <GAME ID="10" NAME="game1" />
+    <GAME ID="20" NAME="game2" /><!-- take me -->
+
+    <CAR ID="1" NAME="carName1" GAME_ID="10"/>
+    <CAR ID="2" NAME="carName2" GAME_ID="20"/> <!-- take me -->
+    <CAR ID="3" NAME="carName3" />
+
+</dataset>
