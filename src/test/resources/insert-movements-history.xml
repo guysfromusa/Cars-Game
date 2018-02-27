@@ -1,8 +1,10 @@
-<!--<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">-->
+<!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
 <dataset>
-    <CAR ID="-1" NAME="FIAT"></CAR>
+    <MAP ID="777" NAME="map" DELETED="true" CONTENT="1,1"/>
+    <GAME ID="-2" NAME="FIFA" MAP_ID="777"></GAME>
+    <CAR ID="-1" NAME="FIAT" GAME_ID="-2"></CAR>
 
-    <GAME ID="-2" NAME="FIFA"></GAME>
+
 
     <MOVEMENT_HISTORY ID="-3" CAR_ID="-1" GAME_ID="-2" POSITION_X="1" POSITION_Y="1"></MOVEMENT_HISTORY>
     <MOVEMENT_HISTORY ID="-4" CAR_ID="-1" GAME_ID="-2" POSITION_X="2" POSITION_Y="2"></MOVEMENT_HISTORY>
