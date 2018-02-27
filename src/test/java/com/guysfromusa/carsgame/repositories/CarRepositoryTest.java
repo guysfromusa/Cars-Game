@@ -47,7 +47,7 @@ public class CarRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DatabaseSetup("/carRepository_shouldFindACarByGameAndName.xml")
+    @DatabaseSetup("/carRepository_shouldFindAllCarsByGame.xml")
     public void shouldFindAllCarsByGame() {
         //given
 
