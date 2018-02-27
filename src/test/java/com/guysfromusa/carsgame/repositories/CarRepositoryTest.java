@@ -30,4 +30,18 @@ public class CarRepositoryTest extends BaseRepositoryTest {
         assertThat(gotCar.getId()).isEqualTo(2);
         assertThat(gotCar.getName()).isEqualTo("carName2");
     }
+
+    @Test
+    @DatabaseSetup("/carRepository_shouldFindACarByGameAndName.xml")
+    public void shouldFindACarByGameAndName() {
+        //given
+
+        //when
+        CarEntity gotCar = carRepository.findByGameAndName("game2", "carName2");
+
+        //then
+        assertThat(gotCar).isNotNull();
+        assertThat(gotCar.getId()).isEqualTo(2);
+        assertThat(gotCar.getName()).isEqualTo("carName2");
+    }
 }
