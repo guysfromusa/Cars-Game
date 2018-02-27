@@ -14,7 +14,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  * Created by Dominik Zurek, 26.02.18
  */
 
-@Entity
+@Entity(name = "MOVEMENT_HISTORY")
 public class MovementsHistory {
 
     @Id
