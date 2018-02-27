@@ -20,6 +20,7 @@ public class CarConverter {
         Car car = new Car();
         car.setName(carEntity.getName());
         car.setType(carEntity.getCarType());
+        car.setDirection(carEntity.getDirection());
 
         Integer positionX = carEntity.getPositionX();
         Integer positionY = carEntity.getPositionY();
