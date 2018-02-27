@@ -6,6 +6,10 @@ import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Movement;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +30,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @RestController
 @RequestMapping(value = "/v1/games", produces = APPLICATION_JSON_UTF8_VALUE)
+@Api(value = "games", description = "Operation for managing games", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
 public class GamesResource {
 
     private final Map<Movement.Type, MovementStrategy> movementStrategyMap = Maps.newEnumMap(Movement.Type.class);
@@ -40,6 +45,11 @@ public class GamesResource {
     }
 
     @RequestMapping(value = "{game}/cars/{car}/movements", method = POST, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "Perform a movement of the car", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful movement of the car"),
+            @ApiResponse(code = 404, message = "Game not found")
+    })
     public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement){
 
         movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
