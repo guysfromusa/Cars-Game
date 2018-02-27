@@ -17,7 +17,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * Created by Robert Mycek, 2018-02-26
@@ -47,10 +47,10 @@ public class MapsResourceTest {
     public void deleteShouldReturnNotFoundStatusCode() {
         //when
         ResponseEntity<Map> response = template
-                .exchange("/v1/maps/{id}", DELETE, null, Map.class, 777L);
+                .exchange("/v1/maps/{name}", DELETE, null, Map.class, "notExist");
 
         //then
-        assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
+        assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 
 }

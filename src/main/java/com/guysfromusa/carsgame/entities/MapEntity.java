@@ -1,72 +1,40 @@
 package com.guysfromusa.carsgame.entities;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "MAP")
+@NoArgsConstructor
+@ToString
 public class MapEntity {
 
+    @Getter
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column
+    @Getter
+    @Setter
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Setter
+    @Getter
+    @Column(nullable = false)
     private String content;
 
-    @Column
-    private Boolean deleted;
-
-    public MapEntity() {
-    }
-
-    public MapEntity(String name) {
-        this.name = name;
-    }
+    @Setter
+    @Getter
+    @Column(nullable = false)
+    private boolean deleted;
 
     public MapEntity(String name, String content) {
         this.name = name;
         this.content = content;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("name", name)
-                .append("content", content)
-                .append("deleted", deleted)
-                .toString();
     }
 }

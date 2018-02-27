@@ -5,8 +5,9 @@ import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -14,6 +15,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  * Created by Sebastian Mikucki, 26.02.18
  */
 @Service
+@Transactional
 public class MapService {
 
     private final MapRepository mapRepository;
@@ -28,11 +30,18 @@ public class MapService {
     }
 
     public MapEntity create(MapEntity map) {
+
         return mapRepository.save(map);
     }
 
-    public void delete(Long id) {
-        mapRepository.delete(id);
+    public Optional<MapEntity> markAsDeleted(String name) {
+        Optional<MapEntity> map = mapRepository.findByNameAndDeleted(name, false);
+        map.ifPresent(m -> m.setDeleted(true));
+        return map;
+    }
+
+    public void delete(MapEntity map) {
+        mapRepository.deleteByName(map.getName());
     }
 
     public MapEntity findById(Long id) {

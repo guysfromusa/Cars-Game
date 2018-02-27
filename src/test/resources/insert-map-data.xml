@@ -1,5 +1,5 @@
 <!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
 <dataset>
-    <MAP ID="1" NAME="testMap1"/>
-    <MAP ID="2" NAME="testMap2"/>
+    <MAP ID="1" NAME="testMap1" DELETED="false" CONTENT="1,1"/>
+    <MAP ID="2" NAME="testMap2" DELETED="false" CONTENT="1,1"/>
 </dataset>

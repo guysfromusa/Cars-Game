@@ -1,6 +1,5 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.converters.MapConverter;
 import com.guysfromusa.carsgame.v1.model.Map;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.Validate.notNull;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -48,22 +46,16 @@ public class MapsResource {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{id}")
+                .path("/{name}")
                 .buildAndExpand(id)
                 .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteMap(@PathVariable Long id) {
-        MapEntity map = mapService.findById(id);
-        if (map == null) {
-            return new ResponseEntity(NOT_FOUND);
-        }
-        mapService.delete(id);
+    @DeleteMapping(value = "/{name}")
+    public ResponseEntity<?> deleteMap(@PathVariable String name) {
+        mapService.markAsDeleted(name).ifPresent(mapService::delete);
         return new ResponseEntity<>(NO_CONTENT);
     }
-
-
 }

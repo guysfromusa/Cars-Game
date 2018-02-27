@@ -29,7 +29,7 @@ public class MapServiceTest {
     @Test
     public void shouldFindAllMaps() {
         //given
-        List<MapEntity> collection = Lists.newArrayList(new MapEntity("testMap"));
+        List<MapEntity> collection = Lists.newArrayList(new MapEntity("testMap", "1,1,1"));
         when(mapRepository.findAll()).thenReturn(collection);
         //when
         Iterable<MapEntity> result = mapService.findAll();

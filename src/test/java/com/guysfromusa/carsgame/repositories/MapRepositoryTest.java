@@ -20,7 +20,7 @@ public class MapRepositoryTest extends BaseRepositoryTest {
     @DatabaseSetup("/insert-map-data.xml")
     public void shouldSaveMapToDb() {
         //given
-        MapEntity map = new MapEntity("testMap3");
+        MapEntity map = new MapEntity("testMap3", "1,1");
         //when
         MapEntity savedMap = mapRepository.save(map);
         //then

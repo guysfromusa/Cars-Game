@@ -19,7 +19,7 @@ public class DbConfiguration {
     @Bean
     public CommandLineRunner populate(MapRepository mapRepository) {
         return args -> {
-            MapEntity map = new MapEntity("map1");
+            MapEntity map = new MapEntity("map1", "1,1,1");
             mapRepository.save(map);
         };
     }
