@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Movement;
-import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
 
+import static com.guysfromusa.carsgame.model.Direction.WEST;
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -31,7 +31,7 @@ public class GamesResourceTest {
     private TestRestTemplate template;
 
     @Test
-    public void whenActionSuccessfulShouldReturnCarPositions() {
+    public void whenActionSuccessful_thenShouldReturnCarPositions() {
         //given
         Movement movement = new Movement();
         movement.setType(Movement.Type.TURN);
@@ -42,12 +42,12 @@ public class GamesResourceTest {
                 .build();
 
         //when
-        ResponseEntity<Car[]> response = template.postForEntity("/v1/games/1/cars/1/movements", request, Car[].class);
+        ResponseEntity<Car[]> response = template.postForEntity("/v1/games/game1/cars/car1/movements", request, Car[].class);
 
         //then
         assertThat(response.getBody())
-                .extracting(Car::getName, Car::getDirection)
-                .containsExactly(tuple("car1", null));
+                .extracting(Car::getName, Car::getDirection, Car::getPosition)
+                .containsExactly(tuple("car1", WEST, null));
     }
 
 }
