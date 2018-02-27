@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
  */
 
 @Entity(name = "MOVEMENT_HISTORY")
-public class MovementsHistory {
+public class MovementsHistoryEntity {
 
     @Id
     @GeneratedValue
@@ -33,18 +33,18 @@ public class MovementsHistory {
     @Column(nullable = false)
     private Point position;
 
-    public MovementsHistory() {
+    public MovementsHistoryEntity() {
     }
 
-    public MovementsHistory(String gameId,String mapName, String carName, Point position) {
+    public MovementsHistoryEntity(String gameId, String mapName, String carName, Point position) {
         this.gameId = gameId;
         this.mapName = mapName;
         this.carName = carName;
         this.position = position;
     }
 
-    public static MovementsHistory withPosition(MovementsHistory movementsHistory, Point position){
-        return new MovementsHistory(movementsHistory.gameId, movementsHistory.mapName, movementsHistory.carName, position);
+    public static MovementsHistoryEntity withPosition(MovementsHistoryEntity movementsHistoryEntity, Point position){
+        return new MovementsHistoryEntity(movementsHistoryEntity.gameId, movementsHistoryEntity.mapName, movementsHistoryEntity.carName, position);
     }
 
     public Long getId() {
