@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MovementsHistoryRepositoryCustom {
 
-    List<MovementsHistoryEntity> findMovements(List<String> gameIds, List<String> carNames, int limitOfRecentStep);
+    List<MovementsHistoryEntity> findMovements(List<String> gameNames, List<String> carNames, int limitOfRecentStep);
 }

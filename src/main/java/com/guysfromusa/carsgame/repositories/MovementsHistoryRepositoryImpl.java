@@ -24,7 +24,7 @@ public class MovementsHistoryRepositoryImpl implements MovementsHistoryRepositor
     }
 
     @Override
-    public List<MovementsHistoryEntity> findMovements(List<String> gameIds, List<String> carNames, int limitOfRecentStep){
+    public List<MovementsHistoryEntity> findMovements(List<String> gameNames, List<String> carNames, int limitOfRecentStep){
 
         Session session = entityManager.unwrap(Session.class);
         Criteria criteria = session.createCriteria(MovementsHistoryEntity.class, "movementHistory");
@@ -32,7 +32,7 @@ public class MovementsHistoryRepositoryImpl implements MovementsHistoryRepositor
         criteria.createAlias("movementHistory.game", "game");
 
         if(!carNames.isEmpty()) criteria.add(Restrictions.in("car.name", carNames));
-        if(!gameIds.isEmpty()) criteria.add(Restrictions.in("game.id", gameIds));
+        if(!gameNames.isEmpty()) criteria.add(Restrictions.in("game.name", gameNames));
 
         if(limitOfRecentStep != 0) {
             criteria.addOrder(Order.desc("createDateTime"));
