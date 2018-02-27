@@ -1,32 +1,53 @@
 package com.guysfromusa.carsgame.entities;
 
+import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
-@Entity(name="CAR")
+@Entity
+@Table(name = "CAR")
 @NoArgsConstructor
 public class CarEntity {
 
-    @Getter @Setter
     @Id
+    @GeneratedValue
+    @Getter
+    @Setter
     private Long id;
 
-    @Getter @Setter
+    @Column(nullable = false)
+    @Getter
+    @Setter
     private String name;
 
     @ManyToOne
-    @JoinColumn(name="GAME_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "GAME_ID")
+    @Getter
+    @Setter
     private GameEntity game;
 
+    @Column
+    @Enumerated(STRING)
+    @Getter
+    @Setter
+    private Direction direction;
 
-    //TODO finish
+    @Getter @Setter
+    private Integer positionX;
+
+    @Getter @Setter
+    private Integer positionY;
+
+    @Getter @Setter
+    @Enumerated(STRING)
+    private CarType carType;
 }
