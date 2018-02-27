@@ -2,7 +2,7 @@ package com.guysfromusa.carsgame.config;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
-import com.guysfromusa.carsgame.entities.Map;
+import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MapRepository;
@@ -25,7 +25,7 @@ public class DbConfiguration {
     @Bean
     public CommandLineRunner populate(MapRepository mapRepository, CarRepository carRepository, GameRepository gameRepository) {
         return args -> {
-            Map map = new Map("map1");
+            MapEntity map = new MapEntity("map1", "1,1,1");
             mapRepository.save(map);
 
             GameEntity game = new GameEntity();

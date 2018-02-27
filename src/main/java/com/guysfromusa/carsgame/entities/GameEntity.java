@@ -26,8 +26,14 @@ public class GameEntity {
     @Setter
     private String name;
 
-    @OneToMany(mappedBy="game", targetEntity = CarEntity.class)
+    @OneToMany(mappedBy = "game", targetEntity = CarEntity.class)
     @Getter
     @Setter
     private Set<CarEntity> cars;
+
+    @ManyToOne
+    @JoinColumn(name = "MAP_ID", nullable = false)
+    @Getter
+    @Setter
+    private MapEntity map;
 }
