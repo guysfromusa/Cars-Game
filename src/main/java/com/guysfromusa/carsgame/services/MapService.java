@@ -1,11 +1,17 @@
 package com.guysfromusa.carsgame.services;
 
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.Map;
+import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -24,4 +30,6 @@ public class MapService {
     public Iterable<Map> findAll() {
         return mapRepository.findAll();
     }
+
+
 }

@@ -2,6 +2,8 @@ package com.guysfromusa.carsgame.v1.converters;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -18,7 +20,15 @@ public class CarConverter {
     public static Car toCar(CarEntity carEntity){
         Car car = new Car();
         car.setName(carEntity.getName());
+        car.setType(carEntity.getCarType());
         car.setDirection(carEntity.getDirection());
+
+        Integer positionX = carEntity.getPositionX();
+        Integer positionY = carEntity.getPositionY();
+        Point point = new Point(positionX, positionY);
+
+        car.setPosition(point);
+
         return car;
     }
 

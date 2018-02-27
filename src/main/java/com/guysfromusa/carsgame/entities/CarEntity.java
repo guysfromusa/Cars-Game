@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.entities;
 
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,5 +41,13 @@ public class CarEntity {
     @Setter
     private Direction direction;
 
-    //TODO finish
+    @Getter @Setter
+    private Integer positionX;
+
+    @Getter @Setter
+    private Integer positionY;
+
+    @Getter @Setter
+    @Enumerated(STRING)
+    private CarType carType;
 }
