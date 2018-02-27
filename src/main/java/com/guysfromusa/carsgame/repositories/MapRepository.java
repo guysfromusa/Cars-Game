@@ -16,9 +16,8 @@ public interface MapRepository extends JpaRepository<MapEntity, Long> {
     Optional<MapEntity> findByNameAndDeleted(String name, boolean deleted);
 
     @Modifying
-    @Transactional
     @Query("delete from MapEntity m " +
             "where m.name = :name " +
-            "and m.id not in (select g.map.id from GameEntity g)")
+            "and not exists (select g from GameEntity g where g.map = m)")
     void deleteByName(@Param("name") String name);
 }
