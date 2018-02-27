@@ -1,17 +1,23 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.v1.model.CarPosition;
+import com.google.common.collect.Maps;
+import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Movement;
-import org.springframework.data.geo.Point;
+import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 
-import static com.guysfromusa.carsgame.model.Direction.NORTH;
-import static java.util.Collections.singletonList;
+import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCars;
+import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -22,13 +28,24 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(value = "/v1/games", produces = APPLICATION_JSON_UTF8_VALUE)
 public class GamesResource {
 
+    private final Map<Movement.Type, MovementStrategy> movementStrategyMap = Maps.newEnumMap(Movement.Type.class);
+
+    private final CarService carService;
+
+    @Inject
+    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService){
+        this.carService = notNull(carService);
+        notEmpty(movementStrategies)
+                .forEach(strategy -> movementStrategyMap.put(strategy.getType(), strategy));
+    }
 
     @RequestMapping(value = "{game}/cars/{car}/movements", method = POST, consumes = APPLICATION_JSON_UTF8_VALUE)
-    public List<CarPosition> moveCar(@PathVariable String game, @PathVariable String car, @RequestBody /*@Validated*/ Movement newMovement){
+    public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement){
 
+        movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
 
-
-        return singletonList(new CarPosition("car1", new Point(0,1), NORTH));
+        List<CarEntity> carsInGame = carService.findCars(game);
+        return toCars(carsInGame);
     }
 
 }
