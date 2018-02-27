@@ -22,7 +22,7 @@ public class MovementsHistory {
     private Long id;
 
     @Column(nullable = false)
-    private Long gameId;
+    private String gameId;
 
     @Column(nullable = false)
     private String carName;
@@ -36,26 +36,26 @@ public class MovementsHistory {
     public MovementsHistory() {
     }
 
-    public MovementsHistory(Long gameId, String carName, String mapName, Point position) {
+    public MovementsHistory(String gameId,String mapName, String carName, Point position) {
         this.gameId = gameId;
-        this.carName = carName;
         this.mapName = mapName;
+        this.carName = carName;
         this.position = position;
     }
 
-    public MovementsHistory withPosition(Point position){
-        return new MovementsHistory(this.gameId, this.carName, this.mapName, position);
+    public static MovementsHistory withPosition(MovementsHistory movementsHistory, Point position){
+        return new MovementsHistory(movementsHistory.gameId, movementsHistory.mapName, movementsHistory.carName, position);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getGameId() {
+    public String getGameId() {
         return gameId;
     }
 
-    public void setGameId(Long gameId) {
+    public void setGameId(String gameId) {
         this.gameId = gameId;
     }
 

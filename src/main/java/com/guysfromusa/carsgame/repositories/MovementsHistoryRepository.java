@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
  * Created by Dominik Zurek, 26.02.18
  */
 
-public interface MovementsHistoryRepository extends CrudRepository<MovementsHistory, Long>, MovementHistoryRepositoryCustom {
+public interface MovementsHistoryRepository extends CrudRepository<MovementsHistory, Long>, MovementsHistoryRepositoryCustom {
 
 }
