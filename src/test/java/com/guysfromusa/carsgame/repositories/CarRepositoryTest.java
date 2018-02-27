@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -44,4 +45,19 @@ public class CarRepositoryTest extends BaseRepositoryTest {
         assertThat(gotCar.getId()).isEqualTo(2);
         assertThat(gotCar.getName()).isEqualTo("carName2");
     }
+
+    @Test
+    @DatabaseSetup("/carRepository_shouldFindACarByGameAndName.xml")
+    public void shouldFindAllCarsByGame() {
+        //given
+
+        //when
+        List<CarEntity> gotCars = carRepository.findByGame("game2");
+
+        //then
+        assertThat(gotCars)
+                .extracting(CarEntity::getName)
+                .containsExactlyInAnyOrder("carName2", "carName4");
+    }
+
 }

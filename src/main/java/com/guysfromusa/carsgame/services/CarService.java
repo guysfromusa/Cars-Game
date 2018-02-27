@@ -7,14 +7,11 @@ import com.guysfromusa.carsgame.repositories.CarRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
 import java.util.function.Function;
 
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
-import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -32,23 +29,18 @@ public class CarService {
 
     @Transactional(readOnly = true)
     public List<CarEntity> findCars(String game) {
-        return singletonList(new CarEntity(){{ //FIXME implement me
-            this.setName("car1");
-        }});
+        return carRepository.findByGame(game);
     }
 
     @Transactional
     public void turnCar(String game, String carName, TurnSide turnSide) {
         CarEntity car = carRepository.findByGameAndName(game, carName);
-        //uncomment me once adding cars will be reedy
-        /*
         //FIXME handle car not found
 
         Function<Direction, Direction> turnF = turnSide == LEFT ? Direction::turnLeft : Direction::turnRight;
 
         Direction newDirection = turnF.apply(car.getDirection());
         car.setDirection(newDirection);
-        */
 
         //update movements
     }

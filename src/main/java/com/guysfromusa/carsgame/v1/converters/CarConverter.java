@@ -18,6 +18,7 @@ public class CarConverter {
     public static Car toCar(CarEntity carEntity){
         Car car = new Car();
         car.setName(carEntity.getName());
+        car.setDirection(carEntity.getDirection());
         return car;
     }
 

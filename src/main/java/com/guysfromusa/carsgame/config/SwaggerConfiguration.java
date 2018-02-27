@@ -19,17 +19,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration {
 
-    @Value("${api.version}")
+    @Value("${api.version:1.0}")
     private String apiVersion;
-    @Value("${api.title}")
+
+    @Value("${api.title:Rest API}")
     private String apiTitle;
-    @Value("${api.description}")
+
+    @Value("${api.description:REST API documentation}")
     private String apiDescription;
-    @Value("${api.contact.names}")
+
+    @Value("${api.contact.names:}")
     private String contactNames;
-    @Value("${api.contact.mail}")
+
+    @Value("${api.contact.mail:}")
     private String contactMail;
-    @Value("${api.contact.www}")
+
+    @Value("${api.contact.www:}")
     private String contactWww;
 
     @Bean
