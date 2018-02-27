@@ -32,7 +32,7 @@ public class GameEntity {
     private Set<CarEntity> cars;
 
     @ManyToOne
-    @JoinColumn(name = "MAP_ID", nullable = false)
+    @JoinColumn(name = "MAP_ID")
     @Getter
     @Setter
     private MapEntity map;
