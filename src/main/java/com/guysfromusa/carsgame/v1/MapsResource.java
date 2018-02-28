@@ -10,8 +10,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.inject.Inject;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -37,7 +37,7 @@ public class MapsResource {
     public List<Map> findAllMaps() {
         return mapService.findAll().stream()
                 .map(mapConverter::fromEntity)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
