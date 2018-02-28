@@ -103,7 +103,9 @@ public class CarResourceTest implements CarApiAware {
 
         //then
         Car carResponse = carResponseEntity.getBody();
-        assertThat(carResponse.getPosition()).extracting(Point::getX, Point::getY).contains(1, 1);
+        assertThat(carResponse.getPosition())
+                .extracting(Point::getX, Point::getY)
+                .contains(1, 1);
     }
 
 
