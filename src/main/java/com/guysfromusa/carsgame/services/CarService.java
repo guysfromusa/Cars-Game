@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
@@ -19,9 +20,11 @@ import org.springframework.validation.ValidationUtils;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
+import static java.lang.String.format;
 import static org.apache.commons.collections4.IteratorUtils.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -71,10 +74,10 @@ public class CarService {
 
     public MovementsHistoryEntity turnCar(String gameName, String carName, TurnSide turnSide) {
         GameEntity gameEntity = gameRepository.findByName(gameName)
-                .orElseThrow(() -> new IllegalArgumentException("Game '" + gameName + "' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
 
         CarEntity carEntity = carRepository.findByGameAndName(gameName, carName)
-                .orElseThrow(() -> new IllegalArgumentException("Car '" + carName + "' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));
 
         Function<Direction, Direction> turnF = turnSide == LEFT ? Direction::turnLeft : Direction::turnRight;
 

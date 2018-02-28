@@ -2,12 +2,14 @@ package com.guysfromusa.carsgame.repositories;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -39,7 +41,7 @@ public class CarRepositoryTest extends BaseRepositoryTest {
 
         //when
         CarEntity gotCar = carRepository.findByGameAndName("game2", "carName2")
-                .orElseThrow(() -> new IllegalStateException("no car found"));
+                .orElseThrow(() -> new EntityNotFoundException("no car found"));
 
         //then
         assertThat(gotCar.getId()).isEqualTo(2);
