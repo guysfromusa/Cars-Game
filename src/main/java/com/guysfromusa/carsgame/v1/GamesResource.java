@@ -51,7 +51,9 @@ public class GamesResource {
     @ApiOperation(value = "Perform a movement of the car", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful movement of the car"),
-            @ApiResponse(code = 404, message = "Game not found")})
+            @ApiResponse(code = 404, message = "Game not found"),
+            @ApiResponse(code = 404, message = "Car not found")
+    })
     public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement){
 
         movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
@@ -62,7 +64,10 @@ public class GamesResource {
 
     @ApiOperation(value = "Starts the game with the given Map")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Game was successfully started")})
+            @ApiResponse(code = 200, message = "Game was successfully started"),
+            @ApiResponse(code = 404, message = "Map not found")
+
+    })
     @PostMapping(path = "{gameName}")
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
