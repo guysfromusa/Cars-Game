@@ -37,17 +37,17 @@ public class MapsResourceTest {
                 .build();
 
         //when
-        ResponseEntity<Long> response = template.postForEntity("/v1/maps", request, Long.class);
+        ResponseEntity<String> response = template.postForEntity("/v1/maps", request, String.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(CREATED);
     }
 
     @Test
-    public void deleteShouldReturnNotFoundStatusCode() {
+    public void shouldDeleteMap() {
         //when
         ResponseEntity<Map> response = template
-                .exchange("/v1/maps/{name}", DELETE, null, Map.class, "notExist");
+                .exchange("/v1/maps/{name}", DELETE, null, Map.class, "map");
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(NO_CONTENT);

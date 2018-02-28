@@ -20,13 +20,6 @@ public class MapConverterTest {
     }
 
     @Test
-    public void toEntity() {
-        MapEntity entity = converter.toEntity(new Map("name", "content"));
-        assertThat(entity.getName()).isEqualTo("name");
-        assertThat(entity.getContent()).isEqualTo("content");
-    }
-
-    @Test
     public void fromEntity() {
         Map map = converter.fromEntity(new MapEntity("name", "content"));
         assertThat(map.getName()).isEqualTo("name");

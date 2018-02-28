@@ -8,10 +8,12 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "MAP")
+@Table(name = "MAP", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "active"})})
 @NoArgsConstructor
 @ToString
 public class MapEntity {
+
+    public static final String ACTIVE = "ACTIVE";
 
     @Getter
     @Id
@@ -31,10 +33,14 @@ public class MapEntity {
     @Setter
     @Getter
     @Column(nullable = false)
-    private boolean deleted;
+    private String active = ACTIVE;
 
     public MapEntity(String name, String content) {
         this.name = name;
         this.content = content;
+    }
+
+    public void deactivate() {
+        active = Long.toString(id);
     }
 }

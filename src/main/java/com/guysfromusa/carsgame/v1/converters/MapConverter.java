@@ -9,10 +9,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MapConverter {
-    public MapEntity toEntity(Map map) {
-        return new MapEntity(map.getName(), map.getContent());
-    }
-
     public Map fromEntity(MapEntity mapEntity) {
         return new Map(mapEntity.getName(), mapEntity.getContent());
     }
