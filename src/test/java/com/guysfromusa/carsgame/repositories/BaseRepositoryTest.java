@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.repositories;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.guysfromusa.carsgame.config.DbConfiguration;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,5 +20,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
+@DatabaseTearDown("/clean.xml")
 public abstract class BaseRepositoryTest {
+
+
 }
