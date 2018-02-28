@@ -9,8 +9,13 @@ import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
+import com.guysfromusa.carsgame.repositories.GameRepository;
+import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.v1.validators.CarGameAdditionValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.ValidationUtils;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -24,6 +29,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  * Created by Tomasz Bradlo, 26.02.18
  */
 @Service
+@Transactional
 public class CarService {
 
     private final CarRepository carRepository;
@@ -39,12 +45,11 @@ public class CarService {
         this.gameRepository = notNull(gameRepository);
     }
 
-    @Transactional
+
     public Long deleteCarByName(String name) {
         return carRepository.deleteByName(name);
     }
 
-    @Transactional
     public CarEntity addCar(CarType carType, String name) {
         CarEntity car = new CarEntity();
         car.setCarType(carType);
@@ -64,7 +69,6 @@ public class CarService {
         return carRepository.findByGame(game);
     }
 
-    @Transactional
     public MovementsHistoryEntity turnCar(String gameName, String carName, TurnSide turnSide) {
         GameEntity gameEntity = gameRepository.findByName(gameName)
                 .orElseThrow(() -> new IllegalArgumentException("Game '" + gameName + "' not found"));
@@ -85,4 +89,22 @@ public class CarService {
         movementEntity.setDirection(carEntity.getDirection());
         return movementsHistoryRepository.save(movementEntity);
     }
+
+    public CarEntity addCarToGame(String carName, String gameName, Point startingPoint){
+        CarEntity car = carRepository.findByName(carName);
+
+        //TODO use validator
+
+        Integer positionX = startingPoint.getX();
+        Integer positionY = startingPoint.getY();
+
+        car.setPositionX(positionX);
+        car.setPositionY(positionY);
+
+        GameEntity game = gameRepository.findByName(car.getName());
+        car.setGame(game);
+
+        return carRepository.save(car);
+    }
+
 }

@@ -7,15 +7,19 @@ import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
+import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
@@ -25,6 +29,9 @@ import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -117,6 +124,35 @@ public class CarServiceTest {
         MovementsHistoryEntity movement = captor.getValue();
         assertEquals(WEST, movement.getDirection());
         assertEquals(WEST, carEntity.getDirection());
+    }
+
+    @Test
+    public void shouldAddCarToGame(){
+        //given
+        String carName = "My-Second-Car";
+        String carGame = "Car-Game";
+        Point startingPoint = new Point(1,1);
+        CarEntity carEntity = new CarEntity();
+        carEntity.setName(carName);
+
+        when(carRepository.findByName(eq(carName))).thenReturn(carEntity);
+
+
+        //when
+        carService.addCarToGame(carName, carGame, startingPoint);
+
+        //then
+        verify(carRepository).save(argThat(new ArgumentMatcher<CarEntity>() {
+            @Override
+            public boolean matches(Object argument) {
+                CarEntity carEntityArgument = (CarEntity) argument;
+                String carNameCaptor = carEntityArgument.getName();
+                Integer positionX = carEntityArgument.getPositionX();
+                Integer positionY = carEntityArgument.getPositionY();
+                return Objects.equals(carName, carNameCaptor) && Objects.equals(1, positionX)
+                        && Objects.equals(1, positionY);
+            }
+        }));
     }
 
 }
