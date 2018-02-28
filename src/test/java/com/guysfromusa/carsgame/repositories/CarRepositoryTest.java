@@ -39,12 +39,13 @@ public class CarRepositoryTest extends BaseRepositoryTest {
         //given
 
         //when
+        CarEntity gotCar = carRepository.findByGameAndName("game2", "carName2")
+                .orElseThrow(() -> new IllegalStateException("no car found"));
         Optional<CarEntity> carEntityOptional = carRepository.findByGameAndName("game2", "carName2");
 
         //then
-        assertThat(carEntityOptional).isPresent();
-        assertThat(carEntityOptional).map(CarEntity::getId).get().isEqualTo(2L);
-        assertThat(carEntityOptional).map(CarEntity::getName).get().isEqualTo("carName2");
+        assertThat(gotCar.getId()).isEqualTo(2);
+        assertThat(gotCar.getName()).isEqualTo("carName2");
     }
 
     @Test

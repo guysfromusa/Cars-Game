@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.v1.model;
 
+import com.guysfromusa.carsgame.model.Direction;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,10 @@ public class MovementHistory {
     private String gameName;
 
     @Getter @Setter
-    @ApiModelProperty(notes = "Position of the car")
+    @ApiModelProperty(notes = "New position of the car")
     private Point position;
+
+    @Getter @Setter
+    @ApiModelProperty(notes = "New direction of the car")
+    private Direction direction;
 }
