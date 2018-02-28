@@ -136,7 +136,7 @@ public class CarServiceTest {
         carEntity.setName(carName);
 
         when(carRepository.findByName(eq(carName))).thenReturn(carEntity);
-
+        when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
 
         //when
         carService.addCarToGame(carName, carGame, startingPoint);
