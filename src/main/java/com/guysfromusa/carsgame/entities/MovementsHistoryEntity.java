@@ -39,12 +39,12 @@ public class MovementsHistoryEntity {
     @Setter
     private CarEntity car;
 
-    @Column(name="POSITION_X", nullable = false)
+    @Column(name="NEW_POSITION_X", nullable = false)
     @Getter
     @Setter
     private Integer positionX;
 
-    @Column(name="POSITION_Y", nullable = false)
+    @Column(name="NEW_POSITION_Y", nullable = false)
     @Getter
     @Setter
     private Integer positionY;
