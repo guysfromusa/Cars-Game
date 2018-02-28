@@ -134,9 +134,12 @@ public class CarServiceTest {
         Point startingPoint = new Point(1,1);
         CarEntity carEntity = new CarEntity();
         carEntity.setName(carName);
+        GameEntity gameEntity = new GameEntity();
+        gameEntity.setName("game1");
 
         when(carRepository.findByName(eq(carName))).thenReturn(carEntity);
-        when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
+
+        when(gameRepository.findByName(any())).thenReturn(Optional.of(gameEntity));
 
         //when
         carService.addCarToGame(carName, carGame, startingPoint);

@@ -1,6 +1,6 @@
 <!DOCTYPE dataset SYSTEM "src/test/resources/schema.dtd">
 <dataset>
-    <CAR ID="1" NAME="carName1" CRASHED="FALSE"/>
-    <CAR ID="2" NAME="carName2" CRASHED="FALSE"/>
-    <CAR ID="3" NAME="carName1" CRASHED="FALSE"/>
+    <CAR ID="1" NAME="carName1" CRASHED="false"/>
+    <CAR ID="2" NAME="carName2" CRASHED="false" />
+    <CAR ID="3" NAME="carName1" CRASHED="false" />
 </dataset>
