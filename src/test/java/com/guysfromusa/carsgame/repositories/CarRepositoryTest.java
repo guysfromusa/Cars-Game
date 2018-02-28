@@ -6,8 +6,9 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -38,12 +39,12 @@ public class CarRepositoryTest extends BaseRepositoryTest {
         //given
 
         //when
-        CarEntity gotCar = carRepository.findByGameAndName("game2", "carName2");
+        Optional<CarEntity> carEntityOptional = carRepository.findByGameAndName("game2", "carName2");
 
         //then
-        assertThat(gotCar).isNotNull();
-        assertThat(gotCar.getId()).isEqualTo(2);
-        assertThat(gotCar.getName()).isEqualTo("carName2");
+        assertThat(carEntityOptional).isPresent();
+        assertThat(carEntityOptional).map(CarEntity::getId).get().isEqualTo(2L);
+        assertThat(carEntityOptional).map(CarEntity::getName).get().isEqualTo("carName2");
     }
 
     @Test

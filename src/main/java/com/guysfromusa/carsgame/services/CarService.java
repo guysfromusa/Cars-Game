@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
@@ -10,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
+import static java.lang.String.format;
 import static org.apache.commons.collections4.IteratorUtils.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -57,8 +60,8 @@ public class CarService {
 
     @Transactional
     public void turnCar(String game, String carName, TurnSide turnSide) {
-        CarEntity car = carRepository.findByGameAndName(game, carName);
-        //FIXME handle car not found
+        Optional<CarEntity> carEntityOptional = carRepository.findByGameAndName(game, carName);
+        CarEntity car = carEntityOptional.orElseThrow(() -> new EntityNotFoundException(format("Car %s not found", carName)));
 
         Function<Direction, Direction> turnF = turnSide == LEFT ? Direction::turnLeft : Direction::turnRight;
 
