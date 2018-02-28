@@ -105,9 +105,9 @@ public class CarService {
         car.setPositionX(positionX);
         car.setPositionY(positionY);
 
-        GameEntity game = gameRepository.findByName(gameName)
-                .orElseThrow(() -> new EntityNotFoundException("Missing car"));
-        car.setGame(game);
+        GameEntity gameEntity = gameRepository.findByName(gameName)
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
+        car.setGame(gameEntity);
 
         return carRepository.save(car);
     }
