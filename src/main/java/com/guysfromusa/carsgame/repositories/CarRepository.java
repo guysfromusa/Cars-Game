@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Tomasz Bradlo, 27.02.18
@@ -19,7 +20,7 @@ public interface CarRepository extends CrudRepository<CarEntity, Long> {
     @Query("from CarEntity c " +
             "where c.name = :name " +
             "and c.game.name = :gameName")
-    CarEntity findByGameAndName(@Param("gameName") String game, @Param("name") String name);
+    Optional<CarEntity> findByGameAndName(@Param("gameName") String game, @Param("name") String name);
 
     Long deleteByName(String name);
 

@@ -1,10 +1,15 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.entities.GameEntity;
+import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.repositories.GameRepository;
+import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -15,14 +20,19 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
+import static com.guysfromusa.carsgame.model.Direction.NORTH;
+import static com.guysfromusa.carsgame.model.Direction.WEST;
+import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +46,8 @@ public class CarServiceTest {
     @Mock
     private GameRepository gameRepository;
 
+    @Mock
+    private MovementsHistoryRepository movementsHistoryRepository;
 
     @InjectMocks
     private CarService carService;
@@ -87,7 +99,31 @@ public class CarServiceTest {
 
         //then
         assertThat(carEntities).isNotEmpty().extracting(CarEntity::getName).contains(carName);
+    }
 
+    @Test
+    public void shouldTurnCar(){
+        //given
+        CarEntity carEntity = new CarEntity();
+        carEntity.setName("car1");
+        carEntity.setDirection(NORTH);
+        GameEntity gameEntity = new GameEntity();
+        gameEntity.setName("game1");
+        when(carRepository.findByGameAndName(any(), any()))
+                .thenReturn(Optional.of(carEntity));
+        when(gameRepository.findByName(any()))
+                .thenReturn(Optional.of(gameEntity));
+
+        //when
+        carService.turnCar("game1", "car1", LEFT);
+
+        //then
+        ArgumentCaptor<MovementsHistoryEntity> captor = ArgumentCaptor.forClass(MovementsHistoryEntity.class);
+        verify(movementsHistoryRepository).save(captor.capture());
+
+        MovementsHistoryEntity movement = captor.getValue();
+        assertEquals(WEST, movement.getDirection());
+        assertEquals(WEST, carEntity.getDirection());
     }
 
     @Test
