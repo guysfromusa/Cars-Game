@@ -25,24 +25,21 @@ public class MapsResource {
 
     private final MapService mapService;
 
-    private final MapConverter mapConverter;
-
     @Inject
-    public MapsResource(MapService mapService, MapConverter mapConverter) {
+    public MapsResource(MapService mapService) {
         this.mapService = notNull(mapService);
-        this.mapConverter = notNull(mapConverter);
     }
 
     @GetMapping
     public List<Map> findAllMaps() {
         return mapService.findAll().stream()
-                .map(mapConverter::fromEntity)
+                .map(MapConverter::fromEntity)
                 .collect(toList());
     }
 
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Long> createMap(@RequestBody Map map) {
-        Long id = mapService.create(mapConverter.toEntity(map)).getId();
+        Long id = mapService.create(MapConverter.toEntity(map)).getId();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
