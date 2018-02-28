@@ -29,4 +29,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleBadRequest(IllegalArgumentException ex) {
+        return new ResponseEntity<>(
+                ApiError.builder()
+                        .date(LocalDateTime.now())
+                        .message(ex.getMessage())
+                        .status("BAD_REQUEST")
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 }
