@@ -48,7 +48,6 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
     }
 
     @Test
-    @Ignore
     public void whenTurnActionSuccessful_thenShouldReturnCarPositions() {
         //given
         addNewMap(template, new Map("mapToPlay", "1,1,1\n1,0,1\n1,0,1"));
