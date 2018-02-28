@@ -21,4 +21,11 @@ public interface CarApiAware {
 
         return newCarIdResponse.getBody();
     }
+
+    default void assignCarToTheGame(TestRestTemplate template, String carName, String gameName){
+        HttpEntity<Object> requestEntity = new RequestBuilder<>().body(gameName).build();
+        String url = String.join("/", "/v1/cars", carName, "games", gameName); //TO CHECK
+
+        template.exchange(url, POST, requestEntity, Void.class);
+    }
 }

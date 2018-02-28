@@ -27,7 +27,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
-public class GamesResourceTest implements CarApiAware, MapApiAware {
+public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware {
 
     @Inject
     private TestRestTemplate template;
@@ -55,9 +55,9 @@ public class GamesResourceTest implements CarApiAware, MapApiAware {
 
         Car car = addNewCar(template, "carToTurn", CarType.MONSTER.name());
 
-        //TODO start game
+        startNewGame(template, "gameToPlay", "mapToPlay");
 
-        //TODO add car to the game
+        assignCarToTheGame(template, "carToTurn", "gameToPlay"); //TODO VERIFY and unignore once car assigning ready
 
         Movement movement = new Movement();
         movement.setType(TURN);
@@ -79,7 +79,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware {
         assertThat(response.getBody())
                 .extracting(Car::getPosition)
                 .extracting(Point::getX, Point::getY)
-                .containsExactly(tuple(null,null));
+                .containsExactly(tuple(0,0));
     }
 
 }
