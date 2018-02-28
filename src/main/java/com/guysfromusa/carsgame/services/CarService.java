@@ -70,10 +70,10 @@ public class CarService {
     @Transactional
     public MovementsHistoryEntity turnCar(String gameName, String carName, TurnSide turnSide) {
         GameEntity gameEntity = gameRepository.findByName(gameName)
-                .orElseThrow(() -> new IllegalArgumentException("Game '" + gameName + "' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
 
         CarEntity carEntity = carRepository.findByGameAndName(gameName, carName)
-                .orElseThrow(() -> new IllegalArgumentException("Car '" + carName + "' not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));
 
         Function<Direction, Direction> turnF = turnSide == LEFT ? Direction::turnLeft : Direction::turnRight;
 
