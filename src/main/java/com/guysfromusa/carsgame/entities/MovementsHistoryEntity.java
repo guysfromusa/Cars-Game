@@ -1,17 +1,11 @@
 package com.guysfromusa.carsgame.entities;
 
+import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
@@ -21,10 +15,13 @@ import static java.time.LocalDateTime.now;
  */
 
 @Entity(name = "MOVEMENT_HISTORY")
+@Table(name = "MOVEMENT_HISTORY")
+@NoArgsConstructor
 public class MovementsHistoryEntity {
 
     @Id
     @GeneratedValue
+    @Getter
     private Long id;
 
     @OneToOne(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
@@ -49,27 +46,19 @@ public class MovementsHistoryEntity {
     @Setter
     private Integer positionY;
 
+    @Column(name="NEW_DIRECTION", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Getter
+    @Setter
+    private Direction direction;
+
     @Column(name="CREATE_DATA_TIME")
     @Getter
     private LocalDateTime createDateTime;
 
-    public MovementsHistoryEntity() {
-    }
-
     @PrePersist
     void createAt(){
         createDateTime = now();
-    }
-
-    public MovementsHistoryEntity(GameEntity game, CarEntity car, Integer positionX, Integer positionY) {
-        this.game = game;
-        this.car = car;
-        this.positionX = positionX;
-        this.positionY = positionY;
-    }
-
-    public static MovementsHistoryEntity withPosition(MovementsHistoryEntity movementsHistoryEntity, Integer positionX, Integer positionY){
-        return new MovementsHistoryEntity(movementsHistoryEntity.game, movementsHistoryEntity.car, positionX, positionY);
     }
 
 }

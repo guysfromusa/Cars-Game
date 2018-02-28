@@ -50,4 +50,7 @@ public class CarEntity {
     @Getter @Setter
     @Enumerated(STRING)
     private CarType carType;
+
+    @Getter @Setter
+    private boolean crashed;
 }

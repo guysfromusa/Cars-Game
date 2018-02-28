@@ -25,18 +25,15 @@ public class MapsResource {
 
     private final MapService mapService;
 
-    private final MapConverter mapConverter;
-
     @Inject
-    public MapsResource(MapService mapService, MapConverter mapConverter) {
+    public MapsResource(MapService mapService) {
         this.mapService = notNull(mapService);
-        this.mapConverter = notNull(mapConverter);
     }
 
     @GetMapping
     public List<Map> findAllMaps() {
         return mapService.findAll().stream()
-                .map(mapConverter::fromEntity)
+                .map(MapConverter::fromEntity)
                 .collect(toList());
     }
 
