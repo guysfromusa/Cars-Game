@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware {
     }
 
     @Test
+    @Ignore
     public void whenTurnActionSuccessful_thenShouldReturnCarPositions() {
         //given
         addNewMap(template, new Map("mapToPlay", "1,1,1\n1,0,1\n1,0,1"));
