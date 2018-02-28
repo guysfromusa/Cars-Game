@@ -48,7 +48,6 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
     }
 
     @Test
-    @Ignore
     public void whenTurnActionSuccessful_thenShouldReturnCarPositions() {
         //given
         addNewMap(template, new Map("mapToPlay", "1,1,1\n1,0,1\n1,0,1"));
@@ -57,7 +56,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
 
         startNewGame(template, "gameToPlay", "mapToPlay");
 
-        assignCarToTheGame(template, "carToTurn", "gameToPlay"); //TODO VERIFY and unignore once car assigning ready
+        assignCarToTheGame(template, "carToTurn", "gameToPlay", new Point(1,2));
 
         Movement movement = new Movement();
         movement.setType(TURN);
@@ -68,7 +67,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
                 .build();
 
         //when
-        String path = String.join("/", "/v1/games", "game1", "cars", car.getName(), "movements");
+        String path = String.join("/", "/v1/games", "gameToPlay", "cars", "carToTurn", "movements");
         ResponseEntity<Car[]> response = template.postForEntity(path, request, Car[].class);
 
         //then
@@ -79,7 +78,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         assertThat(response.getBody())
                 .extracting(Car::getPosition)
                 .extracting(Point::getX, Point::getY)
-                .containsExactly(tuple(0,0));
+                .containsExactly(tuple(1,2));
     }
 
 }

@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,17 @@ public interface CarApiAware {
         HttpEntity<Object> requestEntity = new RequestBuilder<>().body(type).build();
         String url = String.join("/", "/v1/cars", name);
 
-        ResponseEntity<Car> newCarIdResponse = template.exchange(url, POST, requestEntity, Car.class);
+        ResponseEntity<Car> newCarResponse = template.exchange(url, POST, requestEntity, Car.class);
 
-        return newCarIdResponse.getBody();
+        return newCarResponse.getBody();
     }
 
-    default void assignCarToTheGame(TestRestTemplate template, String carName, String gameName){
-        HttpEntity<Object> requestEntity = new RequestBuilder<>().body(gameName).build();
-        String url = String.join("/", "/v1/cars", carName, "games", gameName); //TO CHECK
+    default Car assignCarToTheGame(TestRestTemplate template, String carName, String gameName, Point startPoint){
 
-        template.exchange(url, POST, requestEntity, Void.class);
+        HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(startPoint).build();
+        String url = String.join("/", "/v1/cars", carName, "game", gameName);
+
+        ResponseEntity<Car> modifiedCar =  template.exchange(url, POST, requestEntity, Car.class);
+        return modifiedCar.getBody();
     }
 }
