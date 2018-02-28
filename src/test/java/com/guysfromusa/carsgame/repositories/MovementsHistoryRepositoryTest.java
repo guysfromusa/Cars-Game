@@ -21,8 +21,6 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@Transactional
 public class MovementsHistoryRepositoryTest extends BaseRepositoryTest {
 
     @Inject
