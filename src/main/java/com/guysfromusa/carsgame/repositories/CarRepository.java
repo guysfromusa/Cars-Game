@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface CarRepository extends CrudRepository<CarEntity, Long> {
 
-    CarEntity findByName(String name);
+    Optional<CarEntity> findByName(String name);
 
     @Query("from CarEntity c " +
             "where c.name = :name " +

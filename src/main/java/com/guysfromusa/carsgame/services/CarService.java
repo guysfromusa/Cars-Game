@@ -10,21 +10,15 @@ import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
-import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
-import com.guysfromusa.carsgame.v1.validators.CarGameAdditionValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.ValidationUtils;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
-import static java.lang.String.format;
 import static org.apache.commons.collections4.IteratorUtils.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -94,7 +88,8 @@ public class CarService {
     }
 
     public CarEntity addCarToGame(String carName, String gameName, Point startingPoint){
-        CarEntity car = carRepository.findByName(carName);
+        CarEntity car = carRepository.findByName(carName)
+                .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));
 
         //TODO use validator
 

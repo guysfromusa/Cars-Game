@@ -25,7 +25,8 @@ public class CarRepositoryTest extends BaseRepositoryTest {
         //given
 
         //when
-        CarEntity gotCar = carRepository.findByName("carName2");
+        CarEntity gotCar = carRepository.findByName("carName2")
+                .orElseThrow(() -> new EntityNotFoundException("Car not found"));
 
         //then
         assertThat(gotCar).isNotNull();

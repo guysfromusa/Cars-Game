@@ -133,7 +133,7 @@ public class CarServiceTest {
         gameEntity.setName("game1");
 
         when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
-        when(carRepository.findByName(eq(carName))).thenReturn(carEntity);
+        when(carRepository.findByName(eq(carName))).thenReturn(Optional.of(carEntity));
 
         when(gameRepository.findByName(any())).thenReturn(Optional.of(gameEntity));
 
