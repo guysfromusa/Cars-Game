@@ -1,33 +1,23 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
-import com.guysfromusa.carsgame.repositories.BaseRepositoryTest;
 import com.guysfromusa.carsgame.repositories.CarRepository;
-import org.apache.commons.collections.iterators.SingletonListIterator;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
 import java.util.List;
-import java.util.Objects;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.mock.staticmock.AnnotationDrivenStaticEntityMockingControl.verify;
 
 
 @RunWith(MockitoJUnitRunner.class)
