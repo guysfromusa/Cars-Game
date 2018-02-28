@@ -12,10 +12,6 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class MapConverter {
 
-    public static MapEntity toEntity(Map map) {
-        return new MapEntity(map.getName(), map.getContent());
-    }
-
     public static Map fromEntity(MapEntity mapEntity) {
         return new Map(mapEntity.getName(), mapEntity.getContent());
     }

@@ -38,13 +38,13 @@ public class MapsResource {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Long> createMap(@RequestBody Map map) {
-        Long id = mapService.create(MapConverter.toEntity(map)).getId();
+    public ResponseEntity<?> createMap(@RequestBody Map map) {
+        String name = mapService.create(map.getName(), map.getContent()).getName();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{name}")
-                .buildAndExpand(id)
+                .buildAndExpand(name)
                 .toUri();
 
         return ResponseEntity.created(location).build();

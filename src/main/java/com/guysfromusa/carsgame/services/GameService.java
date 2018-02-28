@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -30,7 +31,7 @@ public class GameService {
 
     @Transactional
     public GameEntity startNewGame(String gameName, String mapName) {
-        Optional<MapEntity> mapOptional = mapRepository.findByNameAndDeleted(mapName, false);
+        Optional<MapEntity> mapOptional = mapRepository.findByNameAndActive(mapName, ACTIVE);
 
         //TODO negative response if game already exist
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface MapRepository extends JpaRepository<MapEntity, Long> {
 
-    Optional<MapEntity> findByNameAndDeleted(String name, boolean deleted);
+    Optional<MapEntity> findByNameAndActive(String name, String active);
 
     @Modifying
     @Query("delete from MapEntity m " +

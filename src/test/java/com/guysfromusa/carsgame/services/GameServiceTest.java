@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,7 +42,7 @@ public class GameServiceTest {
         //given
         MapEntity mapEntity = new MapEntity();
         mapEntity.setName("map1");
-        when(mapRepositoryMock.findByNameAndDeleted("map1", false))
+        when(mapRepositoryMock.findByNameAndActive("map1", ACTIVE))
                 .thenReturn(Optional.of(mapEntity));
 
         //when

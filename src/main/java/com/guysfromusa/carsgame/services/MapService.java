@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -28,14 +29,13 @@ public class MapService {
         return mapRepository.findAll();
     }
 
-    public MapEntity create(MapEntity map) {
-        return mapRepository.save(map);
-        // TODO: handle just one map with name and deleted = false
-    }
-
     public void deleteByName(String name) {
         mapRepository.deleteByName(name);
-        mapRepository.findByNameAndDeleted(name, false)
-                .ifPresent(m -> m.setDeleted(true));
+        mapRepository.findByNameAndActive(name, ACTIVE)
+                .ifPresent(MapEntity::deactivate);
+    }
+
+    public MapEntity create(String name, String content) {
+        return mapRepository.save(new MapEntity(name, content));
     }
 }
