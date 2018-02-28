@@ -1,17 +1,23 @@
 package com.guysfromusa.carsgame.v1;
 
 import com.google.common.collect.ImmutableList;
+import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Point;
+import org.assertj.core.api.Condition;
 import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
+
+import java.util.Comparator;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -19,6 +25,7 @@ import static org.assertj.core.api.Java6Assertions.tuple;
 import static org.awaitility.Duration.FIVE_SECONDS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.POST;
 
 /**
  * Created by Konrad Rys
@@ -77,4 +84,28 @@ public class CarResourceTest implements CarApiAware {
         //then
         assertThat(removedCarIdResponse.getBody()).isGreaterThan(0);
     }
+
+    @Test
+    public void shouldAddCarToGame(){
+        //given
+        String name = "My-Sweet-Car";
+        String game = "new-game";
+        String monsterType = "MONSTER";
+
+        String url = String.join("/", "/v1/cars", name, "game", game);
+        Point point = new Point(1, 1);
+
+        HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(point).build();
+
+        //when
+        addNewCar(template, name, monsterType);
+        ResponseEntity<Car> carResponseEntity = template.exchange(url, POST, requestEntity, Car.class);
+
+        //then
+        Car responseEntityBody = carResponseEntity.getBody();
+        assertThat(responseEntityBody.getPosition())
+                .extracting(Point::getX, Point::getY).contains(1, 1);
+    }
+
+
 }

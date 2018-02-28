@@ -1,11 +1,13 @@
 package com.guysfromusa.carsgame.v1.converters;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.transform;
 import static lombok.AccessLevel.PRIVATE;
@@ -21,6 +23,8 @@ public class CarConverter {
         car.setName(carEntity.getName());
         car.setType(carEntity.getCarType());
         car.setDirection(carEntity.getDirection());
+
+        Optional.ofNullable(carEntity.getGame()).map(GameEntity::getId).ifPresent(car::setGameId);
 
         Integer positionX = carEntity.getPositionX();
         Integer positionY = carEntity.getPositionY();

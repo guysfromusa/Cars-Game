@@ -28,4 +28,10 @@ public class Car {
     @Getter @Setter
     private CarType type;
 
+    @Getter @Setter
+    private Long gameId;
+
+    @Getter @Setter
+    private boolean crashed;
+
 }
