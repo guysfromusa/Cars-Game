@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.exceptions.ApiError;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .status("NOT_FOUND")
                         .build(),
                 HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return new ResponseEntity<>(
+                ApiError.builder()
+                        .date(LocalDateTime.now())
+                        .message(ex.getMessage())
+                        .status("CONFLICT")
+                        .build(),
+                HttpStatus.CONFLICT
         );
     }
 
