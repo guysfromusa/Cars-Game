@@ -3,6 +3,10 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.converters.MapConverter;
 import com.guysfromusa.carsgame.v1.model.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,6 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
  */
 @RestController
 @RequestMapping(value = "/v1/maps", produces = APPLICATION_JSON_UTF8_VALUE)
+@Api(value = "maps", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
 public class MapsResource {
 
     private final MapService mapService;
@@ -37,6 +42,10 @@ public class MapsResource {
                 .collect(toList());
     }
 
+    @ApiOperation(value = "Create new map", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Map successfully created"),
+            @ApiResponse(code = 409, message = "Map with given name exist")})
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createMap(@RequestBody Map map) {
         String name = mapService.create(map.getName(), map.getContent()).getName();
@@ -50,6 +59,8 @@ public class MapsResource {
         return ResponseEntity.created(location).build();
     }
 
+    @ApiOperation(value = "Delete map", response = List.class)
+    @ApiResponses(value = {@ApiResponse(code = 204, message = "Map successfully deleted")})
     @DeleteMapping(value = "/{name}")
     public ResponseEntity<?> deleteMap(@PathVariable String name) {
         mapService.deleteByName(name);
