@@ -29,7 +29,7 @@ public class Car {
     private CarType type;
 
     @Getter @Setter
-    private Long gameId;
+    private String game;
 
     @Getter @Setter
     private boolean crashed;

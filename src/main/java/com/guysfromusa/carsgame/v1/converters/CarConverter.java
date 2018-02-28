@@ -24,7 +24,7 @@ public class CarConverter {
         car.setType(carEntity.getCarType());
         car.setDirection(carEntity.getDirection());
 
-        Optional.ofNullable(carEntity.getGame()).map(GameEntity::getId).ifPresent(car::setGameId);
+        Optional.ofNullable(carEntity.getGame()).map(GameEntity::getName).ifPresent(car::setGame);
 
         Integer positionX = carEntity.getPositionX();
         Integer positionY = carEntity.getPositionY();
