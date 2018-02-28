@@ -100,11 +100,13 @@ public class CarService {
 
         Integer positionX = startingPoint.getX();
         Integer positionY = startingPoint.getY();
+        car.setDirection(Direction.NORTH);
 
         car.setPositionX(positionX);
         car.setPositionY(positionY);
 
-        GameEntity game = gameRepository.findByName(car.getName());
+        GameEntity game = gameRepository.findByName(gameName)
+                .orElseThrow(() -> new EntityNotFoundException("Missing car"));
         car.setGame(game);
 
         return carRepository.save(car);
