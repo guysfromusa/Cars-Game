@@ -31,6 +31,7 @@ public class MovementsHistoryRepositoryImpl implements MovementsHistoryRepositor
         criteria.createAlias("movementHistory.car", "car");
         criteria.createAlias("movementHistory.game", "game");
 
+        //TODO consider projection to avoid eagerly loaded entities
         if(!carNames.isEmpty()) criteria.add(Restrictions.in("car.name", carNames));
         if(!gameNames.isEmpty()) criteria.add(Restrictions.in("game.name", gameNames));
 
