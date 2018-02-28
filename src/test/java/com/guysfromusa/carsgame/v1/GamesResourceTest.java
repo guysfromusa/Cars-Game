@@ -3,10 +3,7 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
-import com.guysfromusa.carsgame.v1.model.Car;
-import com.guysfromusa.carsgame.v1.model.Map;
-import com.guysfromusa.carsgame.v1.model.Movement;
-import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.v1.model.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +33,22 @@ public class GamesResourceTest implements CarApiAware, MapApiAware {
     private TestRestTemplate template;
 
     @Test
-    @Ignore //impl using db in progress
+    public void shouldStartTheGame(){
+        //given
+        addNewMap(template, new Map("mapToAssign", "1"));
+
+        //when
+        String url = String.join("/", "/v1/games", "gameToStart");
+        Game gameCreated = template.postForObject(url, "mapToAssign", Game.class);
+
+        //then
+        assertThat(gameCreated)
+                .extracting(Game::getName,Game::getMapName)
+                .containsExactly("gameToStart", "mapToAssign");
+    }
+
+    @Test
+    @Ignore
     public void whenTurnActionSuccessful_thenShouldReturnCarPositions() {
         //given
         addNewMap(template, new Map("mapToPlay", "1,1,1\n1,0,1\n1,0,1"));
