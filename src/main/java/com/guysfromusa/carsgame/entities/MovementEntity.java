@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by Tomasz Bradlo, 26.02.18
@@ -22,7 +24,9 @@ public class MovementEntity {
 //TODO
 //    @Getter @Setter private CarEntity car;
 //
-//    @Getter @Setter private GameEntity game;
+    @ManyToOne
+    @JoinColumn(name="GAME_ID", referencedColumnName = "ID")
+    @Getter @Setter private GameEntity game;
 
     @Getter @Setter private MovementType type;
 
