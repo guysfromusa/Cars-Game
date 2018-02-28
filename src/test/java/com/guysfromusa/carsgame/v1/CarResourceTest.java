@@ -89,7 +89,7 @@ public class CarResourceTest implements CarApiAware {
     public void shouldAddCarToGame(){
         //given
         String name = "My-Sweet-Car";
-        String game = "new-game";
+        String game = "game1";
         String monsterType = "MONSTER";
 
         String url = String.join("/", "/v1/cars", name, "game", game);
@@ -102,9 +102,10 @@ public class CarResourceTest implements CarApiAware {
         ResponseEntity<Car> carResponseEntity = template.exchange(url, POST, requestEntity, Car.class);
 
         //then
-        Car responseEntityBody = carResponseEntity.getBody();
-        assertThat(responseEntityBody.getPosition())
-                .extracting(Point::getX, Point::getY).contains(1, 1);
+        Car carResponse = carResponseEntity.getBody();
+        assertThat(carResponse.getPosition())
+                .extracting(Point::getX, Point::getY)
+                .contains(1, 1);
     }
 
 
