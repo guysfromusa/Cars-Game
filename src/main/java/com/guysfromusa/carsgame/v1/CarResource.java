@@ -45,7 +45,7 @@ public class CarResource {
     @PostMapping(path = "{name}")
     @ApiOperation(value = "Add car", response = Car.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Car successfully added")
+            @ApiResponse(code = 201, message = "Car successfully added")
     })
     public Car addCar(@PathVariable("name") String name, @RequestBody String type){
         CarType carType = CarType.valueOf(type);
@@ -71,6 +71,9 @@ public class CarResource {
 
     @DeleteMapping(path= "{name}")
     @ApiOperation(value = "Remove car", notes = "Operation removes car and returns id of deleted car", response = Long.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Car successfully removed")
+    })
     public Long removeCar(@PathVariable("name") String name){
         return carService.deleteCarByName(name);
     }

@@ -65,7 +65,8 @@ public class GamesResource {
     @ApiOperation(value = "Starts the game with the given Map")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Game was successfully started"),
-            @ApiResponse(code = 404, message = "Map not found")
+            @ApiResponse(code = 404, message = "Map not found"),
+            @ApiResponse(code = 409, message = "Game already exists")
 
     })
     @PostMapping(path = "{gameName}")
