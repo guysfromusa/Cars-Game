@@ -42,7 +42,7 @@ public class MapsResource {
                 .collect(toList());
     }
 
-    @ApiOperation(value = "Create new map", response = List.class)
+    @ApiOperation(value = "Create new map")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Map successfully created"),
             @ApiResponse(code = 409, message = "Map with given name exist")})
@@ -59,7 +59,7 @@ public class MapsResource {
         return ResponseEntity.created(location).build();
     }
 
-    @ApiOperation(value = "Delete map", response = List.class)
+    @ApiOperation(value = "Delete map")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Map successfully deleted")})
     @DeleteMapping(value = "/{name}")
     public ResponseEntity<?> deleteMap(@PathVariable String name) {
