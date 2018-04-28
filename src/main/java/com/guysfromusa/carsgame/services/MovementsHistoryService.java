@@ -1,7 +1,8 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
+import com.guysfromusa.carsgame.v1.converters.MovementsHistoryConverter;
+import com.guysfromusa.carsgame.v1.model.MovementHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class MovementsHistoryService {
         this.repository = notNull(repository);
     }
 
-    public List<MovementsHistoryEntity> findMovementsHistory(List<String> gameIds, List<String> carNames, int limitOfRecentStep) {
-        return repository.findMovements(gameIds, carNames, limitOfRecentStep);
+    public List<MovementHistory> findMovementsHistory(List<String> gameIds, List<String> carNames, int limitOfRecentStep) {
+        return MovementsHistoryConverter.toMovementHistories(repository.findMovements(gameIds, carNames, limitOfRecentStep));
     }
 }
