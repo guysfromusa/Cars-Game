@@ -3,7 +3,6 @@ package com.guysfromusa.carsgame.services;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.GameRepository;
-import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -14,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -33,7 +31,7 @@ public class GameServiceTest {
     private GameRepository gameRepositoryMock;
 
     @Mock
-    private MapRepository mapRepositoryMock;
+    private MapService mapServiceMock;
 
     @Captor
     private ArgumentCaptor<GameEntity> gameEntityCaptor;
@@ -44,7 +42,7 @@ public class GameServiceTest {
         MapEntity mapEntity = new MapEntity();
         mapEntity.setName("map1");
         when(gameRepositoryMock.findByName(any())).thenReturn(Optional.empty());
-        when(mapRepositoryMock.findByNameAndActive("map1", ACTIVE))
+        when(mapServiceMock.find("map1"))
                 .thenReturn(Optional.of(mapEntity));
 
         //when
@@ -65,7 +63,7 @@ public class GameServiceTest {
         mapEntity.setName("map1");
         when(gameRepositoryMock.findByName("game1"))
                 .thenReturn(Optional.of(new GameEntity()));
-        when(mapRepositoryMock.findByNameAndActive("map1", ACTIVE))
+        when(mapServiceMock.find("map1"))
                 .thenReturn(Optional.of(mapEntity));
 
 

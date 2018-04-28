@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -29,7 +30,11 @@ public class MapService {
         return mapRepository.findAll();
     }
 
-    public void deleteByName(String name) {
+    public Optional<MapEntity> find(String name) {
+        return mapRepository.findByNameAndActive(name, ACTIVE);
+    }
+
+    public void delete(String name) {
         mapRepository.deleteByName(name);
         mapRepository.findByNameAndActive(name, ACTIVE)
                 .ifPresent(MapEntity::deactivate);
