@@ -3,7 +3,6 @@ package com.guysfromusa.carsgame.v1.validator;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
-import com.guysfromusa.carsgame.exceptions.ValidationException;
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
@@ -47,7 +46,7 @@ public class CarGameAdditionValidator{
             String carName = validationSubject.getCarEntity().getName();
 
             if(gamesCarNames.contains(carName)){
-                throw new ValidationException(CAR_EXISTS_IN_GAME_MESSAGE);
+                throw new IllegalArgumentException(CAR_EXISTS_IN_GAME_MESSAGE);
             }
         };
     }
@@ -56,7 +55,7 @@ public class CarGameAdditionValidator{
         return validationSubject -> {
             boolean crashed = validationSubject.getCarEntity().isCrashed();
             if(crashed){
-                throw new ValidationException(CAR_CRASHED_MESSAGE);
+                throw new IllegalArgumentException(CAR_CRASHED_MESSAGE);
             }
         };
     }
@@ -64,13 +63,13 @@ public class CarGameAdditionValidator{
     private Consumer<CarGameAdditionValidationSubject> areStartingCoordinatesValid(){
         return validationSubject -> {
             Point startingPoint = Optional.ofNullable(validationSubject.getStartingPoint())
-                    .orElseThrow(() -> new ValidationException(WRONG_STARTING_POINT_MESSAGE));
+                    .orElseThrow(() -> new IllegalArgumentException(WRONG_STARTING_POINT_MESSAGE));
 
             MapEntity gameMap = validationSubject.getGameEntity().getMap();
             String gameMapContent = gameMap.getContent();
 
             if(!mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)){
-                throw new ValidationException(WRONG_STARTING_POINT_MESSAGE);
+                throw new IllegalArgumentException(WRONG_STARTING_POINT_MESSAGE);
             }
         };
     }

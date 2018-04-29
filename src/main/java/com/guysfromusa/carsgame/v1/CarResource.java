@@ -17,6 +17,9 @@ import java.util.List;
 
 import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCar;
 import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCars;
+import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.CAR_CRASHED_MESSAGE;
+import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.CAR_EXISTS_IN_GAME_MESSAGE;
+import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.WRONG_STARTING_POINT_MESSAGE;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -63,4 +66,22 @@ public class CarResource {
         return carService.deleteCarByName(name);
     }
 
+
+    @PostMapping(path = "{car}/cars/{game}")
+    @ApiOperation(value = "Add car to given game", response = Car.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Car successfully added to game"),
+            @ApiResponse(code = 404, message = "Game not found"),
+            @ApiResponse(code = 404, message = "Car not found"),
+            @ApiResponse(code = 404, message = CAR_CRASHED_MESSAGE),
+            @ApiResponse(code = 404, message = CAR_EXISTS_IN_GAME_MESSAGE),
+            @ApiResponse(code = 404, message = WRONG_STARTING_POINT_MESSAGE)
+    })
+    public Car addCarToGame(@PathVariable("car") String carName, @PathVariable("game") String game,
+                            @RequestBody Point startingPoint){
+
+        CarEntity addedCar = carService.addCarToGame(carName, game, startingPoint);
+
+        return toCar(addedCar);
+    }
 }

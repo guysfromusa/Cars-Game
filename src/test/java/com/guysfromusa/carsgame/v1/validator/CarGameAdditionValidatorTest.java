@@ -58,7 +58,7 @@ public class CarGameAdditionValidatorTest {
         verify(mapService).isPositionValidOnGameMap(eq(gameMapContent), eq(startingPoint));
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldFailureCarAdditionForCrashedCar(){
         //given
         String gameMapContent = "1,1\n1,0\n1,0\n1,1";
@@ -81,7 +81,7 @@ public class CarGameAdditionValidatorTest {
 
     }
 
-    @Test(expected = ValidationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldFailureCarAdditionWhenCarAlreadyAssigned(){
         //given
         String gameMapContent = "1,1\n1,0\n1,0\n1,1";

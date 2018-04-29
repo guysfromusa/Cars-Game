@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import static com.guysfromusa.carsgame.model.Direction.NORTH;
+import static com.guysfromusa.carsgame.model.Direction.WEST;
 
 @SpringBootApplication
 public class CarsGameApplication {
@@ -28,6 +29,7 @@ public class CarsGameApplication {
 
 			GameEntity game = new GameEntity();
 			game.setName("game1");
+			game.setMap(map);
 			gameRepository.save(game);
 
 			CarEntity car = new CarEntity();
@@ -35,6 +37,17 @@ public class CarsGameApplication {
 			car.setGame(game);
 			car.setDirection(NORTH);
 			carRepository.save(car);
+
+			CarEntity car2 = new CarEntity();
+			car2.setName("car2");
+			car2.setDirection(WEST);
+			carRepository.save(car2);
+
+			CarEntity car3 = new CarEntity();
+			car3.setName("car3");
+			car3.setDirection(WEST);
+			car3.setCrashed(true);
+			carRepository.save(car3);
 
 		};
 	}

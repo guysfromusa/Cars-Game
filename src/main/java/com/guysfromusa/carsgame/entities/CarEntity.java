@@ -24,7 +24,7 @@ public class CarEntity {
     @Setter
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Getter
     @Setter
     private String name;
