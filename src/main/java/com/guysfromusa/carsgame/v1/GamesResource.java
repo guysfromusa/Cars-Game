@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-import static com.guysfromusa.carsgame.v1.converters.GameConverter.toGame;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -78,7 +77,7 @@ public class GamesResource {
     @PostMapping(path = "{gameName}")
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
-        return toGame(gameEntity);
+        return conversionService.convert(gameEntity, Game.class);
     }
 
 }
