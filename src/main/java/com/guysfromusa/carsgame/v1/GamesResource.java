@@ -8,7 +8,9 @@ import com.guysfromusa.carsgame.services.GameService;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.Movement;
+import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
+import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,8 +21,10 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
+import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCar;
 import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCars;
 import static com.guysfromusa.carsgame.v1.converters.GameConverter.toGame;
+import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.*;
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -69,10 +73,30 @@ public class GamesResource {
             @ApiResponse(code = 409, message = "Game already exists")
 
     })
+
+
     @PostMapping(path = "{gameName}")
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
         return toGame(gameEntity);
+    }
+
+    @PostMapping(path = "{game}/cars/{car}")
+    @ApiOperation(value = "Add car to given game", response = Car.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Car successfully added to game"),
+            @ApiResponse(code = 404, message = "Game not found"),
+            @ApiResponse(code = 404, message = "Car not found"),
+            @ApiResponse(code = 404, message = CAR_CRASHED_MESSAGE),
+            @ApiResponse(code = 404, message = CAR_EXISTS_IN_GAME_MESSAGE),
+            @ApiResponse(code = 404, message = WRONG_STARTING_POINT_MESSAGE)
+    })
+    public Car addCarToGame(@PathVariable("car") String carName, @PathVariable("game") String game,
+                            @RequestBody Point startingPoint){
+
+        CarEntity addedCar = carService.addCarToGame(carName, game, startingPoint);
+
+        return toCar(addedCar);
     }
 
 }

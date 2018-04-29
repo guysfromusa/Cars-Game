@@ -54,21 +54,6 @@ public class CarResource {
         return toCar(addedCar);
     }
 
-    @PostMapping(path = "{name}/game/{game}")
-    @ApiOperation(value = "Add car to given game", response = Car.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Car successfully added to game"),
-            @ApiResponse(code = 404, message = "Game not found"),
-            @ApiResponse(code = 404, message = "Car not found")
-    })
-    public Car addCarToGame(@PathVariable("name") String name, @PathVariable("game") String game,
-                            @RequestBody Point startingPoint){
-
-        CarEntity addedCar = carService.addCarToGame(name, game, startingPoint);
-
-        return toCar(addedCar);
-    }
-
     @DeleteMapping(path= "{name}")
     @ApiOperation(value = "Remove car", notes = "Operation removes car and returns id of deleted car", response = Long.class)
     @ApiResponses(value = {
