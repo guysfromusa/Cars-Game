@@ -22,17 +22,17 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
-    private final MapRepository mapRepository;
+    private final MapService mapService;
 
     @Inject
-    public GameService(GameRepository gameRepository, MapRepository mapRepository) {
+    public GameService(GameRepository gameRepository, MapService mapService) {
         this.gameRepository = notNull(gameRepository);
-        this.mapRepository = notNull(mapRepository);
+        this.mapService = notNull(mapService);
     }
 
     @Transactional
     public GameEntity startNewGame(String gameName, String mapName) {
-        Optional<MapEntity> mapOptional = mapRepository.findByNameAndActive(mapName, ACTIVE);
+        Optional<MapEntity> mapOptional = mapService.find(mapName);
 
         gameRepository.findByName(gameName)
                 .ifPresent(gameEntity -> {

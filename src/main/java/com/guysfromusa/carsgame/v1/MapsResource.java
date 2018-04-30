@@ -63,7 +63,7 @@ public class MapsResource {
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Map successfully deleted")})
     @DeleteMapping(value = "/{name}")
     public ResponseEntity<?> deleteMap(@PathVariable String name) {
-        mapService.deleteByName(name);
+        mapService.delete(name);
         return new ResponseEntity<>(NO_CONTENT);
     }
 }
