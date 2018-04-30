@@ -4,13 +4,15 @@ import com.guysfromusa.carsgame.services.MovementsHistoryService;
 import com.guysfromusa.carsgame.v1.model.MovementHistory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -21,7 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
 @RequestMapping(value= "/v1/movements-history", produces =  APPLICATION_JSON_UTF8_VALUE)
-@Api(value = "history", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+@Api(value = "movements-history", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
 public class MovementsHistoryResource {
 
     private final MovementsHistoryService service;
@@ -31,11 +33,15 @@ public class MovementsHistoryResource {
         this.service = notNull(service);
     }
 
-    @ApiOperation(value = "Find all available movements history", response = List.class)
-    @GetMapping(value = "/{gameIds}/{carNames}/{limitOfRecentStep}")
-    public List<MovementHistory> findMovementHistory(@PathVariable("gameIds") List<String> gameIds,
-                                                     @PathVariable("carNames") List<String> carNames,
-                                                     @PathVariable("limitOfRecentStep") int limitOfRecentStep){
+
+    @ApiOperation(value = "Find history", response = List.class)
+    @GetMapping(params = {"gameIds", "carNames", "limitOfRecentStep"})
+    public List<MovementHistory> findMovementHistory(@ApiParam(value = "game's ids needed to find move history")
+                                                        @RequestParam(value = "gameIds", required = false) Optional<List<String>> gameIds,
+                                                     @ApiParam(value = "car's names needed to find move history")
+                                                        @RequestParam(value = "carNames", required = false) Optional<List<String>> carNames,
+                                                     @ApiParam(value = "number of previous step")
+                                                         @RequestParam(value = "limitOfRecentStep", required = false) Optional<Integer> limitOfRecentStep){
         return service.findMovementsHistory(gameIds, carNames, limitOfRecentStep);
     }
 }

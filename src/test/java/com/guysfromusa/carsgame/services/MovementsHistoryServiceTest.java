@@ -1,7 +1,5 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.entities.CarEntity;
-import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.MovementHistory;
@@ -14,13 +12,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static com.guysfromusa.carsgame.model.Direction.SOUTH;
+import static com.guysfromusa.carsgame.entities.CarEntityBuilder.aCarEntity;
+import static com.guysfromusa.carsgame.entities.GameEntityBuilder.aGameEntity;
+import static com.guysfromusa.carsgame.entities.MovementsHistoryEntityBuilder.aMovementsHistoryEntity;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,10 +36,10 @@ public class MovementsHistoryServiceTest {
     @Test
     public void shouldReturnEmptyList(){
         //given
-        when(repository.findMovements(anyList(), anyList(), anyInt())).thenReturn(emptyList());
+        when(repository.findMovements(of(anyList()), of(anyList()), of(anyInt()))).thenReturn(emptyList());
 
         //when
-        List<MovementHistory> result = movementsHistoryService.findMovementsHistory(emptyList(), emptyList(), 2);
+        List<MovementHistory> result = movementsHistoryService.findMovementsHistory(of(emptyList()), of(emptyList()), of(2));
 
         //then
         assertThat(result).isEmpty();
@@ -47,32 +48,32 @@ public class MovementsHistoryServiceTest {
     @Test
     public void shouldReturnMovementHistory(){
         //given
-        when(repository.findMovements(singletonList("game1"), singletonList("game2"), 2))
-                .thenReturn(asList(build("game1","fiat", 1, 2),
-                        build("game2","mercedes", 0, 0)));
+        MovementsHistoryEntity entity1 = aMovementsHistoryEntity()
+                .withCar(aCarEntity().withName("fiat").build())
+                .withGame(aGameEntity().withName("game1").build())
+                .withPositionX(1)
+                .withPositionY(2)
+                .build();
+
+        MovementsHistoryEntity entity2 = aMovementsHistoryEntity()
+                .withCar(aCarEntity().withName("mercedes").build())
+                .withGame(aGameEntity().withName("game2").build())
+                .withPositionX(0)
+                .withPositionY(0)
+                .build();
+
+        when(repository.findMovements(of(anyList()), of(anyList()), eq(of(2))))
+                .thenReturn(asList(entity1, entity2));
         //when
-        List<MovementHistory> result  = movementsHistoryService.findMovementsHistory(singletonList("game1"), singletonList("game2"), 2);
+        List<MovementHistory> result  = movementsHistoryService
+                .findMovementsHistory(of(asList("game1", "game2")), of(asList("mercedes", "fiat")), of(2));
 
         //then
+
+
         assertThat(result).extracting(movementHistory -> movementHistory.getPosition().getX(),
                 movementHistory -> movementHistory.getPosition().getY())
                 .containsExactly(Tuple.tuple(1, 2),
                         Tuple.tuple(0 ,0));
-    }
-
-    private MovementsHistoryEntity build(String carName, String gameName, int posX, int posY){
-        //given
-        CarEntity carEntity = new CarEntity();
-        carEntity.setName(carName);
-        GameEntity gameEntity = new GameEntity();
-        gameEntity.setName(gameName);
-        MovementsHistoryEntity entity = new MovementsHistoryEntity();
-        entity.setCar(carEntity);
-        entity.setGame(gameEntity);
-        entity.setPositionX(posX);
-        entity.setPositionY(posY);
-        entity.setDirection(SOUTH);
-
-        return entity;
     }
 }

@@ -24,10 +24,10 @@ public class MovementsHistoryResourceTest {
     private TestRestTemplate template;
 
     @Test
-    public void shouldCreateMap() {
+    public void shouldReturnStatus() {
         //when
-        ResponseEntity<MovementHistory> movements = template.getForEntity("/v1/movements-history/{gameIds}/{carNames}/{limitOfRecentStep}",
-                null,  "1,2,3", "toyota,mercedes", "2");
+        ResponseEntity<MovementHistory> movements = template.getForEntity("/v1/movements-history?gameIds=1,2,4&carNames=toyota,mercedes&limitOfRecentStep=",
+                null);
 
         //then
         assertThat(movements.getStatusCode()).isEqualTo(OK);
