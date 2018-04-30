@@ -20,7 +20,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.eq;
@@ -42,7 +41,6 @@ public class MovementsHistoryServiceTest {
     public void shouldReturnEmptyList(){
         //given
         when(repository.findMovements(anyList(), anyList(), of(anyInt()))).thenReturn(emptyList());
-        when(conversionService.convert(any(), any())).thenCallRealMethod();
 
         //when
         List<MovementHistory> result = movementsHistoryService.findMovementsHistory(emptyList(), emptyList(), of(2));
@@ -75,8 +73,6 @@ public class MovementsHistoryServiceTest {
                 .findMovementsHistory(asList("game1", "game2"), asList("mercedes", "fiat"), of(2));
 
         //then
-
-
         assertThat(result).extracting(movementHistory -> movementHistory.getPosition().getX(),
                 movementHistory -> movementHistory.getPosition().getY())
                 .containsExactly(Tuple.tuple(1, 2),

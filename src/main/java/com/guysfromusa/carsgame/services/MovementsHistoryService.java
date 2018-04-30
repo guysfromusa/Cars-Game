@@ -4,11 +4,11 @@ import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.MovementHistory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public class MovementsHistoryService {
     private final MovementsHistoryRepository repository;
     private final ConversionService conversionService;
 
-    @Inject
+    @Autowired
     public MovementsHistoryService(MovementsHistoryRepository repository,  ConversionService conversionService) {
         this.repository = notNull(repository);
         this.conversionService = notNull(conversionService);
