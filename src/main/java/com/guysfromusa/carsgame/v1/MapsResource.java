@@ -1,12 +1,12 @@
 package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.services.MapService;
-import com.guysfromusa.carsgame.v1.converters.MapConverter;
 import com.guysfromusa.carsgame.v1.model.Map;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,15 +30,18 @@ public class MapsResource {
 
     private final MapService mapService;
 
+    private final ConversionService conversionService;
+
     @Inject
-    public MapsResource(MapService mapService) {
+    public MapsResource(MapService mapService, ConversionService conversionService) {
         this.mapService = notNull(mapService);
+        this.conversionService = notNull(conversionService);
     }
 
     @GetMapping
     public List<Map> findAllMaps() {
         return mapService.findAll().stream()
-                .map(MapConverter::fromEntity)
+                .map(mapEntity -> conversionService.convert(mapEntity, Map.class))
                 .collect(toList());
     }
 

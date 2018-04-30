@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.*;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +51,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         //given
         addNewMap(template, new Map("mapToPlay", "1,1,1\n1,0,1\n1,0,1"));
 
-        Car car = addNewCar(template, "carToTurn", CarType.MONSTER.name());
+        Car car = addNewCar(template, "carToTurn", CarType.MONSTER);
 
         startNewGame(template, "gameToPlay", "mapToPlay");
 

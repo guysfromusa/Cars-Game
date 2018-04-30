@@ -11,9 +11,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MapConverterTest {
 
+    private MapConverter mapConverter = new MapConverter();
+
     @Test
     public void fromEntity() {
-        Map map = MapConverter.fromEntity(new MapEntity("name", "content"));
+        //given
+        MapEntity mapEntity = new MapEntity("name", "content");
+        //when
+        Map map = mapConverter.convert(mapEntity);
+        //then
         assertThat(map.getName()).isEqualTo("name");
         assertThat(map.getContent()).isEqualTo("content");
     }
