@@ -4,6 +4,7 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import io.swagger.annotations.Api;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -42,9 +42,8 @@ public class CarResource {
     @ApiOperation(value = "Find all available cars", response = List.class)
     public List<Car> getAllCars(){
         List<CarEntity> carEntities = this.carService.loadAllCars();
-        return carEntities.stream()
-                .map(carEntity -> conversionService.convert(carEntity, Car.class))
-                .collect(Collectors.toList());
+        return StreamUtils.convert(carEntities,
+                carEntity -> conversionService.convert(carEntity, Car.class));
     }
 
     @PostMapping(path = "{name}")

@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
+import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.Movement;
@@ -20,7 +21,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -62,9 +62,8 @@ public class GamesResource {
         movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
 
         List<CarEntity> carsInGame = carService.findCars(game);
-        return carsInGame.stream()
-                .map(carEntity -> conversionService.convert(carEntity, Car.class))
-                .collect(toList());
+        return StreamUtils.convert(carsInGame,
+                carEntity -> conversionService.convert(carEntity, Car.class));
     }
 
     @ApiOperation(value = "Starts the game with the given Map")
