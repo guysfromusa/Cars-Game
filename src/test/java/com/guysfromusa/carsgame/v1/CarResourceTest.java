@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.awaitility.Awaitility;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
@@ -30,7 +32,7 @@ import static org.springframework.http.HttpMethod.POST;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
-public class CarResourceTest implements CarApiAware {
+public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
     @Inject
     private TestRestTemplate template;
@@ -85,6 +87,7 @@ public class CarResourceTest implements CarApiAware {
     }
 
     @Test
+    @Sql(value = {"/sql/clean.sql"})
     public void shouldAddCarToGame(){
         //given
         String name = "My-Sweet-Car";
@@ -97,7 +100,9 @@ public class CarResourceTest implements CarApiAware {
         HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(point).build();
 
         //when
+        addNewMap(template, new Map("map1", "1,1,1"));
         addNewCar(template, name, monsterType);
+        startNewGame(template, "game1", "map1");
         ResponseEntity<Car> carResponseEntity = template.exchange(url, POST, requestEntity, Car.class);
 
         //then
