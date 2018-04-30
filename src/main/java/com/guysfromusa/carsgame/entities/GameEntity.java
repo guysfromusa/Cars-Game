@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.entities;
 
+import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,4 +37,9 @@ public class GameEntity {
     @Getter
     @Setter
     private MapEntity map;
+
+    @Setter
+    @Getter
+    @Enumerated(EnumType.STRING)
+    private GameStatus gameStatus = GameStatus.RUNNING;
 }

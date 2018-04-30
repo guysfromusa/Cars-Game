@@ -3,21 +3,29 @@ package com.guysfromusa.carsgame.v1;
 import com.google.common.collect.Maps;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
+import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
+import com.guysfromusa.carsgame.v1.model.GameStatusDto;
 import com.guysfromusa.carsgame.v1.model.Movement;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -83,5 +91,17 @@ public class GamesResource {
         return conversionService.convert(gameEntity, Game.class);
     }
 
+    @GetMapping(path = "{gameName}")
+    @ApiOperation(value = "Check status for the given game")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Status of the game"),
+            @ApiResponse(code = 404, message = "Game not found")
+
+    })
+    public GameStatusDto checkStatus(@ApiParam(name = "gameName", value = "name of the game", required = true)
+                                                @PathVariable("gameName") String gameName){
+        GameStatus status = gameService.getStatus(gameName);
+        return conversionService.convert(status, GameStatusDto.class);
+    }
 
 }

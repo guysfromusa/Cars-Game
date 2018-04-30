@@ -2,11 +2,15 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
+import com.guysfromusa.carsgame.utils.StreamUtils;
+import com.guysfromusa.carsgame.v1.model.MovementHistory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -19,13 +23,17 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class MovementsHistoryService {
 
     private final MovementsHistoryRepository repository;
+    private final ConversionService conversionService;
 
     @Autowired
-    public MovementsHistoryService(MovementsHistoryRepository repository) {
+    public MovementsHistoryService(MovementsHistoryRepository repository,  ConversionService conversionService) {
         this.repository = notNull(repository);
+        this.conversionService = notNull(conversionService);
     }
 
-    public List<MovementsHistoryEntity> findMovementsHistory(List<String> gameIds, List<String> carNames, int limitOfRecentStep) {
-        return repository.findMovements(gameIds, carNames, limitOfRecentStep);
+    public List<MovementHistory> findMovementsHistory(List<String> gameIds, List<String> carNames, Optional<Integer> limitOfRecentStep) {
+        List<MovementsHistoryEntity> movements = repository.findMovements(gameIds, carNames, limitOfRecentStep);
+        return StreamUtils.convert(movements,
+                movementsHistoryEntity -> conversionService.convert(movementsHistoryEntity, MovementHistory.class));
     }
 }

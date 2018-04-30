@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.v1.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
@@ -81,6 +83,14 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
                 .containsExactly(tuple(1,2));
     }
 
-
-
+    @Test
+    @Sql("/sql/gameResource_insertGame.sql")
+    public void shouldReturnStatusOfTheGame() {
+        //when
+        GameStatusDto entity = template.getForObject("/v1/games/game2", GameStatusDto.class);
+        //then
+        assertThat(entity)
+                .extracting(GameStatusDto::getStatus)
+                .containsExactly(GameStatus.RUNNING);
+    }
 }

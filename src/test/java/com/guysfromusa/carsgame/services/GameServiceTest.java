@@ -2,6 +2,8 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
+import com.guysfromusa.carsgame.entities.enums.GameStatus;
+import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,5 +71,31 @@ public class GameServiceTest {
 
         //when
         gameService.startNewGame("game1", "map1");
+    }
+
+    @Test
+    public void shouldReturnStatusOfTheGame() {
+        //given
+        GameEntity gameEntity = new GameEntity();
+        String gameName = "game1";
+        when(gameRepositoryMock.findByName(gameName))
+                .thenReturn(Optional.of(gameEntity));
+
+        //when
+        GameStatus status = gameService.getStatus(gameName);
+
+        //then
+        assertThat(status).isEqualTo(GameStatus.RUNNING);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void shouldThrowExceptionWhenGameNotFound() {
+        //given
+        String gameName = "game1";
+        when(gameRepositoryMock.findByName(gameName))
+                .thenReturn(Optional.empty());
+
+        //when
+        gameService.getStatus(gameName);
     }
 }
