@@ -23,10 +23,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCar;
-import static com.guysfromusa.carsgame.v1.converters.CarConverter.toCars;
-import static com.guysfromusa.carsgame.v1.converters.GameConverter.toGame;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.*;
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;

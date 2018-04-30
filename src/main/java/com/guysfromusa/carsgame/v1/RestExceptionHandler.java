@@ -2,7 +2,6 @@ package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.exceptions.ApiError;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
-import com.guysfromusa.carsgame.exceptions.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

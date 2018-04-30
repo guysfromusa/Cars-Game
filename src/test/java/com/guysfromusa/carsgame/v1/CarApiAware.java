@@ -28,7 +28,7 @@ public interface CarApiAware {
     default Car assignCarToTheGame(TestRestTemplate template, String carName, String gameName, Point startPoint){
 
         HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(startPoint).build();
-        String url = String.join("/", "/v1/cars", carName, "cars", gameName);
+        String url = String.join("/", "/v1/cars", carName, "game", gameName);
 
         ResponseEntity<Car> modifiedCar =  template.exchange(url, POST, requestEntity, Car.class);
         return modifiedCar.getBody();

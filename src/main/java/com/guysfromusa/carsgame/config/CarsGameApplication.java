@@ -43,12 +43,6 @@ public class CarsGameApplication {
 			car2.setDirection(WEST);
 			carRepository.save(car2);
 
-			CarEntity car3 = new CarEntity();
-			car3.setName("car3");
-			car3.setDirection(WEST);
-			car3.setCrashed(true);
-			carRepository.save(car3);
-
 		};
 	}
 

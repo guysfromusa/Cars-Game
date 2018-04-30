@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
@@ -95,7 +96,6 @@ public class CarResourceTest implements CarApiAware {
         String name = "car2";
         String game = "game1";
 
-        String url = String.join("/", "/v1/cars", name, "cars", game);
         Point point = new Point(1, 0);
 
         //when
@@ -108,25 +108,26 @@ public class CarResourceTest implements CarApiAware {
     }
 
     @Test
+    @Sql("/sql/insert_car.sql")
     public void shouldRejectAdditionCrashedCarToGame(){
         //given
         String name = "car3";
         String game = "game1";
-        String monsterType = "MONSTER";
 
-        String url = String.join("/", "/v1/cars", name, "cars", game);
-        Point point = new Point(1, 1);
+        String url = String.join("/", "/v1/cars", name, "game", game);
+        Point point = new Point(1, 0);
 
         HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(point).build();
 
         //when
-        ResponseEntity<ApiError> carResponse = template.exchange(url, POST, requestEntity, ApiError.class);
+        ResponseEntity<IllegalArgumentException> carResponse = template.exchange(url, POST, requestEntity, IllegalArgumentException.class);
 
 
         //then
-        Assertions.assertThat(carResponse.getBody())
+        ResponseEntity<ApiError> responseEntity = restExceptionHandler.handleBadRequest(carResponse.getBody());
+        Assertions.assertThat(responseEntity.getBody())
                 .extracting(ApiError::getMessage, ApiError::getStatus)
-                .containsExactly("Car is aready crashed", "BAD_REQUEST");
+                .containsExactly("Car is already crashed", "BAD_REQUEST");
 
     }
 
