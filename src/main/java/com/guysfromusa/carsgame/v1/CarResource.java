@@ -7,10 +7,7 @@ import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,7 +66,8 @@ public class CarResource {
             @ApiResponse(code = 400, message = CAR_EXISTS_IN_GAME_MESSAGE),
             @ApiResponse(code = 400, message = WRONG_STARTING_POINT_MESSAGE)
     })
-    public Car addCarToGame(@PathVariable("name") String name, @PathVariable("game") String game,
+    public Car addCarToGame(@ApiParam(name = "name", value="Car name") @PathVariable("name") String name,
+                            @ApiParam(name = "game", value="Game name") @PathVariable("game") String game,
                             @RequestBody Point startingPoint){
 
         CarEntity addedCar = carService.addCarToGame(name, game, startingPoint);
@@ -82,7 +80,7 @@ public class CarResource {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Car successfully removed")
     })
-    public Long removeCar(@PathVariable("name") String name){
+    public Long removeCar(@ApiParam(name = "name", value="Car name to be deleted") @PathVariable("name") String name){
         return carService.deleteCarByName(name);
     }
 

@@ -8,7 +8,6 @@ import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.Condition;
 import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 import static org.awaitility.Duration.FIVE_SECONDS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 
 /**
@@ -108,7 +106,7 @@ public class CarResourceTest implements CarApiAware {
     }
 
     @Test
-    @Sql("/sql/insert_car.sql")
+    @Sql("/sql/car_resource_insert_car.sql")
     public void shouldRejectAdditionCrashedCarToGame(){
         //given
         String name = "car3";
