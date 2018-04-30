@@ -2,16 +2,16 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
-import com.guysfromusa.carsgame.v1.converters.MovementsHistoryConverter;
+import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.MovementHistory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -23,16 +23,17 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class MovementsHistoryService {
 
     private final MovementsHistoryRepository repository;
-    private final MovementsHistoryConverter converter;
+    private final ConversionService conversionService;
 
-    @Autowired
-    public MovementsHistoryService(MovementsHistoryRepository repository, MovementsHistoryConverter converter) {
+    @Inject
+    public MovementsHistoryService(MovementsHistoryRepository repository,  ConversionService conversionService) {
         this.repository = notNull(repository);
-        this.converter = notNull(converter);
+        this.conversionService = notNull(conversionService);
     }
 
     public List<MovementHistory> findMovementsHistory(List<String> gameIds, List<String> carNames, Optional<Integer> limitOfRecentStep) {
         List<MovementsHistoryEntity> movements = repository.findMovements(gameIds, carNames, limitOfRecentStep);
-        return movements.stream().map(converter::convert).collect(toList());
+        return StreamUtils.convert(movements,
+                movementsHistoryEntity -> conversionService.convert(movementsHistoryEntity, MovementHistory.class));
     }
 }
