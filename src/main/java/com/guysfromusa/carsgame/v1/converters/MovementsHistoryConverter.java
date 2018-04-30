@@ -18,5 +18,4 @@ public class MovementsHistoryConverter implements Converter<MovementsHistoryEnti
         movementHistory.setDirection(entity.getDirection());
         return movementHistory;
     }
-
 }
