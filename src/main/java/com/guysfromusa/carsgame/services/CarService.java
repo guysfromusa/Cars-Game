@@ -38,7 +38,6 @@ public class CarService {
 
     private final MovementsHistoryRepository movementsHistoryRepository;
 
-    @Autowired
     private CarGameAdditionValidator carGameAdditionValidator;
 
     @Inject
@@ -47,7 +46,7 @@ public class CarService {
         this.carRepository = notNull(carRepository);
         this.movementsHistoryRepository = notNull(movementsHistoryRepository);
         this.gameRepository = notNull(gameRepository);
-        this.carGameAdditionValidator = carGameAdditionValidator;
+        this.carGameAdditionValidator = notNull(carGameAdditionValidator);
     }
 
 

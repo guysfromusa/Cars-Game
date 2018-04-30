@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.exceptions.ApiError;
-import com.guysfromusa.carsgame.exceptions.ValidationException;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.assertj.core.api.Assertions;
@@ -120,12 +119,11 @@ public class CarResourceTest implements CarApiAware {
         HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(point).build();
 
         //when
-        ResponseEntity<IllegalArgumentException> carResponse = template.exchange(url, POST, requestEntity, IllegalArgumentException.class);
+        ResponseEntity<ApiError> carResponse = template.exchange(url, POST, requestEntity, ApiError.class);
 
 
         //then
-        ResponseEntity<ApiError> responseEntity = restExceptionHandler.handleBadRequest(carResponse.getBody());
-        Assertions.assertThat(responseEntity.getBody())
+        Assertions.assertThat(carResponse.getBody())
                 .extracting(ApiError::getMessage, ApiError::getStatus)
                 .containsExactly("Car is aready crashed", "BAD_REQUEST");
 

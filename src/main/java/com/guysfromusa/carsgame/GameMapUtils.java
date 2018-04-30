@@ -1,7 +1,5 @@
 package com.guysfromusa.carsgame;
 
-import com.guysfromusa.carsgame.v1.model.Point;
-
 import java.util.stream.Stream;
 
 public class GameMapUtils {

@@ -4,27 +4,26 @@ package com.guysfromusa.carsgame.v1.validator;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.services.MapService;
-import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.*;
+
 @Component
 public class CarGameAdditionValidator{
 
-    public static final String CAR_CRASHED_MESSAGE = "Car is aready crashed";
-    public static final String CAR_EXISTS_IN_GAME_MESSAGE = "Car is aready added to game";
+    public static final String CAR_CRASHED_MESSAGE = "Car is already crashed";
+    public static final String CAR_EXISTS_IN_GAME_MESSAGE = "Car is already added to game";
     public static final String WRONG_STARTING_POINT_MESSAGE = "Starting point is invalid";
 
-    private MapService mapService;
+    private final MapService mapService;
 
     public CarGameAdditionValidator(@Autowired MapService mapService) {
         this.mapService = mapService;
@@ -32,8 +31,8 @@ public class CarGameAdditionValidator{
 
     public void validateCarBeforeAddition(CarGameAdditionValidationSubject validationSubject) {
         isCarNotAlreadyInGame()
-            .andThen(isCarNotCrashed())
-            .andThen(areStartingCoordinatesValid())
+            .andThen(carNotCrashed())
+            .andThen(startingCoordinatesValid())
             .accept(validationSubject);
     }
 
@@ -51,7 +50,7 @@ public class CarGameAdditionValidator{
         };
     }
 
-    private Consumer<CarGameAdditionValidationSubject> isCarNotCrashed(){
+    private Consumer<CarGameAdditionValidationSubject> carNotCrashed(){
         return validationSubject -> {
             boolean crashed = validationSubject.getCarEntity().isCrashed();
             if(crashed){
@@ -60,9 +59,9 @@ public class CarGameAdditionValidator{
         };
     }
 
-    private Consumer<CarGameAdditionValidationSubject> areStartingCoordinatesValid(){
+    private Consumer<CarGameAdditionValidationSubject> startingCoordinatesValid(){
         return validationSubject -> {
-            Point startingPoint = Optional.ofNullable(validationSubject.getStartingPoint())
+            Point startingPoint = ofNullable(validationSubject.getStartingPoint())
                     .orElseThrow(() -> new IllegalArgumentException(WRONG_STARTING_POINT_MESSAGE));
 
             MapEntity gameMap = validationSubject.getGameEntity().getMap();
