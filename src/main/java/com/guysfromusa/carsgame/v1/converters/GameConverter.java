@@ -3,23 +3,25 @@ package com.guysfromusa.carsgame.v1.converters;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.v1.model.Game;
-import lombok.NoArgsConstructor;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-import static lombok.AccessLevel.PRIVATE;
+import static java.util.Optional.ofNullable;
 
 /**
  * Created by Tomasz Bradlo, 28.02.18
  */
-@NoArgsConstructor(access = PRIVATE)
-public class GameConverter {
+@Component
+public class GameConverter implements Converter<GameEntity, Game> {
 
-    public static Game toGame(GameEntity gameEntity) {
-        String mapName = Optional.ofNullable(gameEntity.getMap())
+    @Override
+    public Game convert(GameEntity gameEntity) {
+        String mapName = ofNullable(gameEntity)
+                .map(GameEntity::getMap)
                 .map(MapEntity::getName)
                 .orElseThrow(() -> new IllegalArgumentException("Map is required"));
 
         return new Game(gameEntity.getName(), mapName);
     }
+
 }

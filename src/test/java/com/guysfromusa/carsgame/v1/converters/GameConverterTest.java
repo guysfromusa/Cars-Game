@@ -13,6 +13,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class GameConverterTest {
 
+    private GameConverter gameConverter = new GameConverter();
+
     @Test
     public void shouldConvertGameEntityToDto(){
         //given
@@ -24,7 +26,7 @@ public class GameConverterTest {
         gameEntity.setMap(mapEntity);
 
         //when
-        Game game = GameConverter.toGame(gameEntity);
+        Game game = gameConverter.convert(gameEntity);
 
         //then
         assertEquals("game1", game.getName());
@@ -38,6 +40,6 @@ public class GameConverterTest {
         gameEntity.setName("game1");
 
         //when
-        Game game = GameConverter.toGame(gameEntity);
+        gameConverter.convert(gameEntity);
     }
 }

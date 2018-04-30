@@ -4,27 +4,27 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
-import lombok.NoArgsConstructor;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-
-import static com.google.common.collect.Lists.transform;
-import static lombok.AccessLevel.PRIVATE;
+import static java.util.Optional.ofNullable;
 
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
-@NoArgsConstructor(access = PRIVATE)
-public class CarConverter {
+@Component
+public class CarConverter implements Converter<CarEntity, Car> {
 
-    public static Car toCar(CarEntity carEntity){
+    @Override
+    public Car convert(CarEntity carEntity) {
         Car car = new Car();
         car.setName(carEntity.getName());
         car.setType(carEntity.getCarType());
         car.setDirection(carEntity.getDirection());
 
-        Optional.ofNullable(carEntity.getGame()).map(GameEntity::getName).ifPresent(car::setGame);
+        ofNullable(carEntity.getGame())
+                .map(GameEntity::getName)
+                .ifPresent(car::setGame);
 
         Integer positionX = carEntity.getPositionX();
         Integer positionY = carEntity.getPositionY();
@@ -35,7 +35,4 @@ public class CarConverter {
         return car;
     }
 
-    public static List<Car> toCars(List<CarEntity> carEntities){
-        return transform(carEntities, CarConverter::toCar);
-    }
 }
