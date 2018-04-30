@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.services;
 import com.google.common.collect.Lists;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.repositories.MapRepository;
+import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,8 @@ import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -67,5 +70,34 @@ public class MapServiceTest {
 
         //then
         verify(mapRepository).deleteByName("map");
+    }
+
+    @Test
+    public void shouldPositionBeValidOnGameMapWhenCarOnRoad(){
+        //given
+        String gameMapContent = "1,1\n1,0\n1,0\n1,1";
+        Point startingPoint = new Point(1, 3);
+
+        //when
+        boolean positionValidOnGameMap = mapService.isPositionValidOnGameMap(gameMapContent, startingPoint);
+
+        //then
+        assertTrue(positionValidOnGameMap);
+    }
+
+    @Test
+    public void shouldNotBeOnRoadGameMap(){
+        //given
+        String gameMapContent = "1,1\n" +
+                "1,0\n" +
+                "1,0\n" +
+                "1,1";
+        Point startingPoint = new Point(5, 3);
+
+        //when
+        boolean positionValidOnGameMap = mapService.isPositionValidOnGameMap(gameMapContent, startingPoint);
+
+        //then
+        assertFalse(positionValidOnGameMap);
     }
 }

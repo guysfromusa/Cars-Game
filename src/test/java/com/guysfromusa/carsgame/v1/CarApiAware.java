@@ -8,6 +8,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 
 /**
@@ -30,6 +31,14 @@ public interface CarApiAware {
         String url = String.join("/", "/v1/cars", carName, "game", gameName);
 
         ResponseEntity<Car> modifiedCar =  template.exchange(url, POST, requestEntity, Car.class);
+        return modifiedCar.getBody();
+    }
+
+    default Long removeCar(TestRestTemplate template, String carName){
+
+        String url = String.join("/", "/v1/cars", carName);
+
+        ResponseEntity<Long> modifiedCar =  template.exchange(url, DELETE, null, Long.class);
         return modifiedCar.getBody();
     }
 }
