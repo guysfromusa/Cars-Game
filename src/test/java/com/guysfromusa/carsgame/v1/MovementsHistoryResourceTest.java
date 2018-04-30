@@ -26,7 +26,7 @@ public class MovementsHistoryResourceTest {
     private TestRestTemplate template;
 
     @Test
-    @Sql("/sql/historyMovement_Insert.sql")
+    @Sql(value = {"/sql/clean.sql","/sql/historyMovement_Insert.sql"})
     public void shouldReturnOne() {
         //when
         ResponseEntity<MovementHistory[]> movements = template.getForEntity("/v1/movements-history?gameIds=&carNames=FIAT&limitOfRecentStep=", MovementHistory[].class);
@@ -38,7 +38,7 @@ public class MovementsHistoryResourceTest {
   }
 
     @Test
-    @Sql("/sql/historyMovement_Insert.sql")
+    @Sql(value = {"/sql/clean.sql","/sql/historyMovement_Insert.sql"})
     public void shouldReturnTwo() {
         //when
         ResponseEntity<MovementHistory[]> movements = template.getForEntity("/v1/movements-history?gameIds=game2,game3&carNames=FIAT,MERCEDES&limitOfRecentStep=", MovementHistory[].class);
@@ -50,7 +50,7 @@ public class MovementsHistoryResourceTest {
     }
 
     @Test
-    @Sql("/sql/historyMovement_Insert.sql")
+    @Sql(value = {"/sql/clean.sql","/sql/historyMovement_Insert.sql"})
     public void shouldReturnTree() {
         //when
         ResponseEntity<MovementHistory[]> movements = template.getForEntity("/v1/movements-history?gameIds=&carNames=&limitOfRecentStep=", MovementHistory[].class);
