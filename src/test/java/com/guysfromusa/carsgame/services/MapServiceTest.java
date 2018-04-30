@@ -88,7 +88,10 @@ public class MapServiceTest {
     @Test
     public void shouldNotBeOnRoadGameMap(){
         //given
-        String gameMapContent = "1,1\n1,0\n1,0\n1,1";
+        String gameMapContent = "1,1\n" +
+                "1,0\n" +
+                "1,0\n" +
+                "1,1";
         Point startingPoint = new Point(5, 3);
 
         //when
