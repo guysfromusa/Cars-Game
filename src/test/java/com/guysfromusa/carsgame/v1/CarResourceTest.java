@@ -3,10 +3,12 @@ package com.guysfromusa.carsgame.v1;
 import com.google.common.collect.ImmutableList;
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
+import com.guysfromusa.carsgame.exceptions.ApiError;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
+import org.assertj.core.api.Assertions;
 import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +26,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 import static org.awaitility.Duration.FIVE_SECONDS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 
 /**
@@ -33,6 +34,8 @@ import static org.springframework.http.HttpMethod.POST;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
 public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
+
+    private RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
 
     @Inject
     private TestRestTemplate template;
@@ -80,37 +83,54 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
                 .until(() -> addNewCar(template, name, monsterType) != null);
 
         //when
-        ResponseEntity<Long> removedCarIdResponse = template.exchange(url, DELETE, null, Long.class);
+        Long id = removeCar(template, name);
 
         //then
-        assertThat(removedCarIdResponse.getBody()).isGreaterThan(0);
+        assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @Sql(value = {"/sql/clean.sql"})
     public void shouldAddCarToGame(){
         //given
-        String name = "My-Sweet-Car";
+        String name = "car2";
         String game = "game1";
-        CarType monsterType = MONSTER;
+
+        Point point = new Point(1, 0);
+
+        //when
+        Car car = assignCarToTheGame(template, name, game, point);
+
+        //then
+        assertThat(car.getPosition())
+                .extracting(Point::getX, Point::getY)
+                .contains(1, 0);
+    }
+
+    @Test
+    @Sql("/sql/car_resource_insert_car.sql")
+    public void shouldRejectAdditionCrashedCarToGame(){
+        //given
+        String name = "car3";
+        String game = "game1";
 
         String url = String.join("/", "/v1/cars", name, "game", game);
-        Point point = new Point(1, 1);
+        Point point = new Point(1, 0);
 
         HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(point).build();
 
         //when
-        addNewMap(template, new Map("map1", "1,1,1"));
-        addNewCar(template, name, monsterType);
-        startNewGame(template, "game1", "map1");
-        ResponseEntity<Car> carResponseEntity = template.exchange(url, POST, requestEntity, Car.class);
+        ResponseEntity<IllegalArgumentException> carResponse = template.exchange(url, POST, requestEntity, IllegalArgumentException.class);
+
 
         //then
-        Car carResponse = carResponseEntity.getBody();
-        assertThat(carResponse.getPosition())
-                .extracting(Point::getX, Point::getY)
-                .contains(1, 1);
+        ResponseEntity<ApiError> responseEntity = restExceptionHandler.handleBadRequest(carResponse.getBody());
+        Assertions.assertThat(responseEntity.getBody())
+                .extracting(ApiError::getMessage, ApiError::getStatus)
+                .containsExactly("Car is already crashed", "BAD_REQUEST");
+
     }
+
 
 
 }

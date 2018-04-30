@@ -27,6 +27,7 @@ import static com.guysfromusa.carsgame.v1.model.Movement.Type.TURN;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpMethod.POST;
 
 /**
  * Created by Tomasz Bradlo, 25.02.18
