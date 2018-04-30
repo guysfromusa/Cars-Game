@@ -36,10 +36,10 @@ public class MovementsHistoryServiceTest {
     @Test
     public void shouldReturnEmptyList(){
         //given
-        when(repository.findMovements(of(anyList()), of(anyList()), of(anyInt()))).thenReturn(emptyList());
+        when(repository.findMovements(anyList(), anyList(), of(anyInt()))).thenReturn(emptyList());
 
         //when
-        List<MovementHistory> result = movementsHistoryService.findMovementsHistory(of(emptyList()), of(emptyList()), of(2));
+        List<MovementHistory> result = movementsHistoryService.findMovementsHistory(emptyList(), emptyList(), of(2));
 
         //then
         assertThat(result).isEmpty();
@@ -49,24 +49,24 @@ public class MovementsHistoryServiceTest {
     public void shouldReturnMovementHistory(){
         //given
         MovementsHistoryEntity entity1 = aMovementsHistoryEntity()
-                .withCar(aCarEntity().withName("fiat").build())
-                .withGame(aGameEntity().withName("game1").build())
-                .withPositionX(1)
-                .withPositionY(2)
+                .car(aCarEntity().name("fiat").build())
+                .game(aGameEntity().name("game1").build())
+                .positionX(1)
+                .positionY(2)
                 .build();
 
         MovementsHistoryEntity entity2 = aMovementsHistoryEntity()
-                .withCar(aCarEntity().withName("mercedes").build())
-                .withGame(aGameEntity().withName("game2").build())
-                .withPositionX(0)
-                .withPositionY(0)
+                .car(aCarEntity().name("mercedes").build())
+                .game(aGameEntity().name("game2").build())
+                .positionX(0)
+                .positionY(0)
                 .build();
 
-        when(repository.findMovements(of(anyList()), of(anyList()), eq(of(2))))
+        when(repository.findMovements(anyList(), anyList(), eq(of(2))))
                 .thenReturn(asList(entity1, entity2));
         //when
         List<MovementHistory> result  = movementsHistoryService
-                .findMovementsHistory(of(asList("game1", "game2")), of(asList("mercedes", "fiat")), of(2));
+                .findMovementsHistory(asList("game1", "game2"), asList("mercedes", "fiat"), of(2));
 
         //then
 

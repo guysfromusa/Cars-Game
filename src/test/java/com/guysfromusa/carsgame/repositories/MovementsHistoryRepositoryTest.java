@@ -32,25 +32,25 @@ public class MovementsHistoryRepositoryTest extends BaseRepositoryTest {
     public void shouldSaveSingleMovement(){
         //given
         CarEntity car = aCarEntity()
-                .withName("fiat")
-                .withCrashed(false)
-                .withPositionX(1)
-                .withPositionY(3)
-                .withCarType(NORMAL)
+                .name("fiat")
+                .crashed(false)
+                .positionX(1)
+                .positionY(3)
+                .carType(NORMAL)
                 .build();
 
         GameEntity game = aGameEntity()
-                .withName("fifa")
-                .withCars(newHashSet(car))
-                .withMap(new MapEntity("map1", "1,1,1"))
+                .name("fifa")
+                .cars(newHashSet(car))
+                .map(new MapEntity("map1", "1,1,1"))
                 .build();
 
         MovementsHistoryEntity toSave = aMovementsHistoryEntity()
-                .withCar(car)
-                .withGame(game)
-                .withPositionX(1)
-                .withPositionY(3)
-                .withDirection(SOUTH)
+                .car(car)
+                .game(game)
+                .positionX(1)
+                .positionY(3)
+                .direction(SOUTH)
                 .build();
         //when
         MovementsHistoryEntity saved = repository.save(toSave);
@@ -71,7 +71,7 @@ public class MovementsHistoryRepositoryTest extends BaseRepositoryTest {
     @DatabaseSetup("/insert-movements-history.xml")
     public void shouldFindTwoByCarName() {
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements( of(emptyList()), of(singletonList("FIAT")), of(0));
+        List<MovementsHistoryEntity> result = repository.findMovements( emptyList(), singletonList("FIAT"), of(0));
 
         //then
         assertThat(result).hasSize(2);
@@ -81,7 +81,7 @@ public class MovementsHistoryRepositoryTest extends BaseRepositoryTest {
     @DatabaseSetup("/insert-movements-history.xml")
     public void shouldFindTwoByCarAndMapName() {
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements( of(singletonList("FIFA")), of(singletonList("FIAT")), of(0));
+        List<MovementsHistoryEntity> result = repository.findMovements( singletonList("FIFA"), singletonList("FIAT"), of(0));
 
         //then
         assertThat(result).hasSize(2);
@@ -91,7 +91,7 @@ public class MovementsHistoryRepositoryTest extends BaseRepositoryTest {
     @DatabaseSetup("/insert-movements-history.xml")
     public void shouldFindOnlyLastMovements() {
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements(of(singletonList("FIFA")), of(singletonList("FIAT")), of(1));
+        List<MovementsHistoryEntity> result = repository.findMovements(singletonList("FIFA"), singletonList("FIAT"), of(1));
 
         //then
         assertThat(result).hasSize(1).extracting(MovementsHistoryEntity::getPositionX, MovementsHistoryEntity::getPositionY).contains(tuple(2, 2));
@@ -100,7 +100,7 @@ public class MovementsHistoryRepositoryTest extends BaseRepositoryTest {
     @Test
     public void shouldNotFindBecauseOfWrongGameId(){
         //when
-        List<MovementsHistoryEntity> result = repository.findMovements(of(singletonList("NBA")), of(singletonList("FIAT")), of(0));
+        List<MovementsHistoryEntity> result = repository.findMovements(singletonList("NBA"), singletonList("FIAT"), of(0));
 
         //then
         assertThat(result).isEmpty();

@@ -17,29 +17,27 @@ public final class CarEntityBuilder {
         return new CarEntityBuilder();
     }
 
-    public CarEntityBuilder withName(String name) {
+    public CarEntityBuilder name(String name) {
         this.name = name;
         return this;
     }
 
-
-
-    public CarEntityBuilder withPositionX(Integer positionX) {
+    public CarEntityBuilder positionX(Integer positionX) {
         this.positionX = positionX;
         return this;
     }
 
-    public CarEntityBuilder withPositionY(Integer positionY) {
+    public CarEntityBuilder positionY(Integer positionY) {
         this.positionY = positionY;
         return this;
     }
 
-    public CarEntityBuilder withCarType(CarType carType) {
+    public CarEntityBuilder carType(CarType carType) {
         this.carType = carType;
         return this;
     }
 
-    public CarEntityBuilder withCrashed(boolean crashed) {
+    public CarEntityBuilder crashed(boolean crashed) {
         this.crashed = crashed;
         return this;
     }

@@ -16,27 +16,27 @@ public final class MovementsHistoryEntityBuilder {
         return new MovementsHistoryEntityBuilder();
     }
 
-    public MovementsHistoryEntityBuilder withGame(GameEntity game) {
+    public MovementsHistoryEntityBuilder game(GameEntity game) {
         this.game = game;
         return this;
     }
 
-    public MovementsHistoryEntityBuilder withCar(CarEntity car) {
+    public MovementsHistoryEntityBuilder car(CarEntity car) {
         this.car = car;
         return this;
     }
 
-    public MovementsHistoryEntityBuilder withPositionX(Integer positionX) {
+    public MovementsHistoryEntityBuilder positionX(Integer positionX) {
         this.positionX = positionX;
         return this;
     }
 
-    public MovementsHistoryEntityBuilder withPositionY(Integer positionY) {
+    public MovementsHistoryEntityBuilder positionY(Integer positionY) {
         this.positionY = positionY;
         return this;
     }
 
-    public MovementsHistoryEntityBuilder withDirection(Direction direction) {
+    public MovementsHistoryEntityBuilder direction(Direction direction) {
         this.direction = direction;
         return this;
     }

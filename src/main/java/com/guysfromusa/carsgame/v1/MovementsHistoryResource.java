@@ -37,9 +37,9 @@ public class MovementsHistoryResource {
     @ApiOperation(value = "Find history", response = List.class)
     @GetMapping(params = {"gameIds", "carNames", "limitOfRecentStep"})
     public List<MovementHistory> findMovementHistory(@ApiParam(value = "game's ids needed to find move history")
-                                                        @RequestParam(value = "gameIds", required = false) Optional<List<String>> gameIds,
+                                                        @RequestParam(value = "gameIds", required = false) List<String> gameIds,
                                                      @ApiParam(value = "car's names needed to find move history")
-                                                        @RequestParam(value = "carNames", required = false) Optional<List<String>> carNames,
+                                                        @RequestParam(value = "carNames", required = false) List<String> carNames,
                                                      @ApiParam(value = "number of previous step")
                                                          @RequestParam(value = "limitOfRecentStep", required = false) Optional<Integer> limitOfRecentStep){
         return service.findMovementsHistory(gameIds, carNames, limitOfRecentStep);

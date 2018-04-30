@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -22,14 +23,16 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class MovementsHistoryService {
 
     private final MovementsHistoryRepository repository;
+    private final MovementsHistoryConverter converter;
 
     @Autowired
-    public MovementsHistoryService(MovementsHistoryRepository repository) {
+    public MovementsHistoryService(MovementsHistoryRepository repository, MovementsHistoryConverter converter) {
         this.repository = notNull(repository);
+        this.converter = notNull(converter);
     }
 
-    public List<MovementHistory> findMovementsHistory(Optional<List<String>> gameIds, Optional<List<String>> carNames, Optional<Integer> limitOfRecentStep) {
+    public List<MovementHistory> findMovementsHistory(List<String> gameIds, List<String> carNames, Optional<Integer> limitOfRecentStep) {
         List<MovementsHistoryEntity> movements = repository.findMovements(gameIds, carNames, limitOfRecentStep);
-        return MovementsHistoryConverter.toMovementHistories(movements);
+        return movements.stream().map(converter::convert).collect(toList());
     }
 }

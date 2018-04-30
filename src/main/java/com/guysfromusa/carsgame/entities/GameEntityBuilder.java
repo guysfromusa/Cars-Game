@@ -15,17 +15,17 @@ public final class GameEntityBuilder {
     }
 
 
-    public GameEntityBuilder withName(String name) {
+    public GameEntityBuilder name(String name) {
         this.name = name;
         return this;
     }
 
-    public GameEntityBuilder withCars(Set<CarEntity> cars) {
+    public GameEntityBuilder cars(Set<CarEntity> cars) {
         this.cars = cars;
         return this;
     }
 
-    public GameEntityBuilder withMap(MapEntity map) {
+    public GameEntityBuilder map(MapEntity map) {
         this.map = map;
         return this;
     }

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface MovementsHistoryRepositoryCustom {
 
-    List<MovementsHistoryEntity> findMovements(Optional<List<String>> gameIds, Optional<List<String>> carNames, Optional<Integer> limitOfRecentStep);
+    List<MovementsHistoryEntity> findMovements(List<String> gameIds, List<String> carNames, Optional<Integer> limitOfRecentStep);
 }
