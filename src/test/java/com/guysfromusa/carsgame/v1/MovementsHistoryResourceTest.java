@@ -36,4 +36,16 @@ public class MovementsHistoryResourceTest {
         assertThat(movements.getBody()).extracting(MovementHistory::getCarName, MovementHistory::getGameName)
                 .containsExactly(tuple("FIAT", "game2"));
   }
+
+    @Test
+    @Sql("/sql/historyMovement_Insert.sql")
+    public void shouldReturnTwo() {
+        //when
+        ResponseEntity<MovementHistory[]> movements = template.getForEntity("/v1/movements-history?gameIds=game2,game3&carNames=FIAT,MERCEDES&limitOfRecentStep=", MovementHistory[].class);
+
+        //then
+        assertThat(movements.getStatusCode()).isEqualTo(OK);
+        assertThat(movements.getBody()).extracting(MovementHistory::getCarName, MovementHistory::getGameName)
+                .containsExactlyInAnyOrder(tuple("FIAT", "game2"), tuple("MERCEDES", "game3"));
+    }
 }
