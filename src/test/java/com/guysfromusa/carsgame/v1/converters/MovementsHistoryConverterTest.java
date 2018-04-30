@@ -12,6 +12,8 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class MovementsHistoryConverterTest {
 
+    private MovementsHistoryConverter movementsHistoryConverter = new MovementsHistoryConverter();
+
     @Test
     public void shouldConvertSingleEntity(){
         //given
@@ -27,7 +29,7 @@ public class MovementsHistoryConverterTest {
         entity.setDirection(SOUTH);
 
         //when
-        MovementHistory gotDto = MovementsHistoryConverter.toMovementHistory(entity);
+        MovementHistory gotDto = movementsHistoryConverter.convert(entity);
 
         //then
         assertThat(gotDto.getCarName()).isEqualTo("fiat126p");

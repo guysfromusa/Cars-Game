@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.exceptions.ApiError;
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.assertj.core.api.Assertions;
@@ -18,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
-
-import java.util.Comparator;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -43,8 +42,9 @@ public class CarResourceTest implements CarApiAware {
 
     @Test
     public void shouldReturnCars() {
+        //given
         String name = "My-Big-Monster";
-        String monsterType = "MONSTER";
+        CarType monsterType = MONSTER;
         Awaitility.await().atMost(FIVE_SECONDS)
                 .until(() -> addNewCar(template, name, monsterType) != null);
 
@@ -61,7 +61,7 @@ public class CarResourceTest implements CarApiAware {
     public void shouldAddCar() {
         //given
         String name = "My-Sweet-Car";
-        String monsterType = "MONSTER";
+        CarType monsterType = MONSTER;
 
         //when
         Car addedCar = addNewCar(template, name, monsterType);
@@ -76,7 +76,7 @@ public class CarResourceTest implements CarApiAware {
     public void shouldRemoveCar(){
         //given
         String name = "My-Sweet-Car";
-        String monsterType = "MONSTER";
+        CarType monsterType = MONSTER;
 
         String url = String.join("/", "/v1/cars", name);
         Awaitility.await().atMost(FIVE_SECONDS)
@@ -112,6 +112,7 @@ public class CarResourceTest implements CarApiAware {
         //given
         String name = "car3";
         String game = "game1";
+        String monsterType = "MONSTER";
 
         String url = String.join("/", "/v1/cars", name, "cars", game);
         Point point = new Point(1, 1);

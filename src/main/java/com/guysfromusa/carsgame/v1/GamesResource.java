@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
+import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.Movement;
@@ -15,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -43,10 +45,13 @@ public class GamesResource {
 
     private final GameService gameService;
 
+    private final ConversionService conversionService;
+
     @Inject
-    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService){
+    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService, ConversionService conversionService){
         this.carService = notNull(carService);
         this.gameService = notNull(gameService);
+        this.conversionService = notNull(conversionService);
         notEmpty(movementStrategies)
                 .forEach(strategy -> movementStrategyMap.put(strategy.getType(), strategy));
     }
@@ -63,7 +68,8 @@ public class GamesResource {
         movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
 
         List<CarEntity> carsInGame = carService.findCars(game);
-        return toCars(carsInGame);
+        return StreamUtils.convert(carsInGame,
+                carEntity -> conversionService.convert(carEntity, Car.class));
     }
 
     @ApiOperation(value = "Starts the game with the given Map")
@@ -78,7 +84,7 @@ public class GamesResource {
     @PostMapping(path = "{gameName}")
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
-        return toGame(gameEntity);
+        return conversionService.convert(gameEntity, Game.class);
     }
 
 

@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.RequestBuilder;
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -15,7 +16,7 @@ import static org.springframework.http.HttpMethod.POST;
  */
 public interface CarApiAware {
 
-    default Car addNewCar(TestRestTemplate template, String name, String type){
+    default Car addNewCar(TestRestTemplate template, String name, CarType type){
         HttpEntity<Object> requestEntity = new RequestBuilder<>().body(type).build();
         String url = String.join("/", "/v1/cars", name);
 

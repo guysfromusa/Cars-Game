@@ -54,7 +54,7 @@ public class MapServiceTest {
         when(mapRepository.findByNameAndActive("map", ACTIVE)).thenReturn(Optional.of(map));
 
         //when
-        mapService.deleteByName("map");
+        mapService.delete("map");
 
         //then
         verify(map).deactivate();
@@ -66,7 +66,7 @@ public class MapServiceTest {
         when(mapRepository.findByNameAndActive("map", ACTIVE)).thenReturn(Optional.empty());
 
         //when
-        mapService.deleteByName("map");
+        mapService.delete("map");
 
         //then
         verify(mapRepository).deleteByName("map");
