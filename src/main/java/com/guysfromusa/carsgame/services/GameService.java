@@ -2,16 +2,15 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
+import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import com.guysfromusa.carsgame.repositories.GameRepository;
-import com.guysfromusa.carsgame.repositories.MapRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static com.guysfromusa.carsgame.entities.MapEntity.ACTIVE;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -47,4 +46,12 @@ public class GameService {
         game.setMap(map);
         return gameRepository.save(game);
     }
+
+    @Transactional(readOnly = true)
+    public GameStatus getStatus(String gameName) {
+        final GameEntity gameEntity = gameRepository.findByName(gameName)
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
+        return gameEntity.getGameStatus();
+    }
+
 }
