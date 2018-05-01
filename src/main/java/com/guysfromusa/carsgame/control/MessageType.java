@@ -5,6 +5,6 @@ package com.guysfromusa.carsgame.control;
  */
 public enum MessageType {
 
-    INTERRUPT, MOVE
+    MOVE
 
 }
