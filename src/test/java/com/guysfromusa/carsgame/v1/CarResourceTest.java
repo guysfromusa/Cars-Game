@@ -3,10 +3,9 @@ package com.guysfromusa.carsgame.v1;
 import com.google.common.collect.ImmutableList;
 import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
-import com.guysfromusa.carsgame.exceptions.ApiError;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.exceptions.ApiError;
 import com.guysfromusa.carsgame.v1.model.Car;
-import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.assertj.core.api.Assertions;
 import org.awaitility.Awaitility;
@@ -90,10 +89,10 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
     }
 
     @Test
-    @Sql(value = {"/sql/clean.sql"})
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_car.sql"})
     public void shouldAddCarToGame(){
         //given
-        String name = "car2";
+        String name = "car3";
         String game = "game1";
 
         Point point = new Point(1, 0);
@@ -108,7 +107,7 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
     }
 
     @Test
-    @Sql("/sql/car_resource_insert_car.sql")
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_crashed_car.sql"})
     public void shouldRejectAdditionCrashedCarToGame(){
         //given
         String name = "car3";
