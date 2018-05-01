@@ -18,7 +18,11 @@ public class GameQueue {
         queue.put(o);
     }
 
-    public void drainTo(Collection<Message> c) {
+    public Message take() throws InterruptedException {
+        return queue.take();
+    }
+
+    public void drainTo(Collection<? super Message> c) {
         queue.drainTo(c);
     }
 }

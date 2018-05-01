@@ -2,15 +2,16 @@ package com.guysfromusa.carsgame.control;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -20,16 +21,16 @@ import static org.apache.commons.lang3.Validate.notNull;
 @Slf4j
 public class MessageDispatcher implements Runnable {
 
-    @Value("${dispatcher.consume.delayInMs}")
-    private long consumeDelay;
-
     private final GameQueue gameQueue;
+
+    private final GameEngine gameEngine;
 
     private final TaskExecutor taskExecutor;
 
     @Autowired
-    public MessageDispatcher(GameQueue gameQueue, TaskExecutor taskExecutor) {
+    public MessageDispatcher(GameQueue gameQueue, GameEngine gameEngine, TaskExecutor taskExecutor) {
         this.gameQueue = notNull(gameQueue);
+        this.gameEngine = notNull(gameEngine);
         this.taskExecutor = notNull(taskExecutor);
     }
 
@@ -41,17 +42,38 @@ public class MessageDispatcher implements Runnable {
     @Override
     public void run() {
         while (true) {
-            log.info("Consume all messages from queue");
-            try {
-                TimeUnit.MILLISECONDS.sleep(consumeDelay);
-                List<Message> consumedMessages = new ArrayList<>();
-                gameQueue.drainTo(consumedMessages);
+            log.info("Consume messages from queue");
 
-                consumedMessages.forEach(message -> log.info("{}", message));
+            Message firstMessage = null;
+            try {
+                firstMessage = gameQueue.take();
+                log.info("Consumed first message");
             } catch (InterruptedException e) {
-                //TODO error handling
-                log.warn(e.getMessage(), e);
+                e.printStackTrace();
             }
+            List<Message> consumedMessages = new ArrayList<>(singletonList(firstMessage));
+            log.info("DrainTo for messages");
+            gameQueue.drainTo(consumedMessages);
+
+
+            Map<MessageType, List<Message>> byType = consumedMessages.stream()
+                    .collect(groupingBy(Message::getMessageType));
+
+            byType.forEach(this::handle);
+        }
+    }
+
+    private void handle(MessageType messageType, List<Message> messages) {
+        //TODO Strategy
+        switch (messageType) {
+            case MOVE:
+                gameEngine.handleMoves(messages);
+                break;
+            case INTERRUPT:
+                gameEngine.handleInterrupt(messages);
+                break;
+            default:
+                throw new IllegalStateException("Undefined message type");
         }
     }
 }

@@ -3,6 +3,8 @@ package com.guysfromusa.carsgame.control;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -19,7 +21,8 @@ public class GameController {
     }
 
 
-    public void handle(Message m) throws InterruptedException {
+    public CompletableFuture<String> handle(Message m) throws InterruptedException {
         gameQueue.put(m);
+        return m.getFuture();
     }
 }

@@ -24,6 +24,7 @@ public class GameInterrupter {
         log.info("Send message to interrupt all games");
         Message m = new Message();
         m.setGameName("Game - interrupt");
+        m.setMessageType(MessageType.INTERRUPT);
         gameQueue.put(m);
     }
 }
