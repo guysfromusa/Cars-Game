@@ -22,7 +22,6 @@ import static com.guysfromusa.carsgame.v1.model.Movement.Type.TURN;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpMethod.POST;
 
 /**
  * Created by Tomasz Bradlo, 25.02.18
@@ -58,7 +57,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
 
         startNewGame(template, "gameToPlay", "mapToPlay");
 
-        assignCarToTheGame(template, "carToTurn", "gameToPlay", new Point(1,2));
+        assignCarToTheGame(template, "carToTurn", "gameToPlay", new Point(2,2));
 
         Movement movement = new Movement();
         movement.setType(TURN);
@@ -80,7 +79,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         assertThat(response.getBody())
                 .extracting(Car::getPosition)
                 .extracting(Point::getX, Point::getY)
-                .containsExactly(tuple(1,2));
+                .containsExactly(tuple(2,2));
     }
 
     @Test
