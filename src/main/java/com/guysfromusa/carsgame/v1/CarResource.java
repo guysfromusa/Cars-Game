@@ -88,7 +88,7 @@ public class CarResource {
         @ApiResponse(code = 200, message = "Car successfully repaired"),
         @ApiResponse(code = 400, message = "Car with given name does not exist")
     })
-    public Car repeairCar(@PathVariable("name") String name){
+    public Car repairCar(@PathVariable("name") String name){
         CarEntity carEntity = carService.repairCar(name);
         return conversionService.convert(carEntity, Car.class);
     }
