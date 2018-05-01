@@ -19,18 +19,20 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static com.guysfromusa.carsgame.model.Direction.NORTH;
 import static com.guysfromusa.carsgame.model.Direction.WEST;
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -109,9 +111,9 @@ public class CarServiceTest {
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
         when(carRepository.findByGameAndName(any(), any()))
-                .thenReturn(Optional.of(carEntity));
+                .thenReturn(of(carEntity));
         when(gameRepository.findByName(any()))
-                .thenReturn(Optional.of(gameEntity));
+                .thenReturn(of(gameEntity));
 
         //when
         carService.turnCar("game1", "car1", LEFT);
@@ -136,10 +138,10 @@ public class CarServiceTest {
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
 
-        when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
-        when(carRepository.findByName(eq(carName))).thenReturn(Optional.of(carEntity));
+        when(gameRepository.findByName(any())).thenReturn(of(new GameEntity()));
+        when(carRepository.findByName(eq(carName))).thenReturn(of(carEntity));
 
-        when(gameRepository.findByName(any())).thenReturn(Optional.of(gameEntity));
+        when(gameRepository.findByName(any())).thenReturn(of(gameEntity));
 
         //when
         carService.addCarToGame(carName, carGame, startingPoint);
@@ -156,6 +158,28 @@ public class CarServiceTest {
                         && Objects.equals(1, positionY);
             }
         }));
+    }
+
+    @Test
+    public void shouldRepairCar(){
+        //given
+        String carName = "Dodge";
+
+        CarEntity carEntity = createCarEntity();
+        when(carRepository.findByName(carName)).thenReturn(of(carEntity));
+        when(carRepository.save(carEntity)).thenReturn(carEntity);
+
+        //when
+        CarEntity repairedCar = carService.repairCar(carName);
+
+        //then
+        assertFalse(repairedCar.isCrashed());
+    }
+
+    private CarEntity createCarEntity() {
+        CarEntity carEntity = new CarEntity();
+        carEntity.setCrashed(true);
+        return carEntity;
     }
 
 }

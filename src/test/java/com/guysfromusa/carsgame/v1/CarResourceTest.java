@@ -130,6 +130,20 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
     }
 
+    @Test
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_crashed_car.sql"})
+    public void shouldRepairCrashedCar(){
+        //given
+        String name = "car3";
+
+        //when
+        Car car = repairCar(template, name);
+
+        //then
+        Assertions.assertThat(car)
+                .extracting(Car::getName, Car::isCrashed)
+                .containsExactly("car3", false);
+    }
 
 
 }
