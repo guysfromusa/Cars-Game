@@ -4,12 +4,15 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
@@ -19,6 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static com.guysfromusa.carsgame.model.Direction.NORTH;
@@ -52,6 +56,9 @@ public class CarServiceTest {
 
     @InjectMocks
     private CarService carService;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void shouldAddNewCar(){
@@ -174,6 +181,19 @@ public class CarServiceTest {
 
         //then
         assertFalse(repairedCar.isCrashed());
+    }
+
+    @Test
+    public void shouldNotFindCar(){
+        //given
+        String carName = "Dodge";
+
+        when(carRepository.findByName(carName)).thenReturn(Optional.empty());
+
+        //when
+        expectedException.expect(EntityNotFoundException.class);
+        expectedException.expectMessage("Car with name Dodge does not exist");
+        carService.repairCar(carName);
     }
 
     private CarEntity createCarEntity() {
