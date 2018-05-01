@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 public class GameMapUtils {
 
-    public static final String NEW_ROW_MAP_SEPARATOR = "\\\\n|\n";
+    private static final String NEW_ROW_MAP_SEPARATOR = "\\\\n|\n";
 
     private static final String COLUMN_MAP_SEPARATOR = ",";
 
