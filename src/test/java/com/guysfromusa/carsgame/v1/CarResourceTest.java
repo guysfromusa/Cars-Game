@@ -6,6 +6,7 @@ import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.exceptions.ApiError;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.assertj.core.api.Assertions;
 import org.awaitility.Awaitility;
@@ -32,7 +33,7 @@ import static org.springframework.http.HttpMethod.POST;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
-public class CarResourceTest implements CarApiAware {
+public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
     private RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
 
@@ -89,6 +90,7 @@ public class CarResourceTest implements CarApiAware {
     }
 
     @Test
+    @Sql(value = {"/sql/clean.sql"})
     public void shouldAddCarToGame(){
         //given
         String name = "car2";
