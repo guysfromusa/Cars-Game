@@ -11,6 +11,9 @@ import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
+import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +38,15 @@ public class CarService {
 
     private final MovementsHistoryRepository movementsHistoryRepository;
 
+    private CarGameAdditionValidator carGameAdditionValidator;
+
     @Inject
-    public CarService(CarRepository carRepository, MovementsHistoryRepository movementsHistoryRepository, GameRepository gameRepository){
+    public CarService(CarRepository carRepository, MovementsHistoryRepository movementsHistoryRepository,
+                      GameRepository gameRepository, CarGameAdditionValidator carGameAdditionValidator){
         this.carRepository = notNull(carRepository);
         this.movementsHistoryRepository = notNull(movementsHistoryRepository);
         this.gameRepository = notNull(gameRepository);
+        this.carGameAdditionValidator = notNull(carGameAdditionValidator);
     }
 
 
@@ -91,17 +98,20 @@ public class CarService {
         CarEntity car = carRepository.findByName(carName)
                 .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));
 
-        //TODO use validator
+        GameEntity gameEntity = gameRepository.findByName(gameName)
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
+
+        CarGameAdditionValidationSubject validationSubject =
+                new CarGameAdditionValidationSubject(car, gameEntity, startingPoint);
+        carGameAdditionValidator.validateCarBeforeAddition(validationSubject);
 
         Integer positionX = startingPoint.getX();
         Integer positionY = startingPoint.getY();
-        car.setDirection(Direction.NORTH);
 
         car.setPositionX(positionX);
         car.setPositionY(positionY);
 
-        GameEntity gameEntity = gameRepository.findByName(gameName)
-                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
+        car.setDirection(Direction.NORTH);
         car.setGame(gameEntity);
 
         return carRepository.save(car);

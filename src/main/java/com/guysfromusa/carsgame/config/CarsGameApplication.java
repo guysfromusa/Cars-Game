@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static com.guysfromusa.carsgame.model.Direction.NORTH;
+import static com.guysfromusa.carsgame.model.Direction.WEST;
 
 @SpringBootApplication
 @EnableScheduling
@@ -30,6 +31,7 @@ public class CarsGameApplication {
 
 			GameEntity game = new GameEntity();
 			game.setName("game1");
+			game.setMap(map);
 			gameRepository.save(game);
 
 			CarEntity car = new CarEntity();
@@ -37,6 +39,11 @@ public class CarsGameApplication {
 			car.setGame(game);
 			car.setDirection(NORTH);
 			carRepository.save(car);
+
+			CarEntity car2 = new CarEntity();
+			car2.setName("car2");
+			car2.setDirection(WEST);
+			carRepository.save(car2);
 
 		};
 	}

@@ -4,7 +4,12 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
-import com.guysfromusa.carsgame.v1.model.*;
+import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Game;
+import com.guysfromusa.carsgame.v1.model.GameStatusDto;
+import com.guysfromusa.carsgame.v1.model.Map;
+import com.guysfromusa.carsgame.v1.model.Movement;
+import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,7 +62,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
 
         startNewGame(template, "gameToPlay", "mapToPlay");
 
-        assignCarToTheGame(template, "carToTurn", "gameToPlay", new Point(1,2));
+        assignCarToTheGame(template, "carToTurn", "gameToPlay", new Point(2,2));
 
         Movement movement = new Movement();
         movement.setType(TURN);
@@ -79,11 +84,11 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         assertThat(response.getBody())
                 .extracting(Car::getPosition)
                 .extracting(Point::getX, Point::getY)
-                .containsExactly(tuple(1,2));
+                .containsExactly(tuple(2,2));
     }
 
     @Test
-    @Sql("/sql/gameResource_insertGame.sql")
+    @Sql(value = {"/sql/clean.sql","/sql/gameResource_insertGame.sql"})
     public void shouldReturnStatusOfTheGame() {
         //when
         GameStatusDto entity = template.getForObject("/v1/games/game2", GameStatusDto.class);

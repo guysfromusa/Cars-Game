@@ -8,6 +8,7 @@ import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
+import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -43,6 +44,9 @@ public class CarServiceTest {
 
     @Mock
     private MovementsHistoryRepository movementsHistoryRepository;
+
+    @Mock
+    private CarGameAdditionValidator carGameAdditionValidator;
 
     @InjectMocks
     private CarService carService;
