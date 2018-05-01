@@ -89,10 +89,10 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
     }
 
     @Test
-    @Sql(value = {"/sql/clean.sql"})
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_car.sql"})
     public void shouldAddCarToGame(){
         //given
-        String name = "car2";
+        String name = "car3";
         String game = "game1";
 
         Point point = new Point(1, 0);
@@ -107,7 +107,7 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
     }
 
     @Test
-    @Sql("/sql/car_resource_insert_car.sql")
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_crashed_car.sql"})
     public void shouldRejectAdditionCrashedCarToGame(){
         //given
         String name = "car3";
