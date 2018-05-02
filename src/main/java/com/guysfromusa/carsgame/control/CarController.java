@@ -23,7 +23,7 @@ public class CarController {
                 movementStrategyMap.put(movementStrategy.getType(), movementStrategy));
     }
 
-    public void calculateCarState(MovementMessage movementMessage, GameState gameState){
+    public String calculateCarState(MovementMessage movementMessage, GameState gameState){
 
         Operation operation = movementMessage.getMovement().getOperation();
         CarState carState = gameState.getCarState(movementMessage.getCarName());
@@ -33,6 +33,12 @@ public class CarController {
 
         movementStrategy.execute(carState.getCar(), gameMapContent);
 
+        return resolveCollision(gameState);
+    }
+
+    private String resolveCollision(GameState gameState) {
+        //TODO resolve collisions
+        return "{status:'OK'}";
     }
 
 }

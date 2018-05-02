@@ -15,8 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameStateTracker {
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();
 
-    public void addNewGame(String gameId){
-        this.gameStateMap.put(gameId, new GameState());
+    public void addNewGame(String gameId, Integer[][] gameMapContent){
+        this.gameStateMap.put(gameId, new GameState(gameMapContent));
     }
 
     public  void addNewCar(String gameId, String carName){

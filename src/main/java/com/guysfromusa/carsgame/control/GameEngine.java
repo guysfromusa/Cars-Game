@@ -30,21 +30,30 @@ public class GameEngine {
     }
 
     @Async
-    public void handleMoves(List<MovementMessage> messages) {
+    public void handleMoves(List<Message> messages) {
 
         messages.forEach(message -> {
 
             GameState gameState = gameStateTracker.getGameState(message.getGameName());
-            carController.calculateCarState(message, gameState);
+            String status = carController.calculateCarState((MovementMessage) message, gameState);
 
             CompletableFuture<String> future = message.getFuture();
             //TODO think if complete before save to db
             log.info("Complete message");
-            future.complete("{status:'OK'}");
+            future.complete(status);
         });
 
         //TODO at the end save state into db
 
+    }
+
+    public void createNewGame(List<Message> messages){
+        messages.forEach(message -> {
+            NewGameMessage newGameMessage = (NewGameMessage) message;
+            String gameName = newGameMessage.getGameName();
+            Integer[][] mapContent = newGameMessage.getMapContent();
+            gameStateTracker.addNewGame(gameName, mapContent);
+        });
     }
 
 }

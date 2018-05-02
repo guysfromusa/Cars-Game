@@ -14,6 +14,10 @@ public class GameState {
     private Integer[][] gameMapContent;
     private Map<String, CarState> carsMovementMap = new HashMap<>();
 
+    public GameState(Integer[][] gameMapContent) {
+        this.gameMapContent = gameMapContent;
+    }
+
     public void addNewMovement(String carName, Movement.Operation operation) {
         List<Movement> carsMovement = carsMovementMap.get(carName).getMovements();
         carsMovement.add(Movement.newMovement(operation));

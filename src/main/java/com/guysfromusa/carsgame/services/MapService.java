@@ -47,7 +47,7 @@ public class MapService {
     }
 
     public boolean isFieldReachableOnGameMap(String content, Point point){
-        Integer[][] mapContent = GameMapUtils.getMapMatrixFromContent(content);
+        Integer[][] mapContent = GameMapUtils.getMapMatrixContent(content);
         Integer x = point.getX();
         Integer y = point.getY();
         return isFieldReachableOnGameMap(mapContent, x, y);

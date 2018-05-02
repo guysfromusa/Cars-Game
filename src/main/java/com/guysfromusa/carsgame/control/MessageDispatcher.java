@@ -71,6 +71,9 @@ public class MessageDispatcher implements Runnable {
             case MOVE:
                 gameEngine.handleMoves(messages);
                 break;
+            case START_GAME:
+                gameEngine.createNewGame(messages);
+                break;
             default:
                 throw new IllegalStateException("Undefined message type");
         }

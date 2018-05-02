@@ -12,7 +12,7 @@ public class GameMapUtilsTest {
         String content = "1,1\n1,0";
 
         //when
-        Integer[][] mapMatrixContent = GameMapUtils.getMapMatrixFromContent(content);
+        Integer[][] mapMatrixContent = GameMapUtils.getMapMatrixContent(content);
 
         //then
         assertEquals(2, mapMatrixContent.length);

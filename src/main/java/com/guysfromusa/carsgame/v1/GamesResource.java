@@ -1,11 +1,11 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.control.GameController;
-import com.guysfromusa.carsgame.control.MessageType;
-import com.guysfromusa.carsgame.control.MovementMessage;
+import com.guysfromusa.carsgame.GameMapUtils;
+import com.guysfromusa.carsgame.control.*;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
+import com.guysfromusa.carsgame.game_state.GameStateTracker;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
@@ -42,7 +42,7 @@ public class GamesResource {
 
     @Inject
     public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService,
-                         ConversionService conversionService, GameController gameController){
+                         ConversionService conversionService, GameController gameController, GameStateTracker gameStateTracker){
         this.carService = notNull(carService);
         this.gameService = notNull(gameService);
         this.conversionService = notNull(conversionService);
@@ -78,9 +78,19 @@ public class GamesResource {
 
 
     @PostMapping(path = "{gameName}")
-    public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
+    public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName) throws InterruptedException {
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
-        return conversionService.convert(gameEntity, Game.class);
+        Game game = conversionService.convert(gameEntity, Game.class);
+
+        NewGameMessage message = new NewGameMessage();
+        message.setGameName(gameEntity.getName());
+        String content = gameEntity.getMap().getContent();
+
+        Integer[][] mapMatrixContent = GameMapUtils.getMapMatrixContent(content);
+        message.setMapContent(mapMatrixContent);
+        gameController.handle(message);
+
+        return game;
     }
 
     @GetMapping(path = "{gameName}")
