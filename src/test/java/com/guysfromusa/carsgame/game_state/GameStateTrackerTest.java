@@ -1,54 +1,50 @@
 package com.guysfromusa.carsgame.game_state;
 
-import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.junit.Test;
 
-import static com.guysfromusa.carsgame.game_state.GameStateTracker.addNewGame;
-import static com.guysfromusa.carsgame.game_state.GameStateTracker.getGameState;
-import static com.guysfromusa.carsgame.game_state.dtos.GameState.addNewCar;
-import static com.guysfromusa.carsgame.game_state.dtos.GameState.addNewMovement;
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GameStateTrackerTest {
 
+    private GameStateTracker gameStateTracker = new GameStateTracker();
+
     @Test
     public void shouldAddNewGame(){
         //given
-        addNewGame("game1");
+        gameStateTracker.addNewGame("game1");
 
         //when
-        GameState game1 = getGameState("game1");
+        gameStateTracker.getGameState("game1");
 
         //then
-        assertThat(game1.getCarsMovement("someCar")).isNull();
+        assertThat(gameStateTracker.getCarsMovementHistory("game1", "someCar")).isNull();
     }
 
     @Test
     public void shouldAddNewCar(){
         //given
-        addNewGame("game1");
+        gameStateTracker.addNewGame("game1");
 
         //when
-        addNewCar("bmw");
+        gameStateTracker.addNewCar("game1", "bmw");
 
         //then
-        assertThat(getGameState("game1").getCarsMovement("bmw")).isEmpty();
+        assertThat(gameStateTracker.getCarsMovementHistory( "game1","bmw")).isEmpty();
     }
 
     @Test
     public void shouldAddNewCarWithMovement(){
         //given
-        addNewGame("game1");
-        addNewCar("bmw");
+        gameStateTracker.addNewGame("game1");
+        gameStateTracker.addNewCar("game1", "bmw");
 
         //when
-       addNewMovement("bmw", FORWARD);
+        gameStateTracker.addNewMove("game1","bmw", FORWARD);
 
         //then
-        Movement expected = Movement.newMovement(FORWARD);
-        assertThat(getGameState("game1")
+        assertThat(gameStateTracker.getGameState("game1")
                 .getCarsMovement("bmw"))
                 .extracting(Movement::getOperation).containsExactly(FORWARD);
     }
