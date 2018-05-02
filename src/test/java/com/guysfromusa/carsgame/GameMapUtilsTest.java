@@ -2,12 +2,13 @@ package com.guysfromusa.carsgame;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class GameMapUtilsTest {
 
     @Test
-    public void shouldConvertStringContentToIntegerArray(){
+    public void shouldConvertStringContentToIntegerArray() {
         //given
         String content = "1,1\n1,0";
 
@@ -23,4 +24,17 @@ public class GameMapUtilsTest {
         assertEquals(0, mapMatrixContent[1][1], 0);
     }
 
+    @Test
+    public void isReachable() {
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0, 0}, {0, 1, 0}, {0, 0, 0}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0}, {0, 0}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0}})).isTrue();
+
+        assertThat(GameMapUtils.isReachable(new Integer[][]{})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1}, {1, 1}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 0}, {0, 1}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 0, 0}, {1, 0, 0}, {0, 1, 1}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0, 0}, {}, {0, 0, 0}})).isFalse();
+    }
 }
