@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Created by Dominik Zurek 02.05.2018
+ */
 public class GameState {
 
     private Map<String, List<Movement>> carsMovementMap = new HashMap<>();
