@@ -1,13 +1,14 @@
 package com.guysfromusa.carsgame.v1.movement;
 
-import com.guysfromusa.carsgame.v1.model.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.v1.model.Car;
 
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
 public interface MovementStrategy {
 
-    Movement.Type getType();
+    Movement.Operation getType();
 
-    void execute(String game, String carName, Movement movement);
+    void execute(Car car, Integer[][] mapContent);
 }

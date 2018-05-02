@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
-import com.guysfromusa.carsgame.v1.model.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import lombok.Data;
 
 @Data

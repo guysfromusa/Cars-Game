@@ -67,7 +67,7 @@ public class CarGameAdditionValidator{
             MapEntity gameMap = validationSubject.getGameEntity().getMap();
             String gameMapContent = gameMap.getContent();
 
-            if(!mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)){
+            if(!mapService.isFieldReachableOnGameMap(gameMapContent, startingPoint)){
                 throw new IllegalArgumentException(WRONG_STARTING_POINT_MESSAGE);
             }
         };

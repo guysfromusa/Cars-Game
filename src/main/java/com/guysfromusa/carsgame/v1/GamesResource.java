@@ -1,6 +1,5 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.google.common.collect.Maps;
 import com.guysfromusa.carsgame.control.GameController;
 import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MovementMessage;
@@ -21,9 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
-import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -34,8 +31,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @RequestMapping(value = "/v1/games", produces = APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "games", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
 public class GamesResource {
-
-
 
     private final CarService carService;
 
@@ -52,8 +47,6 @@ public class GamesResource {
         this.gameService = notNull(gameService);
         this.conversionService = notNull(conversionService);
         this.gameController = notNull(gameController);
-        notEmpty(movementStrategies)
-                .forEach(strategy -> movementStrategyMap.put(strategy.getType(), strategy));
     }
 
     @PostMapping(path = "{game}/cars/{car}/movements", consumes = APPLICATION_JSON_UTF8_VALUE)
@@ -70,8 +63,6 @@ public class GamesResource {
         message.setCarName(carName);
 
         gameController.handle(message);
-
-        //movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
 
         List<CarEntity> carsInGame = carService.findCars(game);
         return StreamUtils.convert(carsInGame,carEntity -> conversionService.convert(carEntity, Car.class));

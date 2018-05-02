@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class TurnMovementStrategyTest {
 
     @InjectMocks
-    private TurnMovementStrategy turnMovementStrategy;
+    private TurnLeftMovementStrategy turnMovementStrategy;
 
     @Mock
     private CarService carServiceMock;
