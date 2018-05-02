@@ -1,6 +1,9 @@
 package com.guysfromusa.carsgame.v1;
 
 import com.google.common.collect.Maps;
+import com.guysfromusa.carsgame.control.GameController;
+import com.guysfromusa.carsgame.control.MessageType;
+import com.guysfromusa.carsgame.control.MovementMessage;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
@@ -11,21 +14,10 @@ import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
 import com.guysfromusa.carsgame.v1.model.Movement;
-import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
-import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -43,7 +35,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Api(value = "games", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
 public class GamesResource {
 
-    private final Map<Movement.Type, MovementStrategy> movementStrategyMap = Maps.newEnumMap(Movement.Type.class);
+
 
     private final CarService carService;
 
@@ -51,11 +43,15 @@ public class GamesResource {
 
     private final ConversionService conversionService;
 
+    private final GameController gameController;
+
     @Inject
-    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService, ConversionService conversionService){
+    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService,
+                         ConversionService conversionService, GameController gameController){
         this.carService = notNull(carService);
         this.gameService = notNull(gameService);
         this.conversionService = notNull(conversionService);
+        this.gameController = notNull(gameController);
         notEmpty(movementStrategies)
                 .forEach(strategy -> movementStrategyMap.put(strategy.getType(), strategy));
     }
@@ -67,13 +63,18 @@ public class GamesResource {
             @ApiResponse(code = 404, message = "Game not found"),
             @ApiResponse(code = 404, message = "Car not found")
     })
-    public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement){
+    public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement) throws InterruptedException {
+        MovementMessage message = new MovementMessage();
+        message.setGameName(game);
+        message.setMessageType(MessageType.MOVE);
+        message.setCarName(carName);
 
-        movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
+        gameController.handle(message);
+
+        //movementStrategyMap.get(newMovement.getType()).execute(game, carName, newMovement);
 
         List<CarEntity> carsInGame = carService.findCars(game);
-        return StreamUtils.convert(carsInGame,
-                carEntity -> conversionService.convert(carEntity, Car.class));
+        return StreamUtils.convert(carsInGame,carEntity -> conversionService.convert(carEntity, Car.class));
     }
 
     @ApiOperation(value = "Starts the game with the given Map")

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class GameEngine {
 
     @Async
-    public void handleMoves(List<Message> messages) {
+    public void handleMoves(List<MovementMessage> messages) {
 
         //TODO for all messages calculate movements and collisions
 
