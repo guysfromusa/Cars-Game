@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * Created by Sebastian Mikucki, 30.04.18
+ * @deprecated this class will be removed after agreed final solution
  */
 //TODO delete as only POC
 @Deprecated
@@ -39,8 +40,9 @@ public class TestResource {
         Message m = new Message();
         m.setGameName(gameName);
         m.setMessageType(MessageType.MOVE);
-        CompletableFuture<String> handle = gameController.handle(m);
-        return handle.get();
+        CompletableFuture<String> future = m.getFuture();
+        gameController.handle(m);
+        return future.get();
     }
 
 }

@@ -44,6 +44,8 @@ public class MessageDispatcher implements Runnable {
         while (true) {
             log.info("Consume messages from queue");
 
+            //TODO temporary solution, refactor me
+            //TODO filter messages by type and game and forward to engine
             Message firstMessage = null;
             try {
                 firstMessage = gameQueue.take();
@@ -64,13 +66,10 @@ public class MessageDispatcher implements Runnable {
     }
 
     private void handle(MessageType messageType, List<Message> messages) {
-        //TODO Strategy
+        //TODO Strategy someday
         switch (messageType) {
             case MOVE:
                 gameEngine.handleMoves(messages);
-                break;
-            case INTERRUPT:
-                gameEngine.handleInterrupt(messages);
                 break;
             default:
                 throw new IllegalStateException("Undefined message type");
