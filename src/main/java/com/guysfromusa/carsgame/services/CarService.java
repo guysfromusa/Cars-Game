@@ -13,7 +13,6 @@ import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,6 +93,7 @@ public class CarService {
         return movementsHistoryRepository.save(movementEntity);
     }
 
+    //FIXME should be done in tour(round)
     public CarEntity addCarToGame(String carName, String gameName, Point startingPoint){
         CarEntity car = carRepository.findByName(carName)
                 .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));

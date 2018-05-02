@@ -41,11 +41,11 @@ public class GameStateTrackerTest {
         gameStateTracker.addNewCar("game1", "bmw");
 
         //when
-        gameStateTracker.addNewMove("game1","bmw", FORWARD);
+        gameStateTracker.addExecutedMove("game1","bmw", FORWARD);
 
         //then
         assertThat(gameStateTracker.getGameState("game1")
-                .getCarsMovement("bmw"))
+                .getMovementHistory("bmw"))
                 .extracting(Movement::getOperation).containsExactly(FORWARD);
     }
 

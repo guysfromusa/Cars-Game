@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GameStateTest {
 
-    private GameState gameState = new GameState();
+    private GameState gameState = new GameState(gameName);
 
     @Test
     public void shouldAddNewCarWithEmptyMovements(){
@@ -17,7 +17,7 @@ public class GameStateTest {
         gameState.addNewCar("bmw");
 
         //then
-        List<Movement> bmwMovement = gameState.getCarsMovement("bmw");
+        List<Movement> bmwMovement = gameState.getMovementHistory("bmw");
         assertThat(bmwMovement).isEmpty();
     }
 
@@ -27,10 +27,10 @@ public class GameStateTest {
         gameState.addNewCar("bmw");
 
         //when
-        gameState.addNewMovement("bmw", FORWARD);
+        gameState.addMovementHistory("bmw", FORWARD);
 
         //then
-        List<Movement> bmwMovement = gameState.getCarsMovement("bmw");
+        List<Movement> bmwMovement = gameState.getMovementHistory("bmw");
         assertThat(bmwMovement).extracting(Movement::getOperation).containsExactlyInAnyOrder(FORWARD);
     }
 
