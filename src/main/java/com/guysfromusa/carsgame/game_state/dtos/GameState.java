@@ -1,27 +1,24 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@NoArgsConstructor
 public class GameState {
 
-    private Map<String, List<Movement>> CARS_MOVEMENT = new HashMap<>();
+    private Map<String, List<Movement>> carsMovementMap = new HashMap<>();
 
     public void addNewMovement(String carName, Movement.Operation operation) {
-        List<Movement> carsMovement = CARS_MOVEMENT.get(carName);
+        List<Movement> carsMovement = carsMovementMap.get(carName);
         carsMovement.add(Movement.newMovement(operation));
     }
 
     public void addNewCar(String carName) {
-        CARS_MOVEMENT.put(carName, new ArrayList<>());
+        carsMovementMap.put(carName, new ArrayList<>());
     }
 
     public List<Movement> getCarsMovement(String carName) {
-        return CARS_MOVEMENT.get(carName);
+        return carsMovementMap.get(carName);
     }
 }
