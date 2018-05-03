@@ -30,9 +30,9 @@ public class GameState {
         this.gameName = gameName;
     }
 
-    public CompletableFuture<String> addMovementToExecute(Message message) {
+    public CompletableFuture<String> addCommandToExecute(Message message) {
         boolean added = commandsQueue.offer(message);
-        return added ? message.getFuture() : completedFuture("{error:queue is full}");
+        return added ? message.getFuture() : completedFuture("{error:command not added to the queue}");
     }
 
     public void addMovementHistory(String carName, Movement.Operation operation) {

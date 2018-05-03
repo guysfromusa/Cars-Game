@@ -27,7 +27,7 @@ public class CommandProducer {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<String> result = state.addMovementToExecute(move);
+                    CompletableFuture<String> result = state.addCommandToExecute(move);
                     commandEventPublisher.fire(this);
                     return result;
                 })
