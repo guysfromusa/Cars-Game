@@ -3,7 +3,6 @@ package com.guysfromusa.carsgame.control;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import lombok.Data;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -17,7 +16,7 @@ public class Message {
     private String gameName;
     private String carName;
     private MessageType messageType;
-    private List<Movement> movements;
+    private Movement movement;
     //TODO add other fields representing game internal message
 
     public CompletableFuture<String> getFuture() {
