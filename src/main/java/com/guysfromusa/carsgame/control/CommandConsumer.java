@@ -31,14 +31,17 @@ public class CommandConsumer {
         this.gameEngine = notNull(gameEngine);
     }
 
-
     @EventListener(CommandEvent.class)
     public synchronized void handle(CommandEvent event) {
+        boolean queuesNotEmpty = true;
 
+        while (queuesNotEmpty) {
             Optional<GameState> gameToPlayRoundOptional = activeGamesContainer.getGameStates().stream()
                     .filter(state -> !state.isRoundInProgress())
                     .filter(state -> !state.getMovementsQueue().isEmpty())
                     .findFirst();
+
+            queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 
             gameToPlayRoundOptional.ifPresent(gameState -> {
                 gameState.setRoundInProgress(true);
@@ -48,7 +51,7 @@ public class CommandConsumer {
                 gameState.getMovementsQueue().drainTo(consumedMessages);
                 handle(MOVE, consumedMessages, gameState.getGameName());
             });
-
+        }
     }
 
     private void handle(MessageType messageType, List<Message> messages, String gameName) {
@@ -60,6 +63,5 @@ public class CommandConsumer {
             default:
                 throw new IllegalStateException("Undefined message type");
         }
-        activeGamesContainer.getGameState(gameName).setRoundInProgress(false);
     }
 }

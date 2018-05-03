@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class ActiveGamesContainer { //   commandProducer. / consumer
+public class ActiveGamesContainer {
 
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();
 

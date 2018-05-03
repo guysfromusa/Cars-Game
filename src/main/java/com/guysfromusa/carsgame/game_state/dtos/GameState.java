@@ -22,12 +22,12 @@ public class GameState {
     private final String gameName;
 
     @Getter
-    private final BlockingQueue<Message> movementsQueue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Message> movementsQueue = new LinkedBlockingQueue<>(); //TODO sync queue
 
     @Setter @Getter
     private volatile boolean roundInProgress = false;
 
-    private Map<String, List<Movement>> movementsHistoryByCar = new HashMap<>();
+    private Map<String, List<Movement>> movementsHistoryByCar = new HashMap<>(); //TODO sychronize
 
     public GameState(String gameName) {
         this.gameName = gameName;

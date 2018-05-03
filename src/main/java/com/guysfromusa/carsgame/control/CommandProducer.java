@@ -9,15 +9,12 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static org.apache.commons.lang3.Validate.notNull;
-
 @Component
 public class CommandProducer {
 
     private final ActiveGamesContainer activeGamesContainer;
 
     private final CommandEventPublisher commandEventPublisher;
-
 
     @Inject
     public CommandProducer(ActiveGamesContainer activeGamesContainer, CommandEventPublisher commandEventPublisher) {
