@@ -4,10 +4,10 @@ import com.guysfromusa.carsgame.events.CommandEvent;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,8 @@ public class CommandConsumer {
     private final ActiveGamesContainer activeGamesContainer;
 
     private final GameEngine gameEngine;
-    @Autowired
+
+    @Inject
     public CommandConsumer(ActiveGamesContainer activeGamesContainer, GameEngine gameEngine) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.gameEngine = notNull(gameEngine);
@@ -39,7 +40,7 @@ public class CommandConsumer {
             Optional<GameState> gameToPlayRoundOptional = activeGamesContainer.getGameStates().stream()
                     .filter(state -> !state.isRoundInProgress())
                     .filter(state -> !state.getMovementsQueue().isEmpty())
-                    .findFirst();
+                    .findAny();
 
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 
