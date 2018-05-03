@@ -23,7 +23,7 @@ public class CommandProducer {
     }
 
     //todo either? / optional / String?
-    public String scheduleCommand(String gameName, Message move) {
+    public String scheduleCommand(String gameName, Command move) {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {

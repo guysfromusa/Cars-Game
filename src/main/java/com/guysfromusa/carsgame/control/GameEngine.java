@@ -32,16 +32,16 @@ public class GameEngine {
     }
 
     @Async
-    public void handleMoves(List<Message> messages, String gameId) {
+    public void handleMoves(List<Command> commands, String gameId) {
         GameState gameState = activeGamesContainer.getGameState(gameId);
 
-        //TODO for all messages calculate movements and collisions
+        //TODO for all commands calculate movements and collisions
 
         //TODO store all state in DB
 
         //TODO update memory state
 
-        messages.forEach(message -> {
+        commands.forEach(message -> {
             CompletableFuture<String> future = message.getFuture();
             log.info("Complete message");
             future.complete("{status:'OK'}");

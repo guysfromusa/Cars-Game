@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
-import com.guysfromusa.carsgame.control.Message;
+import com.guysfromusa.carsgame.control.Command;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ public final class GameStateBuilder {
 
     private String gameName;
 
-    private Message[] messages;
+    private Command[] commands;
 
     private GameStateBuilder() {
     }
@@ -29,15 +29,15 @@ public final class GameStateBuilder {
         return this;
     }
 
-    public GameStateBuilder movementsQueue(Message ... messages) {
-        this.messages = messages;
+    public GameStateBuilder movementsQueue(Command... commands) {
+        this.commands = commands;
         return this;
     }
 
     public GameState build() {
         GameState gameState = new GameState(gameName);
         gameState.setRoundInProgress(roundInProgress);
-        Arrays.stream(messages)
+        Arrays.stream(commands)
                 .forEach(gameState.getCommandsQueue()::add);
         return gameState;
     }

@@ -48,20 +48,20 @@ public class CommandConsumer {
                 gameState.setRoundInProgress(true);
 
                 //FIXME filter messages by type and group different cars
-                List<Message> consumedMessages = new ArrayList<>();
+                List<Command> consumedCommands = new ArrayList<>();
                 while (!gameState.getCommandsQueue().isEmpty()) {
-                    consumedMessages.add(gameState.getCommandsQueue().poll());
+                    consumedCommands.add(gameState.getCommandsQueue().poll());
                 }
-                handle(MOVE, consumedMessages, gameState.getGameName());
+                handle(MOVE, consumedCommands, gameState.getGameName());
             });
         }
     }
 
-    private void handle(MessageType messageType, List<Message> messages, String gameName) {
+    private void handle(MessageType messageType, List<Command> commands, String gameName) {
         //TODO Strategy someday
         switch (messageType) {
             case MOVE:
-                gameEngine.handleMoves(messages, gameName);
+                gameEngine.handleMoves(commands, gameName);
                 break;
             default:
                 throw new IllegalStateException("Undefined message type");

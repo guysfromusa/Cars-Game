@@ -1,7 +1,8 @@
 package com.guysfromusa.carsgame.v1;
 
+import com.guysfromusa.carsgame.control.AddCarToGameCommand;
+import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.control.Message;
 import com.guysfromusa.carsgame.control.MessageType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,9 +35,10 @@ public class TestResource {
     @GetMapping(value = "{gameName}")
     @ApiOperation(value = "simmulate message")
     public String startNewGame(@PathVariable("gameName") String gameName) {
-        Message move = new Message();
+        Command move = new AddCarToGameCommand();
         move.setGameName(gameName);
-        move.setMessageType(MessageType.MOVE);
+        move.setCarName("car1");
+        move.setMessageType(MessageType.ADD_CAR_TO_GAME);
 
         return commandProducer.scheduleCommand(gameName, move);
     }

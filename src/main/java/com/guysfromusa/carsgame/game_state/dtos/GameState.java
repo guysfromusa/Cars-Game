@@ -1,11 +1,13 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
-import com.guysfromusa.carsgame.control.Message;
+import com.guysfromusa.carsgame.control.Command;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,7 +21,7 @@ public class GameState {
     private final String gameName;
 
     @Getter
-    private final Queue<Message> commandsQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<Command> commandsQueue = new ConcurrentLinkedQueue<>();
 
     @Setter @Getter
     private volatile boolean roundInProgress = false;
@@ -30,9 +32,9 @@ public class GameState {
         this.gameName = gameName;
     }
 
-    public CompletableFuture<String> addCommandToExecute(Message message) {
-        boolean added = commandsQueue.offer(message);
-        return added ? message.getFuture() : completedFuture("{error:command not added to the queue}");
+    public CompletableFuture<String> addCommandToExecute(Command command) {
+        boolean added = commandsQueue.offer(command);
+        return added ? command.getFuture() : completedFuture("{error:command not added to the queue}");
     }
 
     public void addMovementHistory(String carName, Movement.Operation operation) {
