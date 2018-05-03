@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +36,13 @@ public class GameServiceTest {
     @Mock
     private MapService mapServiceMock;
 
+    @Mock
+    private ActiveGamesContainer activeGamesContainer;
+
     @Captor
     private ArgumentCaptor<GameEntity> gameEntityCaptor;
+
+    @Captor ArgumentCaptor<String> gameNameCaptor;
 
     @Test
     public void shouldStartNewGame() {
@@ -54,6 +60,9 @@ public class GameServiceTest {
         verify(gameRepositoryMock).save(gameEntityCaptor.capture());
         GameEntity gotGame = gameEntityCaptor.getValue();
 
+        verify(activeGamesContainer).addNewGame(gameNameCaptor.capture());
+        String gotGameName = gameNameCaptor.getValue();
+        assertThat(gotGameName).isEqualTo("game1");
         assertThat(gotGame.getMap().getName()).isEqualTo("map1");
         assertThat(gotGame.getName()).isEqualTo("game1");
     }
