@@ -22,10 +22,10 @@ public class CollisionMonitor {
 
         Map<Point, List<Car>> potentialCollisionPoints = cars.stream().filter(isCarNotRemovedFromGameMap()).collect(Collectors.groupingBy(o -> o.getPosition()));
 
-        potentialCollisionPoints.entrySet().stream().filter(isCollisionPoint()).forEach(this::resolveCollision);
+        potentialCollisionPoints.entrySet().stream().filter(isCollisionPoint()).forEach(this::resolveSinglePointCollision);
     }
 
-    private void resolveCollision(Map.Entry<Point, List<Car>> pointWithCars){
+    private void resolveSinglePointCollision(Map.Entry<Point, List<Car>> pointWithCars){
         List<Car> carOnCollision = pointWithCars.getValue();
         Map<Integer, List<Car>> carsByWeightRatio = carOnCollision.stream().collect(Collectors.groupingBy(o -> o.getType().getWeightRatio()));
 
