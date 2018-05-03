@@ -20,16 +20,20 @@ public class CollisionMonitor {
 
     public void execute(List<Car> cars){
 
-        Map<Point, List<Car>> potentialCollisionPoints = cars.stream().filter(isCarNotRemovedFromGameMap()).collect(Collectors.groupingBy(o -> o.getPosition()));
+        Map<Point, List<Car>> potentialCollisionPoints = cars.stream().filter(isCarNotRemovedFromGameMap())
+                .collect(Collectors.groupingBy(o -> o.getPosition()));
 
-        potentialCollisionPoints.entrySet().stream().filter(isCollisionPoint()).forEach(this::resolveSinglePointCollision);
+        potentialCollisionPoints.entrySet().stream().filter(isCollisionPoint())
+                .forEach(this::resolveSinglePointCollision);
     }
 
     private void resolveSinglePointCollision(Map.Entry<Point, List<Car>> pointWithCars){
         List<Car> carOnCollision = pointWithCars.getValue();
-        Map<Integer, List<Car>> carsByWeightRatio = carOnCollision.stream().collect(Collectors.groupingBy(o -> o.getType().getWeightRatio()));
+        Map<Integer, List<Car>> carsByWeightRatio = carOnCollision.stream()
+                .collect(Collectors.groupingBy(o -> o.getType().getWeightRatio()));
 
-        Optional<Integer> maxWeightRatioCar = carsByWeightRatio.keySet().stream().max(Comparator.naturalOrder());
+        Optional<Integer> maxWeightRatioCar = carsByWeightRatio.keySet().stream()
+                .max(Comparator.naturalOrder());
         if(!maxWeightRatioCar.isPresent()){
             return;
         }
@@ -65,7 +69,8 @@ public class CollisionMonitor {
     }
 
     private Predicate<Map.Entry<Point, List<Car>>> isCollisionPoint(){
-        return pointListEntry -> CollectionUtils.isNotEmpty(pointListEntry.getValue()) && pointListEntry.getValue().size() > 1;
+        return pointListEntry -> CollectionUtils.isNotEmpty(pointListEntry.getValue())
+                && pointListEntry.getValue().size() > 1;
     }
 
     private Predicate<Car> isCarNotRemovedFromGameMap(){
