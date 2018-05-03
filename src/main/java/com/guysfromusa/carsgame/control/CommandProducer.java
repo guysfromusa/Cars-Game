@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
 import com.google.common.util.concurrent.Futures;
+import com.guysfromusa.carsgame.events.CommandEventPublisher;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +12,15 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class CommandProducer {
 
-    @Inject
     private final ActiveGamesContainer activeGamesContainer;
 
+    private final CommandEventPublisher commandEventPublisher;
 
-    public CommandProducer(ActiveGamesContainer activeGamesContainer) {
+
+    @Inject
+    public CommandProducer(ActiveGamesContainer activeGamesContainer, CommandEventPublisher commandEventPublisher) {
         this.activeGamesContainer = activeGamesContainer;
+        this.commandEventPublisher = commandEventPublisher;
     }
 
     //todo either? / optional / String?
@@ -25,7 +29,7 @@ public class CommandProducer {
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
                     CompletableFuture<String> result = state.addMovementToExecute(move);
-                    //TODO send notification
+                    commandEventPublisher.fire(this);
                     return result;
                 })
                 .map(Futures::getUnchecked)
