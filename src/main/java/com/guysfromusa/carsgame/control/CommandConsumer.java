@@ -39,7 +39,7 @@ public class CommandConsumer {
         while (queuesNotEmpty) {
             Optional<GameState> gameToPlayRoundOptional = activeGamesContainer.getGameStates().stream()
                     .filter(state -> !state.isRoundInProgress())
-                    .filter(state -> !state.getMovementsQueue().isEmpty())
+                    .filter(state -> !state.getCommandsQueue().isEmpty())
                     .findAny();
 
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
@@ -49,7 +49,9 @@ public class CommandConsumer {
 
                 //FIXME filter messages by type and group different cars
                 List<Message> consumedMessages = new ArrayList<>();
-                gameState.getMovementsQueue().drainTo(consumedMessages);
+                while (!gameState.getCommandsQueue().isEmpty()) {
+                    consumedMessages.add(gameState.getCommandsQueue().poll());
+                }
                 handle(MOVE, consumedMessages, gameState.getGameName());
             });
         }

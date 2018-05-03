@@ -6,7 +6,6 @@ import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +28,7 @@ public class ActiveGamesContainer {
         gameState.addMovementHistory(carName, operation);
     }
 
-    public List<Movement> getCarsMovementHistory(String gameId, String carName){
+    public Collection<Movement> getCarsMovementHistory(String gameId, String carName){
        return  this.gameStateMap.get(gameId).getMovementHistory(carName);
     }
 

@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
+import java.util.Queue;
 
 import static com.guysfromusa.carsgame.game_state.dtos.GameStateBuilder.aGameState;
 import static java.util.Arrays.asList;
@@ -51,8 +51,8 @@ public class CommandConsumerTest {
 
         //then
         assertThat(gameStates)
-                .extracting(GameState::getMovementsQueue)
-                .extracting(BlockingQueue::size)
+                .extracting(GameState::getCommandsQueue)
+                .extracting(Queue::size)
                 .containsExactly(0, 0);
     }
 }
