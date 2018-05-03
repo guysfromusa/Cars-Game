@@ -8,15 +8,16 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 @Component
 public class CommandProducer {
 
-    @Inject
     private final ActiveGamesContainer activeGamesContainer;
 
-
+    @Inject
     public CommandProducer(ActiveGamesContainer activeGamesContainer) {
-        this.activeGamesContainer = activeGamesContainer;
+        this.activeGamesContainer = notNull(activeGamesContainer);
     }
 
     //todo either? / optional / String?
