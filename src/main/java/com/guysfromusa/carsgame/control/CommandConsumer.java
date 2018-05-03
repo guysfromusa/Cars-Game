@@ -33,7 +33,7 @@ public class CommandConsumer {
     }
 
     @EventListener(CommandEvent.class)
-    public synchronized void handle(CommandEvent event) {
+    public synchronized void handle(@SuppressWarnings("unused") CommandEvent event) {
         boolean queuesNotEmpty = true;
 
         while (queuesNotEmpty) {
