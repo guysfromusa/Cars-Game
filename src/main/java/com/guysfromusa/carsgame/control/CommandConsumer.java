@@ -1,18 +1,16 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.events.CommandEvent;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
 
 import static com.guysfromusa.carsgame.control.MessageType.MOVE;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -22,36 +20,20 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 @Component
 @Slf4j
-public class CommandConsumer implements Runnable {
+public class CommandConsumer {
 
     private final ActiveGamesContainer activeGamesContainer;
 
     private final GameEngine gameEngine;
-
-    private final TaskExecutor taskExecutor;
-
-    public final CyclicBarrier queuesNotEmptyBarrier = new CyclicBarrier(2);
-
     @Autowired
-    public CommandConsumer(ActiveGamesContainer activeGamesContainer, GameEngine gameEngine, TaskExecutor taskExecutor) {
+    public CommandConsumer(ActiveGamesContainer activeGamesContainer, GameEngine gameEngine) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.gameEngine = notNull(gameEngine);
-        this.taskExecutor = notNull(taskExecutor);
     }
 
-    @PostConstruct
-    public void init() {
-        taskExecutor.execute(this);
-    }
 
-    @Override
-    public void run() {
-        while(true) {
-            try {
-                queuesNotEmptyBarrier.await();
-            } catch (InterruptedException | BrokenBarrierException e) {
-                log.error("Barrier terminated: ", e);
-            }
+    @EventListener(CommandEvent.class)
+    public synchronized void handle(CommandEvent event) {
 
             Optional<GameState> gameToPlayRoundOptional = activeGamesContainer.getGameStates().stream()
                     .filter(state -> !state.isRoundInProgress())
@@ -67,10 +49,6 @@ public class CommandConsumer implements Runnable {
                 handle(MOVE, consumedMessages, gameState.getGameName());
             });
 
-            if (!gameToPlayRoundOptional.isPresent()) {
-                queuesNotEmptyBarrier.reset();
-            }
-        }
     }
 
     private void handle(MessageType messageType, List<Message> messages, String gameName) {
