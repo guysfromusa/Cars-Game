@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
-import com.guysfromusa.carsgame.game_state.GameStateTracker;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 @Component
 @Slf4j
-public class MessageDispatcher implements Runnable {
+public class CommandConsumer implements Runnable {
 
-    private final GameStateTracker gameStateTracker;
+    private final ActiveGamesContainer activeGamesContainer;
 
     private final GameEngine gameEngine;
 
@@ -33,8 +33,8 @@ public class MessageDispatcher implements Runnable {
     public final CyclicBarrier queuesNotEmptyBarrier = new CyclicBarrier(2);
 
     @Autowired
-    public MessageDispatcher(GameStateTracker gameStateTracker, GameEngine gameEngine, TaskExecutor taskExecutor) {
-        this.gameStateTracker = notNull(gameStateTracker);
+    public CommandConsumer(ActiveGamesContainer activeGamesContainer, GameEngine gameEngine, TaskExecutor taskExecutor) {
+        this.activeGamesContainer = notNull(activeGamesContainer);
         this.gameEngine = notNull(gameEngine);
         this.taskExecutor = notNull(taskExecutor);
     }
@@ -53,7 +53,7 @@ public class MessageDispatcher implements Runnable {
                 log.error("Barrier terminated: ", e);
             }
 
-            Optional<GameState> gameToPlayRoundOptional = gameStateTracker.getGameStates().stream()
+            Optional<GameState> gameToPlayRoundOptional = activeGamesContainer.getGameStates().stream()
                     .filter(state -> !state.isRoundInProgress())
                     .filter(state -> !state.getMovementsQueue().isEmpty())
                     .findFirst();
@@ -82,6 +82,6 @@ public class MessageDispatcher implements Runnable {
             default:
                 throw new IllegalStateException("Undefined message type");
         }
-        gameStateTracker.getGameState(gameName).setRoundInProgress(false);
+        activeGamesContainer.getGameState(gameName).setRoundInProgress(false);
     }
 }

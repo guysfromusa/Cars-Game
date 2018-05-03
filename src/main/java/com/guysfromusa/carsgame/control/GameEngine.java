@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
-import com.guysfromusa.carsgame.game_state.GameStateTracker;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -19,16 +19,16 @@ import static org.apache.commons.lang3.Validate.notNull;
 @Slf4j
 public class GameEngine {
 
-    private final GameStateTracker gameStateTracker;
+    private final ActiveGamesContainer activeGamesContainer;
 
     @Inject
-    public GameEngine(GameStateTracker gameStateTracker) {
-        this.gameStateTracker = notNull(gameStateTracker);
+    public GameEngine(ActiveGamesContainer activeGamesContainer) {
+        this.activeGamesContainer = notNull(activeGamesContainer);
     }
 
     @Async
     public void handleMoves(List<Message> messages, String gameId) {
-        GameState gameState = gameStateTracker.getGameState(gameId);
+        GameState gameState = activeGamesContainer.getGameState(gameId);
 
         //TODO for all messages calculate movements and collisions
 
