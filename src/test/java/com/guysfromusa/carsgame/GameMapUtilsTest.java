@@ -26,15 +26,15 @@ public class GameMapUtilsTest {
 
     @Test
     public void isReachable() {
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0, 0}, {0, 1, 0}, {0, 0, 0}})).isTrue();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0}, {0, 0}})).isTrue();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{0}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1}, {1, 1}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1}})).isTrue();
 
         assertThat(GameMapUtils.isReachable(new Integer[][]{})).isFalse();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{1}})).isFalse();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1}, {1, 1}})).isFalse();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 0}, {0, 1}})).isFalse();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 0, 0}, {1, 0, 0}, {0, 1, 1}})).isFalse();
-        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0, 0}, {}, {0, 0, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0}, {0, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 1}, {1, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 1, 1}, {0, 1, 1}, {1, 0, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1, 1}, {}, {1, 1, 1}})).isFalse();
     }
 }

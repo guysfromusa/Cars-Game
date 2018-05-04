@@ -34,7 +34,7 @@ public class GameMapUtils {
         // create visited array (mark walls as visited)
         // TODO: change map & visited to primitive arrays
         Boolean[][] visited = Stream.of(map)
-                .map(row -> Stream.of(row).map(v -> v != 0).toArray(Boolean[]::new))
+                .map(row -> Stream.of(row).map(v -> v == 0).toArray(Boolean[]::new))
                 .toArray(Boolean[][]::new);
 
         // queue of point to visit - tuple of indexes (x,y)
@@ -47,6 +47,7 @@ public class GameMapUtils {
         }
         queue.offer(root);
 
+        // Breadth-first search
         while (!queue.isEmpty()) {
             Tuple2<Integer, Integer> indexes = queue.poll();
             int x = indexes._1;
@@ -70,7 +71,7 @@ public class GameMapUtils {
     private static Tuple2<Integer, Integer> findValidPoint(Integer[][] map) {
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
-                if (map[x][y] == 0) {
+                if (map[x][y] != 0) {
                     return Tuple(x, y);
                 }
             }
