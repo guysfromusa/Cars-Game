@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
@@ -18,12 +19,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -49,11 +45,14 @@ public class GamesResource {
 
     private final ConversionService conversionService;
 
+    private final ActiveGamesContainer activeGamesContainer;
+
     @Inject
-    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService, ConversionService conversionService){
+    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService, ConversionService conversionService, ActiveGamesContainer activeGamesContainer){
         this.carService = notNull(carService);
         this.gameService = notNull(gameService);
         this.conversionService = notNull(conversionService);
+        this.activeGamesContainer = notNull(activeGamesContainer);
         notEmpty(movementStrategies)
                 .forEach(strategy -> movementStrategyMap.put(strategy.getType(), strategy));
     }
@@ -87,6 +86,7 @@ public class GamesResource {
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
 
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
+        activeGamesContainer.addNewGame(gameEntity.getName());
         return conversionService.convert(gameEntity, Game.class);
     }
 

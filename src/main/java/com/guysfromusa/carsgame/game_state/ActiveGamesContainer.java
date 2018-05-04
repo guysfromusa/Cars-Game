@@ -21,17 +21,13 @@ public class ActiveGamesContainer {
         log.info("Game: {} added to container", gameName);
     }
 
-    public  void addNewCar(String gameName, String carName){
-       GameState gameState = this.gameStateMap.get(gameName);
-       gameState.addNewCar(carName);
-        log.info("Car: {} added to game: {}", carName, gameName);
-    }
-
+    @Deprecated //use gameState directly
     public void addExecutedMove(String gameName, String carName, Movement.Operation operation){
         GameState gameState = this.gameStateMap.get(gameName);
         gameState.addMovementHistory(carName, operation);
     }
 
+    @Deprecated //use gameState directly
     public Collection<Movement> getCarsMovementHistory(String gameName, String carName){
        return  this.gameStateMap.get(gameName).getMovementHistory(carName);
     }

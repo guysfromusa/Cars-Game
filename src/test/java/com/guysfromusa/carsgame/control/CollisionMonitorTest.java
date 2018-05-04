@@ -10,7 +10,6 @@ import java.util.Set;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static com.guysfromusa.carsgame.entities.enums.CarType.RACER;
-import static com.guysfromusa.carsgame.v1.model.builder.CarBuilder.aCar;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -82,7 +81,7 @@ public class CollisionMonitorTest {
         point.setX(posX);
         point.setY(posY);
 
-        return aCar()
+        return Car.builder()
         .position(point)
         .name(carName)
         .type(carType).build();
