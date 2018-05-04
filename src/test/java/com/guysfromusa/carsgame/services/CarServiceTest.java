@@ -10,6 +10,8 @@ import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
+import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.validator.BusinessValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -54,6 +56,9 @@ public class CarServiceTest {
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Mock
+    private List<BusinessValidator<CarGameAdditionValidationSubject>> validators;
 
     @InjectMocks
     private CarService carService;

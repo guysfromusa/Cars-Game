@@ -14,6 +14,7 @@ import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.validator.BusinessValidator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,15 +44,21 @@ public class CarService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final List<BusinessValidator<CarGameAdditionValidationSubject>> validators;
+
     @Inject
-    public CarService(CarRepository carRepository, MovementsHistoryRepository movementsHistoryRepository,
-                      GameRepository gameRepository, CarGameAdditionValidator carGameAdditionValidator,
-                      ApplicationEventPublisher applicationEventPublisher){
+    public CarService(CarRepository carRepository,
+                      MovementsHistoryRepository movementsHistoryRepository,
+                      GameRepository gameRepository,
+                      CarGameAdditionValidator carGameAdditionValidator,
+                      ApplicationEventPublisher applicationEventPublisher,
+                      List<BusinessValidator<CarGameAdditionValidationSubject>> validators){
         this.carRepository = notNull(carRepository);
         this.movementsHistoryRepository = notNull(movementsHistoryRepository);
         this.gameRepository = notNull(gameRepository);
         this.carGameAdditionValidator = notNull(carGameAdditionValidator);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
+        this.validators = notNull(validators);
     }
 
 
@@ -110,6 +117,8 @@ public class CarService {
         CarGameAdditionValidationSubject validationSubject =
                 new CarGameAdditionValidationSubject(car, gameEntity, startingPoint);
         carGameAdditionValidator.validateCarBeforeAddition(validationSubject);
+
+        validators.forEach(validator -> validator.validate(validationSubject));
 
         Integer positionX = startingPoint.getX();
         Integer positionY = startingPoint.getY();

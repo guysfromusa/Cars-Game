@@ -14,14 +14,16 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.*;
+import static java.util.Optional.ofNullable;
 
 @Component
+@Deprecated
 public class CarGameAdditionValidator{
 
     public static final String CAR_CRASHED_MESSAGE = "Car is already crashed";
     public static final String CAR_EXISTS_IN_GAME_MESSAGE = "Car is already added to game";
     public static final String WRONG_STARTING_POINT_MESSAGE = "Starting point is invalid";
+    public static final String STARTING_POINT_OCCUPIED_MESSAGE = "Starting point is already occupied by another car";
 
     private final MapService mapService;
 
