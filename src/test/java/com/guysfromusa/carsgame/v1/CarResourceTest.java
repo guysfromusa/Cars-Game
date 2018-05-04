@@ -105,7 +105,7 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
         activeGamesContainer.addNewGame(game);
 
         //when
-        Car car = assignCarToTheGame(template, name, game, point);
+        Car car = addCarToGame(template, name, game, point);
 
         //then
         assertThat(car.getPosition())

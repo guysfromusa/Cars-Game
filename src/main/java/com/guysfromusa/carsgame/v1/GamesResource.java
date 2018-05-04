@@ -13,7 +13,11 @@ import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
 import com.guysfromusa.carsgame.v1.model.Movement;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,6 +84,7 @@ public class GamesResource {
 
     @PostMapping(path = "{gameName}")
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
+
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
         activeGamesContainer.addNewGame(gameEntity.getName());
         return conversionService.convert(gameEntity, Game.class);
