@@ -4,8 +4,9 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
-import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import com.guysfromusa.carsgame.game_state.AddNewGameEvent;
 import com.guysfromusa.carsgame.repositories.GameRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,15 +25,17 @@ public class GameService {
 
     private final MapService mapService;
 
-    private final ActiveGamesContainer activeGamesContainer;
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+
 
     @Inject
     public GameService(GameRepository gameRepository,
                        MapService mapService,
-                       ActiveGamesContainer activeGamesContainer) {
+                       ApplicationEventPublisher applicationEventPublisher) {
         this.gameRepository = notNull(gameRepository);
         this.mapService = notNull(mapService);
-        this.activeGamesContainer = notNull(activeGamesContainer);
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -51,7 +54,7 @@ public class GameService {
         game.setName(gameName);
         game.setMap(map);
         GameEntity savedGame = gameRepository.save(game);
-        activeGamesContainer.addNewGame(gameName);
+        applicationEventPublisher.publishEvent(new AddNewGameEvent(this, gameName));
         return savedGame;
     }
 
