@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.game_state.events;
 
+import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -15,10 +16,12 @@ public class AddCarToGameEvent extends ApplicationEvent {
 
     private final String gameName;
     private final String carName;
+    private final Point point;
 
-    public AddCarToGameEvent(Object source, String gameName, String carName) {
+    public AddCarToGameEvent(Object source, String gameName, String carName, Point point) {
         super(source);
         this.gameName = gameName;
         this.carName = carName;
+        this.point = point;
     }
 }

@@ -119,7 +119,7 @@ public class CarService {
 
         car.setDirection(Direction.NORTH);
         car.setGame(gameEntity);
-        applicationEventPublisher.publishEvent(new AddCarToGameEvent(this, gameName, carName));
+        applicationEventPublisher.publishEvent(new AddCarToGameEvent(this, gameName, carName, startingPoint));
         return carRepository.save(car);
     }
 

@@ -35,6 +35,7 @@ public class GameEventListener {
     @SuppressWarnings("unused")
     public void addNewGameListener(AddCarToGameEvent carToGameEvent){
         log.info("Got event: {}", carToGameEvent);
-        activeGamesContainer.addNewCar(carToGameEvent.getGameName(), carToGameEvent.getCarName());
+        activeGamesContainer.addNewCar(carToGameEvent.getGameName(), carToGameEvent.getCarName(),
+                carToGameEvent.getPoint());
     }
 }

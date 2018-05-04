@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.game_state;
 
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,9 @@ public class ActiveGamesContainer {
         log.info("Game: {} added to container", gameName);
     }
 
-    public  void addNewCar(String gameName, String carName){
+    public  void addNewCar(String gameName, String carName, Point startingPoint){
        GameState gameState = this.gameStateMap.get(gameName);
-       gameState.addNewCar(carName);
+       gameState.addNewCar(carName, startingPoint);
         log.info("Car: {} added to game: {}", carName, gameName);
     }
 

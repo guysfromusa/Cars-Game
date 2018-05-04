@@ -28,7 +28,7 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.addNewGame("game1");
 
         //when
-        activeGamesContainer.addNewCar("game1", "bmw");
+        activeGamesContainer.addNewCar("game1", "bmw", null);
 
         //then
         assertThat(activeGamesContainer.getCarsMovementHistory( "game1","bmw")).isEmpty();
@@ -38,7 +38,7 @@ public class ActiveGamesContainerTest {
     public void shouldAddNewCarWithMovement(){
         //given
         activeGamesContainer.addNewGame("game1");
-        activeGamesContainer.addNewCar("game1", "bmw");
+        activeGamesContainer.addNewCar("game1", "bmw", null);
 
         //when
         activeGamesContainer.addExecutedMove("game1","bmw", FORWARD);
