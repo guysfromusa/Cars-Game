@@ -28,8 +28,8 @@ public class SpringContextConfiguration {
     }
 
     @Bean
-    public TaskExecutor threadPoolExecutor(@Value("${threads.pool.capacity}") int capacity,
-                                           @Value("${threads.pool.max}") int maxPoolSize) {
+    public TaskExecutor threadPoolExecutor(@Value("${threads.pool.capacity:2}") int capacity,
+                                           @Value("${threads.pool.max:4}") int maxPoolSize) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setCorePoolSize(getRuntime().availableProcessors());
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
