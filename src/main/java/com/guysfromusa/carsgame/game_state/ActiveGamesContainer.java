@@ -16,7 +16,6 @@ public class ActiveGamesContainer {
 
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();
 
-    @Deprecated //use gameState directly
     public void addNewGame(String gameName){
         this.gameStateMap.put(gameName, new GameState(gameName));
         log.info("Game: {} added to container", gameName);
