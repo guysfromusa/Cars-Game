@@ -1,9 +1,10 @@
 package com.guysfromusa.carsgame.control;
 
-import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
+import io.vavr.Tuple;
+import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -61,15 +62,15 @@ public class GameEngine {
     public void handleAddCars(List<Command> commands, String gameName) {
         GameState gameState = activeGamesContainer.getGameState(gameName);
 
-        commands.forEach(command -> {
-            AddCarToGameCommand cmd = (AddCarToGameCommand) command;
-            CompletableFuture<CarEntity> result = cmd.getFuture();
-            CarEntity carEntity = carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint());
-            result.complete(carEntity);
+        commands.stream()
+                .map(command -> (AddCarToGameCommand) command)
+                .map(cmd -> Tuple.of(cmd, Try.of(() -> carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint())).toEither()))
+                .map(cmdEitherTuple2 -> cmdEitherTuple2._2.isRight()
+                        ? (Executable) () -> cmdEitherTuple2._1.getFuture().complete(cmdEitherTuple2._2.get())
+                        : (Executable) () -> cmdEitherTuple2._1.getFuture().completeExceptionally(cmdEitherTuple2._2.getLeft()))
+                .forEach(Executable::invoke);
 
-        });
-
-        gameState.setRoundInProgress(true);
+        gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent(this));
     }
 }

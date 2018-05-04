@@ -11,9 +11,7 @@ import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
 import com.guysfromusa.carsgame.v1.model.Movement;
-import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
-import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -87,6 +85,7 @@ public class GamesResource {
 
     @PostMapping(path = "{gameName}")
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName){
+
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
         return conversionService.convert(gameEntity, Game.class);
     }
