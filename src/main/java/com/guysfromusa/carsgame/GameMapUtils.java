@@ -8,12 +8,15 @@ public class GameMapUtils {
 
     private static final String COLUMN_MAP_SEPARATOR = ",";
 
-    public static Integer[][] getMapMatrixFromContent(String content){
+    public static Integer[][] getMapMatrixFromContent(String content) {
         String[] gameMapRows = content.split(NEW_ROW_MAP_SEPARATOR);
 
         return Stream.of(gameMapRows).map(row -> {
             String[] columnsRow = row.split(COLUMN_MAP_SEPARATOR);
-            return Stream.of(columnsRow).map(Integer::valueOf).toArray(Integer[]::new);
+            return Stream.of(columnsRow)
+                    .map(Integer::valueOf)
+                    .map(v -> v != 0 ? 1 : 0)
+                    .toArray(Integer[]::new);
         }).toArray(Integer[][]::new);
     }
 
