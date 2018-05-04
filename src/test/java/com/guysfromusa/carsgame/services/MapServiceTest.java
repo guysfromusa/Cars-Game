@@ -79,7 +79,7 @@ public class MapServiceTest {
         Point startingPoint = new Point(1, 3);
 
         //when
-        boolean positionValidOnGameMap = mapService.isPositionValidOnGameMap(gameMapContent, startingPoint);
+        boolean positionValidOnGameMap = mapService.isFieldReachableOnGameMap(gameMapContent, startingPoint);
 
         //then
         assertTrue(positionValidOnGameMap);
@@ -95,7 +95,7 @@ public class MapServiceTest {
         Point startingPoint = new Point(5, 3);
 
         //when
-        boolean positionValidOnGameMap = mapService.isPositionValidOnGameMap(gameMapContent, startingPoint);
+        boolean positionValidOnGameMap = mapService.isFieldReachableOnGameMap(gameMapContent, startingPoint);
 
         //then
         assertFalse(positionValidOnGameMap);

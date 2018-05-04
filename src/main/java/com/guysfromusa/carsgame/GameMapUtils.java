@@ -8,7 +8,7 @@ public class GameMapUtils {
 
     private static final String COLUMN_MAP_SEPARATOR = ",";
 
-    public static Integer[][] getMapMatrixFromContent(String content){
+    public static Integer[][] getMapMatrixContent(String content){
         String[] gameMapRows = content.split(NEW_ROW_MAP_SEPARATOR);
 
         return Stream.of(gameMapRows).map(row -> {
