@@ -3,7 +3,6 @@ package com.guysfromusa.carsgame.game_state;
 
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
-import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -17,22 +16,19 @@ public class ActiveGamesContainer {
 
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();
 
+    @Deprecated //use gameState directly
     public void addNewGame(String gameName){
         this.gameStateMap.put(gameName, new GameState(gameName));
         log.info("Game: {} added to container", gameName);
     }
 
-    public  void addNewCar(String gameName, String carName, Point startingPoint){
-       GameState gameState = this.gameStateMap.get(gameName);
-       gameState.addNewCar(carName, startingPoint);
-        log.info("Car: {} added to game: {}", carName, gameName);
-    }
-
+    @Deprecated //use gameState directly
     public void addExecutedMove(String gameName, String carName, Movement.Operation operation){
         GameState gameState = this.gameStateMap.get(gameName);
         gameState.addMovementHistory(carName, operation);
     }
 
+    @Deprecated //use gameState directly
     public Collection<Movement> getCarsMovementHistory(String gameName, String carName){
        return  this.gameStateMap.get(gameName).getMovementHistory(carName);
     }

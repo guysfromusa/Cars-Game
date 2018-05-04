@@ -1,6 +1,5 @@
 package com.guysfromusa.carsgame.game_state;
 
-import com.guysfromusa.carsgame.game_state.events.AddCarToGameEvent;
 import com.guysfromusa.carsgame.game_state.events.AddNewGameEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,11 +30,4 @@ public class GameEventListener {
         activeGamesContainer.addNewGame(newGameEvent.getGameName());
     }
 
-    @TransactionalEventListener
-    @SuppressWarnings("unused")
-    public void addNewGameListener(AddCarToGameEvent carToGameEvent){
-        log.info("Got event: {}", carToGameEvent);
-        activeGamesContainer.addNewCar(carToGameEvent.getGameName(), carToGameEvent.getCarName(),
-                carToGameEvent.getPoint());
-    }
 }

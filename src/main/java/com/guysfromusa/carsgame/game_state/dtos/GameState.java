@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
 import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.CarState;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
@@ -47,15 +48,14 @@ public class GameState {
         carsMovement.add(Movement.newMovement(operation));
     }
 
-    //FIXME why do we need this maybe getOrDefault()?
-    public void addNewCar(String carName, Point startingPoint) {
+    public void addNewCar(CarEntity carEntity) {
         Car car = Car.builder()
-                .name(carName)
-                .position(startingPoint).build();
+                .name(carEntity.getName())
+                .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
 
         CarState carState = new CarState();
         carState.setCar(car);
-        carsStatesMemory.put(carName, carState);
+        carsStatesMemory.put(car.getName(), carState);
     }
 
     public Collection<Movement> getMovementHistory(String carName) {
