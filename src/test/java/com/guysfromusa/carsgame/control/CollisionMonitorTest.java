@@ -6,9 +6,11 @@ import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
 import static com.guysfromusa.carsgame.entities.enums.CarType.RACER;
+import static com.guysfromusa.carsgame.v1.model.builder.CarBuilder.aCar;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,59 +22,59 @@ public class CollisionMonitorTest {
     private CollisionMonitor collisionMonitor = new CollisionMonitor();
 
     @Test
-    public void shouldMarkCarsCrashedWhenTypeRacing(){
+    public void whenRacingCarOnOnePoint_shouldMarkCarsCrashed(){
         //given
         Car car1 = createCar(1, 1, "car1", RACER);
         Car car2 = createCar(1, 1, "car2", RACER);
         List<Car> cars = asList(car1, car2);
 
         //when
-        collisionMonitor.execute(cars);
+        Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
 
         //then
-        assertThat(cars).extracting(Car::isCrashed).containsOnly(true, true);
+        assertThat(crashedCarNames).containsOnly("car1", "car2");
     }
 
     @Test
-    public void shouldMarkNormalCarCrashedWhenTruckCollided(){
+    public void whenTruckCollidedWithNormalCar_shouldMarkNormalCarCrashed(){
         //given
         Car car1 = createCar(1, 1, "car1", RACER);
         Car car2 = createCar(1, 1, "car2", MONSTER);
         List<Car> cars = asList(car1, car2);
 
         //when
-        collisionMonitor.execute(cars);
+        Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
 
         //then
-        assertThat(cars).extracting(Car::isCrashed).containsOnly(true, false);
+        assertThat(crashedCarNames).containsOnly("car1");
     }
 
     @Test
-    public void shouldMarkCarsCrashedWhenAllMonsters(){
+    public void whenNormalCarAndMonsterOnOnePoint_shouldMarkCarsCrashed(){
         //given
         Car car1 = createCar(1, 1, "car1", MONSTER);
         Car car2 = createCar(1, 1, "car2", MONSTER);
         List<Car> cars = asList(car1, car2);
 
         //when
-        collisionMonitor.execute(cars);
+        Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
 
         //then
-        assertThat(cars).extracting(Car::isCrashed).containsOnly(true, true);
+        assertThat(crashedCarNames).containsOnly("car1", "car2");
     }
 
     @Test
-    public void shouldNotMarkCarsCrashedWhenAllMonsters(){
+    public void whenTwoMonstersOnDifferentPoint_shouldNotMarkCarsCrashed(){
         //given
         Car car1 = createCar(2, 1, "car1", MONSTER);
         Car car2 = createCar(1, 1, "car2", MONSTER);
         List<Car> cars = asList(car1, car2);
 
         //when
-        collisionMonitor.execute(cars);
+        Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
 
         //then
-        assertThat(cars).extracting(Car::isCrashed).containsOnly(false, false);
+        assertThat(crashedCarNames).isEmpty();
     }
 
     private Car createCar(Integer posX, Integer posY, String carName, CarType carType){
@@ -80,11 +82,10 @@ public class CollisionMonitorTest {
         point.setX(posX);
         point.setY(posY);
 
-        Car car = new Car();
-        car.setPosition(point);
-        car.setName(carName);
-        car.setType(carType);
-        return car;
+        return aCar()
+        .position(point)
+        .name(carName)
+        .type(carType).build();
     }
 
 }
