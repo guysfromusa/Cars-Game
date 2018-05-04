@@ -9,15 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 @Slf4j
@@ -60,7 +58,8 @@ public class GameState {
 
     public Collection<Movement> getMovementHistory(String carName) {
         return Optional.ofNullable(carsStatesMemory.get(carName))
-                .map(CarState::getMovements).orElse(null);
+                .map(CarState::getMovements)
+                .orElse(emptyList());
     }
 
     public Car getCar(String carName){
