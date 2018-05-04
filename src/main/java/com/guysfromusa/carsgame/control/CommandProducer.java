@@ -1,25 +1,28 @@
 package com.guysfromusa.carsgame.control;
 
 import com.google.common.util.concurrent.Futures;
-import com.guysfromusa.carsgame.events.CommandEventPublisher;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 @Component
 public class CommandProducer {
 
     private final ActiveGamesContainer activeGamesContainer;
 
-    private final CommandEventPublisher commandEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Inject
-    public CommandProducer(ActiveGamesContainer activeGamesContainer, CommandEventPublisher commandEventPublisher) {
-        this.activeGamesContainer = activeGamesContainer;
-        this.commandEventPublisher = commandEventPublisher;
+    public CommandProducer(ActiveGamesContainer activeGamesContainer,
+                           ApplicationEventPublisher applicationEventPublisher) {
+        this.activeGamesContainer = notNull(activeGamesContainer);
+        this.applicationEventPublisher = notNull(applicationEventPublisher);
     }
 
     //todo either? / optional / String?
@@ -28,7 +31,7 @@ public class CommandProducer {
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
                     CompletableFuture<String> result = state.addCommandToExecute(move);
-                    commandEventPublisher.fire(this);
+                    applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })
                 .map(Futures::getUnchecked)

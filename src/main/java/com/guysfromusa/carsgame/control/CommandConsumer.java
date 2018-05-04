@@ -1,6 +1,5 @@
 package com.guysfromusa.carsgame.control;
 
-import com.guysfromusa.carsgame.events.CommandEvent;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.extern.slf4j.Slf4j;
