@@ -58,18 +58,19 @@ public class GameEngine {
     }
 
     @Async
-    public void handleAddCars(List<Command> commands, String gameName) {
+    public void handleAddCars(List<Command> commands, String gameName) { //TODO pass state
         GameState gameState = activeGamesContainer.getGameState(gameName);
 
         commands.forEach(command -> {
             AddCarToGameCommand cmd = (AddCarToGameCommand) command;
             CompletableFuture<CarEntity> result = cmd.getFuture();
             CarEntity carEntity = carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint());
+            gameState.addNewCar(carEntity);
             result.complete(carEntity);
 
         });
 
-        gameState.setRoundInProgress(true);
+        gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent(this));
     }
 }

@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
-import com.guysfromusa.carsgame.game_state.events.AddNewGameEvent;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -37,13 +35,8 @@ public class GameServiceTest {
     @Mock
     private MapService mapServiceMock;
 
-    @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
-
     @Captor
     private ArgumentCaptor<GameEntity> gameEntityCaptor;
-
-    @Captor ArgumentCaptor<AddNewGameEvent> gameNameEventCaptor;
 
     @Test
     public void shouldStartNewGame() {
@@ -61,9 +54,6 @@ public class GameServiceTest {
         verify(gameRepositoryMock).save(gameEntityCaptor.capture());
         GameEntity gotGame = gameEntityCaptor.getValue();
 
-        verify(applicationEventPublisher).publishEvent(gameNameEventCaptor.capture());
-        AddNewGameEvent gotGameName = gameNameEventCaptor.getValue();
-        assertThat(gotGameName.getGameName()).isEqualTo("game1");
         assertThat(gotGame.getMap().getName()).isEqualTo("map1");
         assertThat(gotGame.getName()).isEqualTo("game1");
     }

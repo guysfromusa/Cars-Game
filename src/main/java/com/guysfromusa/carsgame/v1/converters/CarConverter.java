@@ -17,10 +17,10 @@ public class CarConverter implements Converter<CarEntity, Car> {
 
     @Override
     public Car convert(CarEntity carEntity) {
-        Car car = new Car();
-        car.setName(carEntity.getName());
-        car.setType(carEntity.getCarType());
-        car.setDirection(carEntity.getDirection());
+        Car car = Car.builder()
+                .name(carEntity.getName())
+                .type(carEntity.getCarType())
+                .direction(carEntity.getDirection()).build();
 
         ofNullable(carEntity.getGame())
                 .map(GameEntity::getName)
