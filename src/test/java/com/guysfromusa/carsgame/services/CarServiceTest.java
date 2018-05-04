@@ -9,7 +9,6 @@ import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
-import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
 import com.guysfromusa.carsgame.validator.BusinessValidator;
 import org.junit.Test;
@@ -50,9 +49,6 @@ public class CarServiceTest {
 
     @Mock
     private MovementsHistoryRepository movementsHistoryRepository;
-
-    @Mock
-    private CarGameAdditionValidator carGameAdditionValidator;
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;

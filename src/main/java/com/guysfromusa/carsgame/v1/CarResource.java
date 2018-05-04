@@ -27,10 +27,10 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static com.guysfromusa.carsgame.control.MessageType.ADD_CAR_TO_GAME;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.CAR_CRASHED_MESSAGE;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.CAR_EXISTS_IN_GAME_MESSAGE;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.STARTING_POINT_OCCUPIED_MESSAGE;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.WRONG_STARTING_POINT_MESSAGE;
+import static com.guysfromusa.carsgame.validator.CarNotCrashedValidator.CAR_CRASHED_MESSAGE;
+import static com.guysfromusa.carsgame.validator.CarNotInGameValidator.CAR_EXISTS_IN_GAME_MESSAGE;
+import static com.guysfromusa.carsgame.validator.StartingPointOccupiedValidator.STARTING_POINT_OCCUPIED_MESSAGE;
+import static com.guysfromusa.carsgame.validator.StartingPointOnMapValidator.WRONG_STARTING_POINT_MESSAGE;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
