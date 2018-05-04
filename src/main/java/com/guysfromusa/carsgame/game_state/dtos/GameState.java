@@ -1,12 +1,17 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
 import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.CarState;
+import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +32,7 @@ public class GameState {
     @Setter @Getter
     private volatile boolean roundInProgress = false;
 
-    private Map<String, Collection<Movement>> movementsHistoryByCar = new ConcurrentHashMap<>();
+    private Map<String, CarState> carsStatesMemory = new ConcurrentHashMap<>();
 
     public GameState(String gameName) {
         this.gameName = gameName;
@@ -39,16 +44,26 @@ public class GameState {
     }
 
     public void addMovementHistory(String carName, Movement.Operation operation) {
-        Collection<Movement> carsMovement = movementsHistoryByCar.get(carName);
+        Collection<Movement> carsMovement = carsStatesMemory.get(carName).getMovements();
         carsMovement.add(Movement.newMovement(operation));
     }
 
-    //FIXME why do we need this maybe getOrDefault()?
-    public void addNewCar(String carName) {
-        movementsHistoryByCar.put(carName, new ConcurrentLinkedQueue<>());
+    public void addNewCar(CarEntity carEntity) {
+        Car car = Car.builder()
+                .name(carEntity.getName())
+                .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
+
+        CarState carState = new CarState();
+        carState.setCar(car);
+        carsStatesMemory.put(car.getName(), carState);
     }
 
     public Collection<Movement> getMovementHistory(String carName) {
-        return movementsHistoryByCar.get(carName);
+        return Optional.ofNullable(carsStatesMemory.get(carName))
+                .map(CarState::getMovements).orElse(null);
+    }
+
+    public Car getCar(String carName){
+        return carsStatesMemory.get(carName).getCar();
     }
 }

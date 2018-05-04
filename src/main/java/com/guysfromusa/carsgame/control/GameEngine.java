@@ -59,16 +59,21 @@ public class GameEngine {
     }
 
     @Async
-    public void handleAddCars(List<Command> commands, String gameName) {
+    public void handleAddCars(List<Command> commands, String gameName) {//TODO pass gameState
         GameState gameState = activeGamesContainer.getGameState(gameName);
 
         commands.stream()
                 .map(command -> (AddCarToGameCommand) command)
-                .map(cmd -> Tuple.of(cmd, Try.of(() -> carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint())).toEither()))
-                .map(cmdEitherTuple2 -> cmdEitherTuple2._2.isRight()
-                        ? (Executable) () -> cmdEitherTuple2._1.getFuture().complete(cmdEitherTuple2._2.get())
-                        : (Executable) () -> cmdEitherTuple2._1.getFuture().completeExceptionally(cmdEitherTuple2._2.getLeft()))
-                .forEach(Executable::invoke);
+                .map(cmd -> Tuple.of(cmd.getFuture(),
+                        Try.of(() -> carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint()))
+                                .toEither()))
+                .forEach(tuple2 -> tuple2._2
+                        .mapLeft(tuple2._1::completeExceptionally)
+                        .right()
+                        .forEach(carEntity -> {
+                            gameState.addNewCar(carEntity);
+                            tuple2._1.complete(carEntity);
+                        }));
 
         gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent(this));
