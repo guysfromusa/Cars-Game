@@ -8,7 +8,6 @@ import com.guysfromusa.carsgame.v1.MapApiAware;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
-import io.vavr.API;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -65,14 +63,10 @@ public class IntegrationTest implements CarApiAware, MapApiAware, GameApiAware {
         addCarToGame(template, zygzak, gameName, new Point(2, 0));
 
         //then
-        API.TODO("Update after integration with collision engine");
         List<Car> allCars = Arrays.asList(findAllCars(template));
         assertThat(allCars).hasSize(4);
-        List<Car> carsCrashed = allCars.stream().filter(Car::isCrashed).collect(Collectors.toList());
-        assertThat(carsCrashed).hasSize(0);
-        List<Car> carsInGame = allCars.stream().filter(car -> Objects.nonNull(car.getGame())).collect(Collectors.toList());
-        assertThat(carsInGame).hasSize(3);
-
+        assertThat(allCars).filteredOn(Car::isCrashed).hasSize(0);
+        assertThat(allCars).filteredOn(car -> nonNull(car.getGame())).hasSize(3);
 
     }
 }
