@@ -4,12 +4,15 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
@@ -26,11 +29,14 @@ import static com.guysfromusa.carsgame.model.Direction.NORTH;
 import static com.guysfromusa.carsgame.model.Direction.WEST;
 import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,6 +56,9 @@ public class CarServiceTest {
 
     @InjectMocks
     private CarService carService;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void shouldAddNewCar(){
@@ -110,9 +119,9 @@ public class CarServiceTest {
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
         when(carRepository.findByGameAndName(any(), any()))
-                .thenReturn(Optional.of(carEntity));
+                .thenReturn(of(carEntity));
         when(gameRepository.findByName(any()))
-                .thenReturn(Optional.of(gameEntity));
+                .thenReturn(of(gameEntity));
 
         //when
         carService.turnCar("game1", "car1", LEFT);
@@ -137,10 +146,10 @@ public class CarServiceTest {
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
 
-        when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
-        when(carRepository.findByName(eq(carName))).thenReturn(Optional.of(carEntity));
+        when(gameRepository.findByName(any())).thenReturn(of(new GameEntity()));
+        when(carRepository.findByName(eq(carName))).thenReturn(of(carEntity));
 
-        when(gameRepository.findByName(any())).thenReturn(Optional.of(gameEntity));
+        when(gameRepository.findByName(any())).thenReturn(of(gameEntity));
 
         //when
         carService.addCarToGame(carName, carGame, startingPoint);
@@ -157,6 +166,41 @@ public class CarServiceTest {
                         && Objects.equals(1, positionY);
             }
         }));
+    }
+
+    @Test
+    public void shouldRepairCar(){
+        //given
+        String carName = "Dodge";
+
+        CarEntity carEntity = createCarEntity();
+        when(carRepository.findByName(carName)).thenReturn(of(carEntity));
+        when(carRepository.save(carEntity)).thenReturn(carEntity);
+
+        //when
+        CarEntity repairedCar = carService.repairCar(carName);
+
+        //then
+        assertFalse(repairedCar.isCrashed());
+    }
+
+    @Test
+    public void shouldNotFindCar(){
+        //given
+        String carName = "Dodge";
+
+        when(carRepository.findByName(carName)).thenReturn(Optional.empty());
+
+        //when
+        expectedException.expect(EntityNotFoundException.class);
+        expectedException.expectMessage("Car with name Dodge does not exist");
+        carService.repairCar(carName);
+    }
+
+    private CarEntity createCarEntity() {
+        CarEntity carEntity = new CarEntity();
+        carEntity.setCrashed(true);
+        return carEntity;
     }
 
 }

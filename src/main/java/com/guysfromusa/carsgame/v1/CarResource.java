@@ -27,9 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import java.util.List;
 
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.CAR_CRASHED_MESSAGE;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.CAR_EXISTS_IN_GAME_MESSAGE;
-import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.WRONG_STARTING_POINT_MESSAGE;
+import static com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator.*;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -106,6 +104,17 @@ public class CarResource {
     })
     public Long removeCar(@ApiParam(name = "name", value="Car name to be deleted") @PathVariable("name") String name){
         return carService.deleteCarByName(name);
+    }
+
+    @PostMapping(path= "{name}/fix")
+    @ApiOperation(value = "Repair crashed car", response = Car.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Car successfully repaired"),
+        @ApiResponse(code = 400, message = "Car with given name does not exist")
+    })
+    public Car repairCar(@PathVariable("name") String name){
+        CarEntity carEntity = carService.repairCar(name);
+        return conversionService.convert(carEntity, Car.class);
     }
 
 }
