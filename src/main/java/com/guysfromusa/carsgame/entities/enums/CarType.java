@@ -1,18 +1,22 @@
 package com.guysfromusa.carsgame.entities.enums;
 
+import lombok.Getter;
+
 public enum CarType {
 
-    NORMAL(1),
-    MONSTER(1),
-    RACER(2);
+    NORMAL(1, 1),
+    MONSTER(1, 2),
+    RACER(2, 1);
 
+    @Getter
     private int stepsPerMove;
 
-    CarType(Integer stepsPerMove) {
+    @Getter
+    private int weightRatio;
+
+    CarType(int stepsPerMove, int weightRatio) {
         this.stepsPerMove = stepsPerMove;
+        this.weightRatio = weightRatio;
     }
 
-    public Integer getStepsPerMove() {
-        return stepsPerMove;
-    }
 }

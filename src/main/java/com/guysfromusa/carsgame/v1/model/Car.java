@@ -34,4 +34,5 @@ public class Car {
     @Getter @Setter
     private boolean crashed;
 
+
 }
