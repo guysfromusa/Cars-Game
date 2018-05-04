@@ -7,10 +7,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Queue;
 
+import static com.guysfromusa.carsgame.control.MessageType.MOVE;
 import static com.guysfromusa.carsgame.game_state.dtos.GameStateBuilder.aGameState;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +30,9 @@ public class CommandConsumerTest {
     @Mock
     private GameEngine gameEngine;
 
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Test
     public void whenTriggeredByTheEvent_shouldCleanAllQueues() {
         //given
@@ -35,11 +40,13 @@ public class CommandConsumerTest {
                 aGameState()
                         .gameName("game1")
                         .roundInProgress(false)
-                        .movementsQueue(new MoveCommand(), new MoveCommand()).build(),
+                        .movementsQueue(new MoveCommand("g1", "c1", MOVE),
+                                new MoveCommand("g1", "c1", MOVE))
+                        .build(),
                 aGameState()
                         .gameName("game2")
                         .roundInProgress(false)
-                        .movementsQueue(new MoveCommand()).build());
+                        .movementsQueue(new MoveCommand("g1", "c1", MOVE)).build());
 
         when(activeGamesContainer.getGameStates()).thenReturn(gameStates);
         when(activeGamesContainer.getGameState("game1")).thenReturn(gameStates.get(0));

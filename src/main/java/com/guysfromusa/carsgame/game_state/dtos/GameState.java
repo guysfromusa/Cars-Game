@@ -11,6 +11,7 @@ import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Supplier;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
@@ -32,9 +33,9 @@ public class GameState {
         this.gameName = gameName;
     }
 
-    public CompletableFuture<String> addCommandToExecute(Command command) {
+    public <T> CompletableFuture<T> addCommandToExecute(Command command, Supplier<T> errorCallback) {
         boolean added = commandsQueue.offer(command);
-        return added ? command.getFuture() : completedFuture("{error:command not added to the queue}");
+        return added ? command.getFuture() : completedFuture(errorCallback.get());
     }
 
     public void addMovementHistory(String carName, Movement.Operation operation) {

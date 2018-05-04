@@ -1,4 +1,4 @@
-package com.guysfromusa.carsgame.game_state;
+package com.guysfromusa.carsgame.game_state.events;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -11,12 +11,14 @@ import org.springframework.context.ApplicationEvent;
 @Value
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class AddNewGameEvent extends ApplicationEvent {
+public class AddCarToGameEvent extends ApplicationEvent {
 
     private final String gameName;
+    private final String carName;
 
-    public AddNewGameEvent(Object source, String gameName) {
+    public AddCarToGameEvent(Object source, String gameName, String carName) {
         super(source);
         this.gameName = gameName;
+        this.carName = carName;
     }
 }

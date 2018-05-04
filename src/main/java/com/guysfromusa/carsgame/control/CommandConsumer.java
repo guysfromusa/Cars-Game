@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.guysfromusa.carsgame.control.MessageType.MOVE;
+import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -51,7 +51,11 @@ public class CommandConsumer {
                 while (!gameState.getCommandsQueue().isEmpty()) {
                     consumedCommands.add(gameState.getCommandsQueue().poll());
                 }
-                handle(MOVE, consumedCommands, gameState.getGameName());
+
+                consumedCommands.stream()
+                        .collect(groupingBy(Command::getMessageType))
+                        .forEach((messageType, commands) ->
+                                handle(messageType, commands, gameState.getGameName()));
             });
         }
     }
@@ -61,6 +65,9 @@ public class CommandConsumer {
         switch (messageType) {
             case MOVE:
                 gameEngine.handleMoves(commands, gameName);
+                break;
+            case ADD_CAR_TO_GAME:
+                gameEngine.handleAddCars(commands, gameName);
                 break;
             default:
                 throw new IllegalStateException("Undefined message type");

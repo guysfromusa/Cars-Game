@@ -1,7 +1,9 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
+import com.guysfromusa.carsgame.services.CarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
@@ -24,10 +26,15 @@ public class GameEngine {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final CarService carService;
+
     @Inject
-    public GameEngine(ActiveGamesContainer activeGamesContainer, ApplicationEventPublisher applicationEventPublisher) {
+    public GameEngine(ActiveGamesContainer activeGamesContainer,
+                      ApplicationEventPublisher applicationEventPublisher,
+                      CarService carService) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
+        this.carService = carService;
     }
 
     @Async
@@ -50,4 +57,19 @@ public class GameEngine {
         applicationEventPublisher.publishEvent(new CommandEvent(this));
     }
 
+    @Async
+    public void handleAddCars(List<Command> commands, String gameName) {
+        GameState gameState = activeGamesContainer.getGameState(gameName);
+
+        commands.forEach(command -> {
+            AddCarToGameCommand cmd = (AddCarToGameCommand) command;
+            CompletableFuture<CarEntity> result = cmd.getFuture();
+            CarEntity carEntity = carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint());
+            result.complete(carEntity);
+
+        });
+
+        gameState.setRoundInProgress(true);
+        applicationEventPublisher.publishEvent(new CommandEvent(this));
+    }
 }

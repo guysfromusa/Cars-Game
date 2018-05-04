@@ -1,27 +1,27 @@
 package com.guysfromusa.carsgame.control;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by Sebastian Mikucki, 30.04.18
  */
-@Data
 //<T> each command can return different type from future
+@AllArgsConstructor
 public abstract class Command<T> {
 
-    //TODO type String to some other representation of finish
+    @Getter
     private final CompletableFuture<T> future = new CompletableFuture<>();
 
+    @Getter
     private String gameName;
 
+    @Getter
     private String carName;
 
+    @Getter
     private MessageType messageType;
-    //TODO add other fields representing game internal message
 
-    public CompletableFuture<T> getFuture() {
-        return future;
-    }
 }

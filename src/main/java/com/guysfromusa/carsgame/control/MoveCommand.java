@@ -9,6 +9,10 @@ import java.util.List;
  */
 public class MoveCommand extends Command<List<CarEntity>> {
 
+    public MoveCommand(String gameName, String carName, MessageType messageType) {
+        super(gameName, carName, messageType);
+    }
+
     //TODO add fields for move command
 
 }

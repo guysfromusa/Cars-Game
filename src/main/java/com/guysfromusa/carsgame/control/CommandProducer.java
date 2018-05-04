@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
 import com.google.common.util.concurrent.Futures;
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -30,11 +31,22 @@ public class CommandProducer {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<String> result = state.addCommandToExecute(move);
+                    CompletableFuture<String> result = state.addCommandToExecute(move, () -> "{status:error}");
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })
                 .map(Futures::getUnchecked)
                 .orElse("{status:error}");
+    }
+
+    public CarEntity scheduleCommand(AddCarToGameCommand cmd) {
+        return Optional.ofNullable(activeGamesContainer.getGameState(cmd.getGameName()))
+                .map(gameState -> {
+                    CompletableFuture<CarEntity> result = gameState.addCommandToExecute(cmd, CarEntity::new);
+                    applicationEventPublisher.publishEvent(new CommandEvent(this));
+                    return result;
+                })
+                .map(Futures::getUnchecked)
+                .orElse(null);
     }
 }

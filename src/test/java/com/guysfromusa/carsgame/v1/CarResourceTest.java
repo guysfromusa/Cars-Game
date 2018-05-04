@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.RequestBuilder;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.exceptions.ApiError;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.assertj.core.api.Assertions;
@@ -35,6 +36,10 @@ import static org.springframework.http.HttpMethod.POST;
 public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
     private RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
+
+    //TODO very bad, think about better solution
+    @Inject
+    private ActiveGamesContainer activeGamesContainer;
 
     @Inject
     private TestRestTemplate template;
@@ -97,6 +102,8 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
         Point point = new Point(1, 0);
 
+        activeGamesContainer.addNewGame(game);
+
         //when
         Car car = assignCarToTheGame(template, name, game, point);
 
@@ -112,6 +119,8 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
         //given
         String name = "car3";
         String game = "game1";
+
+        activeGamesContainer.addNewGame(game);
 
         String url = String.join("/", "/v1/cars", name, "game", game);
         Point point = new Point(1, 0);

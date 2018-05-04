@@ -4,7 +4,7 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
-import com.guysfromusa.carsgame.game_state.AddNewGameEvent;
+import com.guysfromusa.carsgame.game_state.events.AddNewGameEvent;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

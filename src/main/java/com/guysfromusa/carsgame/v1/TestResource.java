@@ -1,9 +1,6 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.control.AddCarToGameCommand;
-import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.control.MessageType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +32,12 @@ public class TestResource {
     @GetMapping(value = "{gameName}")
     @ApiOperation(value = "simmulate message")
     public String startNewGame(@PathVariable("gameName") String gameName) {
-        Command move = new AddCarToGameCommand();
-        move.setGameName(gameName);
-        move.setCarName("car1");
-        move.setMessageType(MessageType.ADD_CAR_TO_GAME);
+//        Command move = new AddCarToGameCommand();
+//        move.setGameName(gameName);
+//        move.setCarName("car1");
+//        move.setMessageType(MessageType.ADD_CAR_TO_GAME);
 
-        return commandProducer.scheduleCommand(gameName, move);
+        return commandProducer.scheduleCommand(gameName, null);
     }
 
 }
