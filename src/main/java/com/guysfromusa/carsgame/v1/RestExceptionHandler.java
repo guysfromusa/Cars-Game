@@ -6,10 +6,13 @@ import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
 import io.vavr.Predicates;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,21 @@ import static io.vavr.API.Match;
 @Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
+        // TODO: make error more human readable???
+        return new ResponseEntity<>(
+                ApiError.builder()
+                        .date(LocalDateTime.now())
+                        .message(ex.getBindingResult().toString())
+                        .status("VALIDATION_FAILED")
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
 
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ApiError> handleEntityNotFound(EntityNotFoundException ex) {
