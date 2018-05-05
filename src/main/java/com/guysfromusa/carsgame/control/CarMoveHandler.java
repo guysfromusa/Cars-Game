@@ -105,6 +105,7 @@ public class CarMoveHandler {
         Point position = car.getPosition();
         position.setY(null);
         position.setX(null);
+        car.setGame(null);
     }
 
     public boolean isCarCrashedWithOther(Set<String> crashedCars, CarDto handledCar){
