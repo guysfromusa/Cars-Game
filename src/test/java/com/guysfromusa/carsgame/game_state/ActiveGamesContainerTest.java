@@ -24,7 +24,7 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1");
 
         //then
-        assertThat(activeGamesContainer.getCarsMovementHistory("game1", "someCar")).isNull();
+        assertThat(activeGamesContainer.getGameState("game1").getMovementHistory("someCar")).isNull();
     }
 
     @Test

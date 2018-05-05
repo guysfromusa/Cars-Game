@@ -35,11 +35,6 @@ public class ActiveGamesContainer {
         gameState.addMovementHistory(carName, operation);
     }
 
-    @Deprecated //use gameState directly
-    public Collection<Movement> getCarsMovementHistory(String gameName, String carName){
-       return  this.gameStateMap.get(gameName).getMovementHistory(carName);
-    }
-
     public Collection<Movement> getNCarsMovementHistory(String gameId, String carName, int numberOfStepBack){
         GameState gameState = this.gameStateMap.get(gameId);
         List<Movement> carsMovement = emptyList();
