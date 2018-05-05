@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -39,25 +39,25 @@ public class CarMoveHandler {
         checkCarAbilityToMove()
                 .andThen(doMove())
                 .andThen(checkCarCollisions())
-                .apply(moveData);
+                .andThen(doCarStateUpdate())
+                .accept(moveData);
     }
 
-    private UnaryOperator<MoveData> checkCarAbilityToMove(){
+    private Consumer<MoveData> checkCarAbilityToMove(){
         return moveData -> {
             Car car = moveData.getCar();
 
             if(car.isCrashed()){
                 moveData.getFuture().completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE));
             }
-            return moveData;
         };
     }
 
-    private UnaryOperator<MoveData> doMove(){
+    private Consumer<MoveData> doMove(){
         return moveData -> {
             CompletableFuture<List<Car>> future = moveData.getMoveCommand().getFuture();
             if(future.isDone()){
-                return moveData;
+                return ;
             }
             GameState gameState = moveData.getGameState();
             boolean isCarCrashedIntoWall = carController.moveCar(moveData.getMoveCommand(), gameState);
@@ -65,16 +65,14 @@ public class CarMoveHandler {
             String message = CAR_CRASHED_INTO_WALL;
             Car car = moveData.getCar();
             markCrashedWhenCollision(isCarCrashedIntoWall, car, future, message);
-
-            return moveData;
         };
     }
 
-    private UnaryOperator<MoveData> checkCarCollisions(){
+    private Consumer<MoveData> checkCarCollisions(){
         return moveData -> {
             CompletableFuture<List<Car>> future = moveData.getFuture();
             if(future.isDone()){
-                return moveData;
+                return;
             }
             List<Car> carsInGame = moveData.getCars();
             Car car = moveData.getCar();
@@ -84,7 +82,14 @@ public class CarMoveHandler {
 
             String message = CAR_CRASHED_WITH_OTHER;
             markCrashedWhenCollision(carCrashedWithOther, car, future, message);
-            return moveData;
+        };
+    }
+
+    private Consumer<MoveData> doCarStateUpdate(){
+        return moveData -> {
+            CompletableFuture<List<Car>> future = moveData.getFuture();
+            List<Car> cars = moveData.getCars();
+            future.complete(cars);
         };
     }
 
