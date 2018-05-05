@@ -45,7 +45,7 @@ public class UndoMovementService {
             result.add(moveCommand.getFuture());
         }
         CompletableFuture<Void> allOfDone = CompletableFuture.allOf(result.toArray(new CompletableFuture[result.size()]));
-        return allOfDone.thenApply(v -> result.get(result.size())).get().get();
+        return allOfDone.thenApply(v -> result.get(result.size()-1)).get().get();
 
     }
 
