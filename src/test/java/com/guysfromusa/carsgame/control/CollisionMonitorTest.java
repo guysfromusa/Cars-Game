@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.entities.enums.CarType;
-import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
@@ -23,9 +23,9 @@ public class CollisionMonitorTest {
     @Test
     public void whenRacingCarOnOnePoint_shouldMarkCarsCrashed(){
         //given
-        Car car1 = createCar(1, 1, "car1", RACER);
-        Car car2 = createCar(1, 1, "car2", RACER);
-        List<Car> cars = asList(car1, car2);
+        CarDto car1 = createCar(1, 1, "car1", RACER);
+        CarDto car2 = createCar(1, 1, "car2", RACER);
+        List<CarDto> cars = asList(car1, car2);
 
         //when
         Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
@@ -37,9 +37,9 @@ public class CollisionMonitorTest {
     @Test
     public void whenTruckCollidedWithNormalCar_shouldMarkNormalCarCrashed(){
         //given
-        Car car1 = createCar(1, 1, "car1", RACER);
-        Car car2 = createCar(1, 1, "car2", MONSTER);
-        List<Car> cars = asList(car1, car2);
+        CarDto car1 = createCar(1, 1, "car1", RACER);
+        CarDto car2 = createCar(1, 1, "car2", MONSTER);
+        List<CarDto> cars = asList(car1, car2);
 
         //when
         Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
@@ -51,9 +51,9 @@ public class CollisionMonitorTest {
     @Test
     public void whenNormalCarAndMonsterOnOnePoint_shouldMarkCarsCrashed(){
         //given
-        Car car1 = createCar(1, 1, "car1", MONSTER);
-        Car car2 = createCar(1, 1, "car2", MONSTER);
-        List<Car> cars = asList(car1, car2);
+        CarDto car1 = createCar(1, 1, "car1", MONSTER);
+        CarDto car2 = createCar(1, 1, "car2", MONSTER);
+        List<CarDto> cars = asList(car1, car2);
 
         //when
         Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
@@ -65,9 +65,9 @@ public class CollisionMonitorTest {
     @Test
     public void whenTwoMonstersOnDifferentPoint_shouldNotMarkCarsCrashed(){
         //given
-        Car car1 = createCar(2, 1, "car1", MONSTER);
-        Car car2 = createCar(1, 1, "car2", MONSTER);
-        List<Car> cars = asList(car1, car2);
+        CarDto car1 = createCar(2, 1, "car1", MONSTER);
+        CarDto car2 = createCar(1, 1, "car2", MONSTER);
+        List<CarDto> cars = asList(car1, car2);
 
         //when
         Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(cars);
@@ -76,15 +76,11 @@ public class CollisionMonitorTest {
         assertThat(crashedCarNames).isEmpty();
     }
 
-    private Car createCar(Integer posX, Integer posY, String carName, CarType carType){
-        Point point = new Point();
-        point.setX(posX);
-        point.setY(posY);
-
-        return Car.builder()
-        .position(point)
-        .name(carName)
-        .type(carType).build();
+    private CarDto createCar(Integer posX, Integer posY, String carName, CarType carType){
+        return CarDto.builder()
+                .position(new Point(posX, posY))
+                .name(carName)
+                .type(carType).build();
     }
 
 }

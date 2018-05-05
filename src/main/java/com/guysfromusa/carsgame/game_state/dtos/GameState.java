@@ -3,17 +3,12 @@ package com.guysfromusa.carsgame.game_state.dtos;
 import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.CarState;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -51,7 +46,7 @@ public class GameState {
     }
 
     public void addNewCar(CarEntity carEntity) {
-        Car car = Car.builder()
+        CarDto car = CarDto.builder()
                 .name(carEntity.getName())
                 .game(carEntity.getGame().getName())
                 .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
@@ -62,7 +57,7 @@ public class GameState {
         log.info("Car: {} added to game: {}", car.getName(), carEntity.getGame().getName());
     }
 
-    public List<Car> getAllCars(){
+    public List<CarDto> getAllCars(){
         return carsStatesMemory.values()
                 .stream()
                 .map(CarState::getCar)
@@ -74,7 +69,7 @@ public class GameState {
                 .map(CarState::getMovements).orElse(null);
     }
 
-    public Car getCar(String carName){
+    public CarDto getCar(String carName){
         return carsStatesMemory.get(carName).getCar();
     }
 }
