@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MoveCommand;
 import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,13 +31,13 @@ public class UndoMovementService {
         this.undoMovementPreparerService = notNull(undoMovementPreparerService);
     }
 
-    public List<CarEntity> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
+    public List<CarDto> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
         List<Movement> movements = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
-        List<CompletableFuture<List<CarEntity>>> result = new LinkedList<>();
+        List<CompletableFuture<List<CarDto>>> result = new LinkedList<>();
         MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
         for (Movement movement : movements) {
             moveCommand.setMovement(movement);
-            Callable<CarEntity> task = createTask(gameId, moveCommand);
+            Callable<CarDto> task = createTask(gameId, moveCommand);
             commandProducer.scheduler.schedule(task, 1, TimeUnit.SECONDS);
             result.add(moveCommand.getFuture());
         }
@@ -46,7 +47,7 @@ public class UndoMovementService {
 
     }
 
-    private Callable<CarEntity> createTask(String gameName, Command move) {
+    private Callable<CarDto> createTask(String gameName, Command move) {
         return () -> commandProducer.scheduleCommand(gameName, move);
     }
 

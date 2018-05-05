@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -33,11 +34,12 @@ public class CommandProducer {
         this.applicationEventPublisher = notNull(applicationEventPublisher);
     }
 
-    //FIXME Collections::emptyList to completeExceptionally
-    public List<Car> scheduleCommand(MoveCommand moveCmd) {
-         return Optional.ofNullable(activeGamesContainer.getGameState(moveCmd.getGameName())) //could be the game is already finished
+    //todo either? / optional / String?
+    public CarDto scheduleCommand(String gameName, Command move) {
+
+         return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<List<Car>> result = state.addCommandToExecute(moveCmd, Collections::emptyList);
+                    CompletableFuture<CarDto> result = state.addCommandToExecute(move, CarDto::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })

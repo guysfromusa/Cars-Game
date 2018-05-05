@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
-import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +16,10 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class CollisionMonitor {
 
-    public Set<String> getCrashedCarNames(List<Car> cars){
+    public Set<String> getCrashedCarNames(List<CarDto> cars){
         Set<String> crashedCars = new HashSet<>();
 
-        Map<Point, List<Car>> potentialCollisionPoints = cars.stream()
+        Map<Point, List<CarDto>> potentialCollisionPoints = cars.stream()
                 .filter(isCarNotRemovedFromGameMap())
                 .collect(groupingBy(o -> o.getPosition()));
 
@@ -30,11 +30,11 @@ public class CollisionMonitor {
         return crashedCars;
     }
 
-    private List<String> resolveSinglePointCollision(Map.Entry<Point, List<Car>> pointWithCars){
+    private List<String> resolveSinglePointCollision(Map.Entry<Point, List<CarDto>> pointWithCars){
         List<String> crashedCarNamesForPoint = new ArrayList<>();
 
-        List<Car> carsOnCollision = pointWithCars.getValue();
-        Map<Integer, List<Car>> carsByWeightRatio = carsOnCollision.stream()
+        List<CarDto> carsOnCollision = pointWithCars.getValue();
+        Map<Integer, List<CarDto>> carsByWeightRatio = carsOnCollision.stream()
                 .collect(groupingBy(o -> o.getType().getWeightRatio()));
 
         Optional<Integer> maxWeightRatioCar = carsByWeightRatio.keySet().stream()
@@ -47,31 +47,31 @@ public class CollisionMonitor {
         return crashedCarNamesForPoint;
     }
 
-    private List<String> getTrucksCrashedIfMoreThanOne(List<Car> cars) {
+    private List<String> getTrucksCrashedIfMoreThanOne(List<CarDto> cars) {
         if(isMoreThanOneCar(cars)){
-            return cars.stream().map(Car::getName).collect(toList());
+            return cars.stream().map(CarDto::getName).collect(toList());
         }
         return Collections.emptyList();
     }
 
-    private boolean isMoreThanOneCar(List<Car> cars) {
+    private boolean isMoreThanOneCar(List<CarDto> cars) {
         return cars.size() > 1;
     }
 
-    private List<String> getCrashedAllSmallerCars(Integer biggestCarWeightRatio, Map<Integer, List<Car>> carsByWeightRatio) {
+    private List<String> getCrashedAllSmallerCars(Integer biggestCarWeightRatio, Map<Integer, List<CarDto>> carsByWeightRatio) {
         return carsByWeightRatio.entrySet().stream()
                 .filter(weightCarEntryList -> weightCarEntryList.getKey() != biggestCarWeightRatio)
                 .map(Map.Entry::getValue)
                 .flatMap(Collection::stream)
-                .map(Car::getName)
+                .map(CarDto::getName)
                 .collect(toList());
     }
 
-    private Predicate<Map.Entry<Point, List<Car>>> isCollisionPoint(){
+    private Predicate<Map.Entry<Point, List<CarDto>>> isCollisionPoint(){
         return pointListEntry -> isMoreThanOneCar(pointListEntry.getValue());
     }
 
-    private Predicate<Car> isCarNotRemovedFromGameMap(){
-        return car -> Optional.ofNullable(car).map(Car::getPosition).isPresent();
+    private Predicate<CarDto> isCarNotRemovedFromGameMap(){
+        return car -> Optional.ofNullable(car).map(CarDto::getPosition).isPresent();
     }
 }

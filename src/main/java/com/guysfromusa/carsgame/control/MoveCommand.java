@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.v1.model.Car;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @ToString(callSuper = true)
 public class MoveCommand extends Command<List<Car>> {
+public class MoveCommand extends Command<List<CarDto>> {
 
     @Getter
     private Movement movement;
