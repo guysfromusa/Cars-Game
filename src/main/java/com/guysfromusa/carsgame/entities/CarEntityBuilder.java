@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.entities;
 
 import com.guysfromusa.carsgame.entities.enums.CarType;
 
+//TODO move to @Builder on CarEntity
 public final class CarEntityBuilder {
 
     private String name;
@@ -9,6 +10,7 @@ public final class CarEntityBuilder {
     private Integer positionY;
     private CarType carType;
     private boolean crashed;
+    private String gameName;
 
     private CarEntityBuilder() {
     }
@@ -19,6 +21,11 @@ public final class CarEntityBuilder {
 
     public CarEntityBuilder name(String name) {
         this.name = name;
+        return this;
+    }
+
+    public CarEntityBuilder gameName(String name){
+        this.gameName = name;
         return this;
     }
 
@@ -49,6 +56,9 @@ public final class CarEntityBuilder {
         carEntity.setPositionY(positionY);
         carEntity.setCarType(carType);
         carEntity.setCrashed(crashed);
+        GameEntity gameEntity = new GameEntity();
+        gameEntity.setName(gameName);
+        carEntity.setGame(gameEntity);
         return carEntity;
     }
 }

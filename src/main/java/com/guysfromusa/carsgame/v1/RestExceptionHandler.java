@@ -64,8 +64,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<ApiError> handleThrowable(Throwable ex) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleException(Exception ex) {
         log.error("Got exception", ex);
         return new ResponseEntity<>(
                 ApiError.builder()
@@ -81,7 +81,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiError> handleExecutionException(UncheckedExecutionException ex){
         return Match(ex.getCause()).of(
                 Case($(Predicates.instanceOf(IllegalArgumentException.class)), this::handleBadRequest),
-                Case($(), this::handleThrowable)
+                Case($(Predicates.instanceOf(Exception.class)), this::handleException),
+                Case($(), e -> {
+                    throw new RuntimeException(e);
+                })
         );
     }
 

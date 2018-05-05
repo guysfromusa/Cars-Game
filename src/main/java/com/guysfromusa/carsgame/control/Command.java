@@ -2,14 +2,16 @@ package com.guysfromusa.carsgame.control;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by Sebastian Mikucki, 30.04.18
+ * @param <T> type returned by future
  */
-//<T> each command can return different type from future
 @AllArgsConstructor
+@ToString
 public abstract class Command<T> {
 
     @Getter

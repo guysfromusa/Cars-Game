@@ -56,13 +56,21 @@ public class RestExceptionHandlerTest {
     @Test
     public void shouldReturnServerApiError() {
         //given
-        Throwable exception = new Throwable("sth bad");
+        Exception exception = new Exception("sth bad");
         //when
-        ResponseEntity<ApiError> responseEntity = restExceptionHandler.handleThrowable(exception);
+        ResponseEntity<ApiError> responseEntity = restExceptionHandler.handleException(exception);
         //then
         assertThat(responseEntity.getBody())
                 .extracting(ApiError::getMessage, ApiError::getStatus)
                 .containsExactly("sth bad", "INTERNAL_SERVER_ERROR");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowException() {
+        //given
+        Error exception = new Error("sth bad");
+        //when
+        restExceptionHandler.handleExecutionException(new UncheckedExecutionException(exception));
     }
 
     @Test
