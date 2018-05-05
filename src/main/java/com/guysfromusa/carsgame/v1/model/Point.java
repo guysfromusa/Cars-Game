@@ -12,11 +12,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Point {
+public class Point implements Cloneable {
 
     @Getter @Setter
     private Integer x;
 
     @Getter @Setter
     private Integer y;
+
+    @Override
+    protected Point clone() throws CloneNotSupportedException {
+        Point clone = (Point) super.clone();
+        clone.setX(getX());
+        clone.setY(getY());
+        return clone;
+    }
 }

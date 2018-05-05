@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Car {
+public class Car implements Cloneable {
 
     @Getter @Setter
     @ApiModelProperty(notes = "Name of the car")
@@ -41,5 +41,19 @@ public class Car {
     @Getter @Setter
     private boolean crashed;
 
-
+    @Override
+    public Car clone() {
+        try {
+            Car clone = (Car) super.clone();
+            clone.setName(getName());
+            clone.setCrashed(isCrashed());
+            clone.setDirection(getDirection());
+            clone.setType(getType());
+            clone.setPosition(getPosition().clone());
+            clone.setGame(getGame());
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }

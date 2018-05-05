@@ -2,26 +2,33 @@ package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.GameMapUtils;
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MoveCommand;
-import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
-import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
+import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
 import com.guysfromusa.carsgame.v1.model.MovementResult;
-import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
 
+import static com.guysfromusa.carsgame.control.MessageType.MOVE;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -42,7 +49,10 @@ public class GamesResource {
     private final CommandProducer commandProducer;
 
     @Inject
-    public GamesResource(List<MovementStrategy> movementStrategies, CarService carService, GameService gameService, ConversionService conversionService, ActiveGamesContainer activeGamesContainer, CommandProducer commandProducer) {
+    public GamesResource(GameService gameService,
+                         ConversionService conversionService,
+                         ActiveGamesContainer activeGamesContainer,
+                         CommandProducer commandProducer) {
         this.gameService = notNull(gameService);
         this.conversionService = notNull(conversionService);
         this.activeGamesContainer = notNull(activeGamesContainer);
@@ -56,16 +66,15 @@ public class GamesResource {
             @ApiResponse(code = 404, message = "Game not found"),
             @ApiResponse(code = 404, message = "Car not found")
     })
-    public CarEntity newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement) {
+    public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement) {
         MoveCommand moveCommand = MoveCommand.builder()
                 .carName(carName)
                 .gameName(game)
-                .messageType(MessageType.MOVE)
+                .messageType(MOVE)
                 .movement(newMovement)
                 .build();
 
-        return commandProducer.scheduleCommand(game, moveCommand);
-
+        return commandProducer.scheduleCommand(moveCommand);
     }
 
     @ApiOperation(value = "Starts the game with the given Map")

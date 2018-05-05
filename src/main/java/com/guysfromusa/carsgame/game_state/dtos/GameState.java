@@ -9,7 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -66,6 +70,7 @@ public class GameState {
         return carsStatesMemory.values()
                 .stream()
                 .map(CarState::getCar)
+                .map(Car::clone)
                 .collect(toList());
     }
 

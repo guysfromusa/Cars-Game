@@ -16,6 +16,7 @@ public class AddCarToGameCommand extends Command<CarEntity> {
     private Point startingPoint;
 
     @Builder
+    //TODO messageType can by hardcoded or via getMessageType
     private AddCarToGameCommand(String gameName, String carName, MessageType messageType, Point startingPoint) {
         super(gameName, carName, messageType);
         this.startingPoint = startingPoint;

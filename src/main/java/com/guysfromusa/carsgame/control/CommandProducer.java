@@ -3,14 +3,18 @@ package com.guysfromusa.carsgame.control;
 import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import com.guysfromusa.carsgame.v1.model.Car;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static java.util.Collections.emptyList;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -29,22 +33,23 @@ public class CommandProducer {
         this.applicationEventPublisher = notNull(applicationEventPublisher);
     }
 
-    public CarEntity scheduleCommand(String gameName, Command move) {
-
-         return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
+    //FIXME Collections::emptyList to completeExceptionally
+    public List<Car> scheduleCommand(MoveCommand moveCmd) {
+         return Optional.ofNullable(activeGamesContainer.getGameState(moveCmd.getGameName())) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<CarEntity> result = state.addCommandToExecute(move, CarEntity::new);
+                    CompletableFuture<List<Car>> result = state.addCommandToExecute(moveCmd, Collections::emptyList);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })
                 .map(Futures::getUnchecked)
-                .orElse(null);
+                .orElse(emptyList());
     }
 
-    public CarEntity scheduleCommand(AddCarToGameCommand cmd) {
-        return Optional.ofNullable(activeGamesContainer.getGameState(cmd.getGameName()))
+    //FIXME CarEntity::new to completeExceptionally
+    public CarEntity scheduleCommand(AddCarToGameCommand addCmd) {
+        return Optional.ofNullable(activeGamesContainer.getGameState(addCmd.getGameName()))
                 .map(gameState -> {
-                    CompletableFuture<CarEntity> result = gameState.addCommandToExecute(cmd, CarEntity::new);
+                    CompletableFuture<CarEntity> result = gameState.addCommandToExecute(addCmd, CarEntity::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })

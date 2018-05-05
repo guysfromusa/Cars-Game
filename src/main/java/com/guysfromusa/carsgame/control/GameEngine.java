@@ -42,12 +42,20 @@ public class GameEngine {
     }
 
     @Async
-    public void handleMoves(List<MoveCommand> commands, String gameId) {
+    public void handleMoves(List<Command> commands, String gameName) {
+        GameState gameState = activeGamesContainer.getGameState(gameName);
 
-        GameState gameState = activeGamesContainer.getGameState(gameId);
+        commands.stream()
+                .map(command -> (MoveCommand)command)
+                .map(moveCmd -> Tuple.of(moveCmd.getFuture(), new MoveData(gameState, moveCmd)))
+                .forEach(moveData -> {
+                    //TODO catch errors and completeExceptionally
+                    carMoveHandler.handleMoveComand(moveData._2);
+                    moveData._1.complete(gameState.getAllCars());
+                });
 
-        commands.stream().map(moveCommand -> new MoveData(gameState, moveCommand))
-                .forEach(carMoveHandler::handleMoveComand);
+
+        //TODO error handling
 
         //TODO store all state in DB
 
