@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.validator;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
-import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -21,7 +21,10 @@ public class CarNotCrashedValidatorTest {
         //given
         CarEntity carEntity = new CarEntity();
         carEntity.setCrashed(false);
-        CarGameAdditionValidationSubject subject = new CarGameAdditionValidationSubject(carEntity, null, null);
+
+        CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
+                .carEntity(carEntity)
+                .build();
         //when
         carNotCrashedValidator.validate(subject);
     }
@@ -34,7 +37,10 @@ public class CarNotCrashedValidatorTest {
 
         CarEntity carEntity = new CarEntity();
         carEntity.setCrashed(true);
-        CarGameAdditionValidationSubject subject = new CarGameAdditionValidationSubject(carEntity, null, null);
+        CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
+                .carEntity(carEntity)
+                .build();
+
         //when
         carNotCrashedValidator.validate(subject);
     }

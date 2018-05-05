@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.validator;
 
-import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import org.springframework.stereotype.Component;
 
 /**

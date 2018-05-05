@@ -4,7 +4,7 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.model.Point;
-import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,7 +42,10 @@ public class StartingPointOnMapValidatorTest {
 
         Mockito.when(mapService.isPositionValidOnGameMap(Matchers.anyString(), Mockito.any())).thenReturn(true);
 
-        CarGameAdditionValidationSubject subject = new CarGameAdditionValidationSubject(null, gameEntity, startingPoint);
+        CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
+                .gameEntity(gameEntity)
+                .startingPoint(startingPoint)
+                .build();
         //when
 
         startingPointOnMapValidator.validate(subject);
@@ -64,7 +67,10 @@ public class StartingPointOnMapValidatorTest {
 
         Mockito.when(mapService.isPositionValidOnGameMap(Matchers.anyString(), Mockito.any())).thenReturn(false);
 
-        CarGameAdditionValidationSubject subject = new CarGameAdditionValidationSubject(null, gameEntity, startingPoint);
+        CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
+                .gameEntity(gameEntity)
+                .startingPoint(startingPoint)
+                .build();
         //when
 
         startingPointOnMapValidator.validate(subject);

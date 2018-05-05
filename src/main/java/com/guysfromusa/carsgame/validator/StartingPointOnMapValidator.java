@@ -3,7 +3,7 @@ package com.guysfromusa.carsgame.validator;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.model.Point;
-import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 

@@ -62,10 +62,12 @@ public class GameEngine {
     public void handleAddCars(List<Command> commands, String gameName) {//TODO pass gameState
         GameState gameState = activeGamesContainer.getGameState(gameName);
 
+        log.debug("Handle add commands: {}", commands);
+
         commands.stream()
                 .map(command -> (AddCarToGameCommand) command)
                 .map(cmd -> Tuple.of(cmd.getFuture(),
-                        Try.of(() -> carService.addCarToGame(cmd.getCarName(), gameName, cmd.getStartingPoint()))
+                        Try.of(() -> carService.addCarToGame(cmd.getCarName(), gameState, cmd.getStartingPoint()))
                                 .toEither()))
                 .forEach(tuple2 -> tuple2._2
                         .mapLeft(tuple2._1::completeExceptionally)

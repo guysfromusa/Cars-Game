@@ -28,7 +28,8 @@ public class ActiveGamesContainerTest {
     public void shouldAddNewMovement(){
         //given
         activeGamesContainer.addNewGame("game1");
-        activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
+        activeGamesContainer.getGameState("game1")
+                .addNewCar(aCarEntity().name("bmw").build());
 
         //when
         activeGamesContainer.addExecutedMove("game1","bmw", FORWARD);

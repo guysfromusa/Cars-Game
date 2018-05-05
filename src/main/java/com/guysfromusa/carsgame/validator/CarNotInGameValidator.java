@@ -1,12 +1,16 @@
 package com.guysfromusa.carsgame.validator;
 
-import com.guysfromusa.carsgame.entities.CarEntity;
-import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import com.guysfromusa.carsgame.game_state.dtos.GameState;
+import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static com.guysfromusa.carsgame.utils.StreamUtils.convert;
+import static org.apache.commons.lang3.Validate.notNull;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
@@ -16,10 +20,18 @@ public class CarNotInGameValidator implements BusinessValidator<CarGameAdditionV
 
     public static final String CAR_EXISTS_IN_GAME_MESSAGE = "Car is already added to game";
 
+    private final ActiveGamesContainer activeGamesContainer;
+
+    @Inject
+    public CarNotInGameValidator(ActiveGamesContainer activeGamesContainer) {
+        this.activeGamesContainer = notNull(activeGamesContainer);
+    }
+
     @Override
-    public void validate(CarGameAdditionValidationSubject validationSubject) {
-        List<String> gamesCarNames = convert(validationSubject.getGameEntity().getCars(), CarEntity::getName);
-        String carName = validationSubject.getCarEntity().getName();
+    public void validate(CarGameAdditionValidationSubject subject) {
+        GameState gameState = activeGamesContainer.getGameState(subject.getGameEntity().getName());
+        List<String> gamesCarNames = convert(gameState.getAllCars(), Car::getName);
+        String carName = subject.getCarEntity().getName();
         if(gamesCarNames.contains(carName)){
             throw new IllegalArgumentException(CAR_EXISTS_IN_GAME_MESSAGE);
         }
