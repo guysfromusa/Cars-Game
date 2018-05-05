@@ -28,7 +28,7 @@ public class SameTypeOnePerCarGameRoundSelector implements GameRoundSelector {
 
         for (Iterator<Command> it = queue.iterator(); it.hasNext(); ) {
             Command command = it.next();
-            if (!cars.contains(command.getCarName())) {
+            if (!cars.contains(command.getCarName()) && command.getMessageType() == type) {
                 it.remove();
                 commands.add(command);
                 cars.add(command.getCarName());

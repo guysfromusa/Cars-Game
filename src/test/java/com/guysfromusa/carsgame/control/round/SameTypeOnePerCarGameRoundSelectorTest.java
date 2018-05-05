@@ -33,8 +33,8 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
     @Test
     public void shouldSelectCommandOfTheSameMessageType() {
-        MoveCommand moveCommand = new MoveCommand("game", "car", MOVE);
-        AddCarToGameCommand addCarToGameCommand = AddCarToGameCommand.builder().carName("car")
+        MoveCommand moveCommand = new MoveCommand("game", "1", MOVE);
+        AddCarToGameCommand addCarToGameCommand = AddCarToGameCommand.builder().carName("2")
                 .gameName("game")
                 .messageType(ADD_CAR_TO_GAME)
                 .startingPoint(null)
