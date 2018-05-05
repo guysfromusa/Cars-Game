@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.validator;
 
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class CarNotInGameValidator implements BusinessValidator<CarGameAdditionV
     @Override
     public void validate(CarGameAdditionValidationSubject subject) {
         GameState gameState = activeGamesContainer.getGameState(subject.getGameEntity().getName());
-        List<String> gamesCarNames = convert(gameState.getAllCars(), Car::getName);
+        List<String> gamesCarNames = convert(gameState.getAllCars(), CarDto::getName);
         String carName = subject.getCarEntity().getName();
         if(gamesCarNames.contains(carName)){
             throw new IllegalArgumentException(CAR_EXISTS_IN_GAME_MESSAGE);
