@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.validator;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class StartingPointOccupiedValidator implements BusinessValidator<CarGame
         Point startingPoint = subject.getStartingPoint();
         GameState gameState = subject.getGameState();
 
-        List<Car> carsInGame = gameState.getAllCars();
+        List<CarDto> carsInGame = gameState.getAllCars();
 
         carsInGame.forEach(car -> {
             if (car.getPosition().equals(startingPoint)) {

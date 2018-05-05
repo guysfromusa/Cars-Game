@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.control;
 import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -31,11 +32,11 @@ public class CommandProducer {
     }
 
     //todo either? / optional / String?
-    public CarEntity scheduleCommand(String gameName, Command move) {
+    public CarDto scheduleCommand(String gameName, Command move) {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<CarEntity> result = state.addCommandToExecute(move, CarEntity::new);
+                    CompletableFuture<CarDto> result = state.addCommandToExecute(move, CarDto::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })
