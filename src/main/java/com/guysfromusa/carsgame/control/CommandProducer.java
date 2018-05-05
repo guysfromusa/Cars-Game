@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledExecutorService;
 
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
@@ -18,6 +20,8 @@ public class CommandProducer {
     private final ActiveGamesContainer activeGamesContainer;
 
     private final ApplicationEventPublisher applicationEventPublisher;
+    public ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
+
 
     @Inject
     public CommandProducer(ActiveGamesContainer activeGamesContainer,
@@ -27,16 +31,16 @@ public class CommandProducer {
     }
 
     //todo either? / optional / String?
-    public String scheduleCommand(String gameName, Command move) {
+    public CarEntity scheduleCommand(String gameName, Command move) {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<String> result = state.addCommandToExecute(move, () -> "{status:error}");
+                    CompletableFuture<CarEntity> result = state.addCommandToExecute(move, CarEntity::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })
                 .map(Futures::getUnchecked)
-                .orElse("{status:error}");
+                .orElse(null);
     }
 
     public CarEntity scheduleCommand(AddCarToGameCommand cmd) {
