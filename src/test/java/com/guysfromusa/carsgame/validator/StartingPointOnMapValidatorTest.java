@@ -37,7 +37,7 @@ public class StartingPointOnMapValidatorTest {
 
         Point startingPoint = new Point(2, 0);
 
-        Mockito.when(mapService.isPositionValidOnGameMap(Matchers.anyString(), Mockito.any())).thenReturn(true);
+        Mockito.when(mapService.isFieldReachableOnGameMap(Matchers.anyString(), Mockito.any())).thenReturn(true);
 
         CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
                 .gameEntity(gameEntity)
@@ -59,7 +59,7 @@ public class StartingPointOnMapValidatorTest {
 
         Point startingPoint = new Point(0, 0);
 
-        Mockito.when(mapService.isPositionValidOnGameMap(Matchers.anyString(), Mockito.any())).thenReturn(false);
+        Mockito.when(mapService.isFieldReachableOnGameMap(Matchers.anyString(), Mockito.any())).thenReturn(false);
 
         CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
                 .gameEntity(gameEntity)

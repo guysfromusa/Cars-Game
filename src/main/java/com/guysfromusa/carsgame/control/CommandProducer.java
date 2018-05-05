@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,12 +33,11 @@ public class CommandProducer {
         this.applicationEventPublisher = notNull(applicationEventPublisher);
     }
 
-    //todo either? / optional / String?
-    public CarDto scheduleCommand(String gameName, Command move) {
-
-         return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
+    public List<CarDto> scheduleCommand(MoveCommand moveCommand) {
+         return Optional.ofNullable(activeGamesContainer.getGameState(moveCommand.getGameName())) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<CarDto> result = state.addCommandToExecute(move, CarDto::new);
+                    //TODO emptyList is it right?
+                    CompletableFuture<List<CarDto>> result = state.addCommandToExecute(moveCommand, Collections::emptyList);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })

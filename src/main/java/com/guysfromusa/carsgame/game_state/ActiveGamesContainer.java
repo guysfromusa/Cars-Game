@@ -24,8 +24,8 @@ public class ActiveGamesContainer {
 
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();
 
-    public void addNewGame(String gameName){
-        this.gameStateMap.put(gameName, new GameState(gameName));
+    public void addNewGame(String gameName, Integer[][] mapContent){
+        this.gameStateMap.put(gameName, new GameState(gameName, mapContent));
         log.info("Game: {} added to container", gameName);
     }
 

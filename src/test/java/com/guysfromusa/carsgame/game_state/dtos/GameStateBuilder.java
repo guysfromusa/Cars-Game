@@ -35,7 +35,7 @@ public final class GameStateBuilder {
     }
 
     public GameState build() {
-        GameState gameState = new GameState(gameName);
+        GameState gameState = new GameState(gameName, new Integer[0][0]);
         gameState.setRoundInProgress(roundInProgress);
         Arrays.stream(commands)
                 .forEach(gameState.getCommandsQueue()::add);

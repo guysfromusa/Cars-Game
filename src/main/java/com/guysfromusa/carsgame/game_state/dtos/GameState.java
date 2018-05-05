@@ -31,9 +31,14 @@ public class GameState {
 
     private Map<String, CarState> carsStatesMemory = new ConcurrentHashMap<>();
 
-    public GameState(String gameName) {
+    @Getter
+    private Integer[][] gameMapContent;
+
+    public GameState(String gameName, Integer[][] gameMapContent) {
         this.gameName = gameName;
+        this.gameMapContent = gameMapContent;
     }
+
 
     public <T> CompletableFuture<T> addCommandToExecute(Command command, Supplier<T> errorCallback) {
         boolean added = commandsQueue.offer(command);
@@ -71,5 +76,10 @@ public class GameState {
 
     public CarDto getCar(String carName){
         return carsStatesMemory.get(carName).getCar();
+    }
+
+
+    public CarState getCarState(String carName) {
+        return carsStatesMemory.get(carName);
     }
 }
