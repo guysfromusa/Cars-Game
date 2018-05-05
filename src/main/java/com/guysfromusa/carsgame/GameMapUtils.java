@@ -52,14 +52,13 @@ public class GameMapUtils {
             return false;
         }
         queue.offer(root);
+        visited[root._1][root._2] = true;
 
         // Breadth-first search
         while (!queue.isEmpty()) {
             Tuple2<Integer, Integer> indexes = queue.poll();
             int x = indexes._1;
             int y = indexes._2;
-
-            visited[x][y] = true;
 
             // add not visited neighbors
             addNeighbor(x, y + 1, map, visited, queue);
@@ -88,6 +87,7 @@ public class GameMapUtils {
     private static void addNeighbor(int x, int y, Integer[][] map, Boolean[][] visited, Queue<Tuple2<Integer, Integer>> queue) {
         if (isOnMap(x, y, map) && !visited[x][y]) {
             queue.offer(Tuple(x, y));
+            visited[x][y] = true;
         }
     }
 
