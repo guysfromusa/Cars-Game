@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MoveCommand;
-import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.springframework.beans.factory.annotation.Autowired;

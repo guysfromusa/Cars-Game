@@ -3,11 +3,11 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.services.UndoMovementService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
-import com.guysfromusa.carsgame.v1.converters.CarDtoConverter;
 import com.guysfromusa.carsgame.v1.model.Car;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +29,12 @@ public class UndoMovementResource {
 
     private final UndoMovementService undoMovementService;
 
-    private final CarDtoConverter carDtoConverter;
+    private final ConversionService conversionService;
 
     @Autowired
-    public UndoMovementResource(UndoMovementService undoMovementService, CarDtoConverter carDtoConverter) {
+    public UndoMovementResource(UndoMovementService undoMovementService, ConversionService conversionService) {
         this.undoMovementService = notNull(undoMovementService);
-        this.carDtoConverter = notNull(carDtoConverter);
+        this.conversionService = notNull(conversionService);
     }
 
     @ApiOperation(value = "Find history", response = List.class)
@@ -45,7 +45,7 @@ public class UndoMovementResource {
 
         List<CarDto> carDtos = undoMovementService.doNMoveBack(gameId, carName, numberOfStepBack);
 
-        return StreamUtils.convert(carDtos, carDtoConverter::convert);
+        return StreamUtils.convert(carDtos, dto -> conversionService.convert(dto, Car.class));
     }
 
 }
