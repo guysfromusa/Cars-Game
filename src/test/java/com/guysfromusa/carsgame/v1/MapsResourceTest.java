@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -41,6 +42,20 @@ public class MapsResourceTest {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(CREATED);
+    }
+
+    @Test
+    public void shouldRejectUnreachableMap() {
+        //given
+        HttpEntity<Map> request = new RequestBuilder<Map>()
+                .body(new Map("name", "0,1\n1,0"))
+                .build();
+
+        //when
+        ResponseEntity<String> response = template.postForEntity("/v1/maps", request, String.class);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Robert Mycek, 2018-02-26
@@ -12,9 +15,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Map {
 
-    @Setter @Getter
+    @Setter @Getter @NotEmpty
     private String name;
 
-    @Setter @Getter
+    @Setter @Getter @NotEmpty
     private String content;
 }
