@@ -1,7 +1,10 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.services.UndoMovementService;
+import com.guysfromusa.carsgame.utils.StreamUtils;
+import com.guysfromusa.carsgame.v1.converters.CarDtoConverter;
+import com.guysfromusa.carsgame.v1.model.Car;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +37,7 @@ public class UndoMovementResource {
 
     @ApiOperation(value = "Find history", response = List.class)
     @GetMapping("/{gameId}/{carName}/{numberOfStepsBack}")
-    public List<CarEntity> findMovementHistory(@PathVariable("gameId") String gameId,
+    public List<Car> findMovementHistory(@PathVariable("gameId") String gameId,
                                                @PathVariable("carName") String carName,
                                                @PathVariable("numberOfStepsBack") int numberOfStepsBack) throws ExecutionException, InterruptedException {
 

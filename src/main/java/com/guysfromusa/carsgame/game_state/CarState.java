@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.game_state;
 
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
-import com.guysfromusa.carsgame.v1.model.Car;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,6 @@ public class CarState {
     private Collection<MovementDto> movementDtos = new ConcurrentLinkedQueue<>();
 
     @Getter @Setter
-    private Car car;
-
+    private CarDto car;
 
 }

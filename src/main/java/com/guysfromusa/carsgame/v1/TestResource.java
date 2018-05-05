@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class TestResource {
 
     @GetMapping(value = "{gameName}")
     @ApiOperation(value = "simmulate message")
-    public CarEntity startNewGame(@PathVariable("gameName") String gameName) {
+    public CarDto startNewGame(@PathVariable("gameName") String gameName) {
 //        Command move = new AddCarToGameCommand();
 //        move.setGameName(gameName);
 //        move.setCarName("car1");
