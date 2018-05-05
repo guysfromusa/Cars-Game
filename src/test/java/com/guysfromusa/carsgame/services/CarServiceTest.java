@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.game_state.events.AddCarToGameEvent;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
@@ -16,6 +17,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +30,9 @@ import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +51,9 @@ public class CarServiceTest {
 
     @Mock
     private CarGameAdditionValidator carGameAdditionValidator;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
     private CarService carService;
@@ -67,6 +74,7 @@ public class CarServiceTest {
         CarEntity capturedCarEntity = carEntityArgumentCaptor.getValue();
         assertEquals(carName, capturedCarEntity.getName());
     }
+
 
     @Test
     public void shouldDeleteCar(){
@@ -145,6 +153,14 @@ public class CarServiceTest {
         carService.addCarToGame(carName, carGame, startingPoint);
 
         //then
+        ArgumentCaptor<AddCarToGameEvent> addCarToGameEventArgumentCaptor = ArgumentCaptor.forClass(AddCarToGameEvent.class);
+        verify(applicationEventPublisher).publishEvent(addCarToGameEventArgumentCaptor.capture());
+
+        AddCarToGameEvent capturedCarToGameEvent = addCarToGameEventArgumentCaptor.getValue();
+        assertThat(capturedCarToGameEvent)
+                .extracting(AddCarToGameEvent::getGameName, AddCarToGameEvent::getCarName)
+                .containsExactly("Car-Game", "My-Second-Car");
+
         verify(carRepository).save(argThat(new ArgumentMatcher<CarEntity>() {
             @Override
             public boolean matches(Object argument) {
