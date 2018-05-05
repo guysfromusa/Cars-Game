@@ -32,12 +32,12 @@ public class UndoMovementResource {
     }
 
     @ApiOperation(value = "Find history", response = List.class)
-    @GetMapping("/{gameId}/{carName}/{numberOfStepBack}")
+    @GetMapping("/{gameId}/{carName}/{numberOfStepsBack}")
     public List<CarEntity> findMovementHistory(@PathVariable("gameId") String gameId,
                                                @PathVariable("carName") String carName,
-                                               @PathVariable("numberOfStepBack") int numberOfStepBack) throws ExecutionException, InterruptedException {
+                                               @PathVariable("numberOfStepsBack") int numberOfStepsBack) throws ExecutionException, InterruptedException {
 
-        return undoMovementService.doNMoveBack(gameId, carName, numberOfStepBack);
+        return undoMovementService.doNMoveBack(gameId, carName, numberOfStepsBack);
     }
 
 }

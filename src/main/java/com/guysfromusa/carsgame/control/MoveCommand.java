@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,9 @@ public class MoveCommand extends Command<List<CarEntity>> {
 
     @Getter @Setter
     private Movement movement;
+
+    @Getter @Setter
+    private Direction direction;
 
 
 }

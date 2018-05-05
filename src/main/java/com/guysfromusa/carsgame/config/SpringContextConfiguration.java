@@ -10,8 +10,10 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static java.lang.Runtime.getRuntime;
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 /**
  * Created by Tomasz Bradlo, 25.02.18
@@ -35,5 +37,10 @@ public class SpringContextConfiguration {
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
         threadPoolTaskExecutor.setQueueCapacity(capacity);
         return threadPoolTaskExecutor;
+    }
+
+    @Bean
+    public ScheduledExecutorService scheduledPollExecutor(){
+        return  newSingleThreadScheduledExecutor();
     }
 }

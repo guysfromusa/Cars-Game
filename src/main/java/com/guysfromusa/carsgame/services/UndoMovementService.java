@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -23,30 +23,33 @@ public class UndoMovementService {
 
     private final CommandProducer commandProducer;
     private final UndoMovementPreparerService undoMovementPreparerService;
+    private final ScheduledExecutorService scheduler;
 
     @Autowired
-    public UndoMovementService(CommandProducer commandProducer, UndoMovementPreparerService undoMovementPreparerService) {
+    public UndoMovementService(CommandProducer commandProducer, UndoMovementPreparerService undoMovementPreparerService, ScheduledExecutorService scheduler) {
         this.commandProducer = notNull(commandProducer);
         this.undoMovementPreparerService = notNull(undoMovementPreparerService);
+        this.scheduler = notNull(scheduler);
     }
 
     public List<CarEntity> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
         List<Movement> movements = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
         List<CompletableFuture<List<CarEntity>>> result = new LinkedList<>();
         MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
+        int delay = 1;
         for (Movement movement : movements) {
             moveCommand.setMovement(movement);
-            Callable<CarEntity> task = createTask(gameId, moveCommand);
-            commandProducer.scheduler.schedule(task, 1, TimeUnit.SECONDS);
+            Runnable task = createTask(gameId, moveCommand);
+            scheduler.schedule(task, delay, TimeUnit.SECONDS);
+            delay++;
             result.add(moveCommand.getFuture());
         }
         CompletableFuture<Void> allOfDone = CompletableFuture.allOf(result.toArray(new CompletableFuture[result.size()]));
-        commandProducer.scheduler.shutdown();
         return allOfDone.thenApply(v -> result.get(result.size())).get().get();
 
     }
 
-    private Callable<CarEntity> createTask(String gameName, Command move) {
+    private Runnable createTask(String gameName, Command move) {
         return () -> commandProducer.scheduleCommand(gameName, move);
     }
 

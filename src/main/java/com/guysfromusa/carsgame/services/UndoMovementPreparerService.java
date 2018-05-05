@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.LEFT;
@@ -19,6 +20,7 @@ import static io.vavr.API.Match;
 import static io.vavr.control.Try.run;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -37,8 +39,8 @@ public class UndoMovementPreparerService {
     }
 
     public List<Movement> prepareBackPath(String gameId, String carName, int numberOfStepBack) {
-        Collection<Movement> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
-        return inverseMovement(movementsHistory);
+        Optional<Collection<Movement>> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
+        return movementsHistory.isPresent() ? inverseMovement(movementsHistory.get()) : emptyList();
     }
 
     private List<Movement> inverseMovement(Collection<Movement> movements) {
@@ -51,9 +53,10 @@ public class UndoMovementPreparerService {
                     Case($(RIGHT), run -> backPath.add(newMovement(LEFT))),
                     Case($(FORWARD), run -> backPath.addAll(asList(newMovement(LEFT), newMovement(LEFT), newMovement(FORWARD)))),
                     Case($(), o -> run(() -> {
-                        throw new IllegalArgumentException(valueOf(movement.getOperation()));
+                        throw new IllegalArgumentException(valueOf("Wrong operation of movement " + movement.getOperation()));
                     })));
         }
+        backPath.addAll(asList(newMovement(LEFT), newMovement(LEFT)));
         return backPath;
     }
 }

@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.CarEntityBuilder.aCarEntity;
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
@@ -66,10 +67,11 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addMovementHistory( "bmw", RIGHT);
 
         //when
-        Collection<Movement> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
+        Optional<Collection<Movement>> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
 
         //then
-        assertThat(result)
+        assertThat(result.isPresent());
+        assertThat(result.get())
                 .extracting(Movement::getOperation)
                 .containsExactly(RIGHT, RIGHT, FORWARD);
     }
@@ -81,10 +83,10 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
 
         //when
-        Collection<Movement> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
+        Optional<Collection<Movement>> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
 
         //then
-        assertThat(result).isEmpty();
+        assertThat(!result.isPresent());
     }
 
 }

@@ -9,9 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ScheduledExecutorService;
 
-import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
@@ -20,8 +18,6 @@ public class CommandProducer {
     private final ActiveGamesContainer activeGamesContainer;
 
     private final ApplicationEventPublisher applicationEventPublisher;
-    public ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
-
 
     @Inject
     public CommandProducer(ActiveGamesContainer activeGamesContainer,
