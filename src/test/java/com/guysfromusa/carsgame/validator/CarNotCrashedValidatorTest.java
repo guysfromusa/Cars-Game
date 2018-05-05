@@ -2,9 +2,9 @@ package com.guysfromusa.carsgame.validator;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
@@ -12,9 +12,6 @@ import org.junit.rules.ExpectedException;
 public class CarNotCrashedValidatorTest {
 
     private CarNotCrashedValidator carNotCrashedValidator = new CarNotCrashedValidator();
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void shouldPassValidationWhenCarIsNotCrashed() {
@@ -32,16 +29,15 @@ public class CarNotCrashedValidatorTest {
     @Test
     public void shouldThrowExceptionWhenCarIsCrashed() {
         //given
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(CarNotCrashedValidator.CAR_CRASHED_MESSAGE);
-
         CarEntity carEntity = new CarEntity();
         carEntity.setCrashed(true);
         CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
                 .carEntity(carEntity)
                 .build();
 
-        //when
-        carNotCrashedValidator.validate(subject);
+        //when then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> carNotCrashedValidator.validate(subject))
+                .withMessage(CarNotCrashedValidator.CAR_CRASHED_MESSAGE);
     }
 }

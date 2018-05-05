@@ -19,9 +19,9 @@ public class StartingPointOccupiedValidator implements BusinessValidator<CarGame
     public static final String STARTING_POINT_OCCUPIED_MESSAGE = "Starting point is already occupied by another car";
 
     @Override
-    public void validate(CarGameAdditionValidationSubject validationSubject) {
-        Point startingPoint = validationSubject.getStartingPoint();
-        GameState gameState = validationSubject.getGameState();
+    public void validate(CarGameAdditionValidationSubject subject) {
+        Point startingPoint = subject.getStartingPoint();
+        GameState gameState = subject.getGameState();
 
         List<Car> carsInGame = gameState.getAllCars();
 
