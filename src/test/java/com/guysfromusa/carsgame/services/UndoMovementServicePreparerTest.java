@@ -47,7 +47,7 @@ public class UndoMovementServicePreparerTest {
         //then
         assertThat(result)
                 .extracting(MovementDto::getOperation)
-                .containsExactly(LEFT, LEFT);
+                .containsExactly(LEFT, LEFT, LEFT, LEFT);
     }
 
     @Test
@@ -63,6 +63,6 @@ public class UndoMovementServicePreparerTest {
         //then
         assertThat(result)
                 .extracting(MovementDto::getOperation)
-                .containsExactly(LEFT, LEFT, FORWARD, LEFT, LEFT, LEFT, FORWARD, RIGHT, LEFT);
+                .containsExactly(LEFT, LEFT, FORWARD, LEFT, LEFT, LEFT, FORWARD, RIGHT, LEFT, LEFT, LEFT);
     }
 }

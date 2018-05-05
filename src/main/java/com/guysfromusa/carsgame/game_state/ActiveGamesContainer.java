@@ -32,12 +32,6 @@ public class ActiveGamesContainer {
         log.info("Game: {} added to container", gameName);
     }
 
-    @Deprecated //use gameState directly
-    public void addExecutedMove(String gameName, String carName, MovementDto.Operation operation){
-        GameState gameState = this.gameStateMap.get(gameName);
-        gameState.addMovementHistory(carName, operation);
-    }
-
     public Optional<Collection<MovementDto>> getNCarsMovementHistory(String gameId, String carName, int numberOfStepBack){
         GameState gameState = this.gameStateMap.get(gameId);
         List<MovementDto> carsMovementDto = emptyList();
