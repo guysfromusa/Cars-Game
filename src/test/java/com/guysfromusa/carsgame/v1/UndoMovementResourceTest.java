@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
@@ -29,6 +30,7 @@ public class UndoMovementResourceTest {
     private ActiveGamesContainer activeGamesContainer;
 
     @Test
+    @Sql(value = {"/sql/clean.sql","/sql/undo_resource_insert.sql"})
     public void shouldBackCar3Step(){
         //given
         activeGamesContainer.addNewGame("game1");

@@ -58,4 +58,8 @@ public class UndoMovementPreparerService {
         backPath.addAll(asList(newMovementDto(LEFT), newMovementDto(LEFT)));
         return backPath;
     }
+
+    public void setUndoProcessFlag(String gameId, String carName, boolean value){
+        activeGamesContainer.getGameState(gameId).setUndoProcessFlag(carName, value);
+    }
 }

@@ -58,9 +58,9 @@ public class GamesResource {
     }
 
     @PostMapping(path = "{game}/cars/{car}/movements", consumes = APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "Perform a movementDto of the car", response = List.class)
+    @ApiOperation(value = "Perform a movement of the car", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful movementDto of the car"),
+            @ApiResponse(code = 200, message = "Successful movement of the car"),
             @ApiResponse(code = 404, message = "Game not found"),
             @ApiResponse(code = 404, message = "Car not found")
     })

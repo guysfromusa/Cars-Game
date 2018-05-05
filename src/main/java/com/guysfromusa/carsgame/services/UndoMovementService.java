@@ -31,16 +31,17 @@ public class UndoMovementService {
 
     public List<MovementDto> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
         List<MovementDto> movementDtos = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
+        undoMovementPreparerService.setUndoProcessFlag(gameId, carName, true);
         int delay = 1;
         for (MovementDto movementDto : movementDtos) {
-            MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
-            moveCommand.setMovementDto(movementDto);
+            MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE, movementDto);
             Runnable task = createTask(gameId, moveCommand);
             scheduler.schedule(task, delay, TimeUnit.SECONDS);
             delay++;
-          //  List<CarDto> carDtos = moveCommand.getFuture().get();
         }
-
+        //todo : it has to be changed. I thnik it should be run when last move will be done or
+        //when car will be crasehed
+        undoMovementPreparerService.setUndoProcessFlag(gameId, carName, false);
         return movementDtos;
 
     }
