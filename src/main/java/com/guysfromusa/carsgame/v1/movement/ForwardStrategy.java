@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.v1.movement;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.services.MapService;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class ForwardStrategy implements MovementStrategy{
     }
 
     @Override
-    public void execute(Car car, Integer[][] mapContent) {
+    public void execute(CarDto car, Integer[][] mapContent) {
         Point position = car.getPosition();
         Integer xForwardPos = car.getDirection().getForwardXF().apply(position);
         Integer yForwardPos = car.getDirection().getForwardYF().apply(position);
@@ -39,7 +39,7 @@ public class ForwardStrategy implements MovementStrategy{
         car.setCrashed(true);
     }
 
-    private void updateCarPosition(Car car, Integer x, Integer y){
+    private void updateCarPosition(CarDto car, Integer x, Integer y){
         car.getPosition().setY(y);
         car.getPosition().setX(x);
     }

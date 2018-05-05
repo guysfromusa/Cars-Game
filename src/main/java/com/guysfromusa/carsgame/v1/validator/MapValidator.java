@@ -23,7 +23,7 @@ public class MapValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Map map = (Map) target;
 
-        Integer[][] board = GameMapUtils.getMapMatrixFromContent(map.getContent());
+        Integer[][] board = GameMapUtils.getMapMatrixContent(map.getContent());
 
         if (!GameMapUtils.isReachable(board)) {
             errors.rejectValue("content", "map.reachable", "The map is not reachable.");

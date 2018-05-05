@@ -36,7 +36,7 @@ public class StartingPointOnMapValidator implements BusinessValidator<CarGameAdd
         MapEntity gameMap = subject.getGameEntity().getMap();
         String gameMapContent = gameMap.getContent();
 
-        if(!mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)){
+        if(!mapService.isFieldReachableOnGameMap(gameMapContent, startingPoint)){
             log.debug("Starting point is invalid");
             throw new IllegalArgumentException(WRONG_STARTING_POINT_MESSAGE);
         }

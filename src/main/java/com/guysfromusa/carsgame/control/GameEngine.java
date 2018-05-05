@@ -35,10 +35,11 @@ public class GameEngine {
     @Inject
     public GameEngine(ActiveGamesContainer activeGamesContainer,
                       ApplicationEventPublisher applicationEventPublisher,
-                      CarService carService) {
+                      CarService carService, CarController carController) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
         this.carService = carService;
+        this.carController = carController;
     }
 
     @Async
@@ -52,7 +53,7 @@ public class GameEngine {
         //TODO update memory state
 
         commands.forEach(message -> {
-            String status = carController.calculateCarState((MovementMessage) message, gameState);
+            String status = carController.calculateCarState((MoveCommand) message, gameState);
 
             CompletableFuture<String> future = message.getFuture();
             log.info("Complete message");
@@ -84,15 +85,6 @@ public class GameEngine {
 
         gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent(this));
-    }
-
-    public void createNewGame(List<Message> messages){
-        messages.forEach(message -> {
-            NewGameMessage newGameMessage = (NewGameMessage) message;
-            String gameName = newGameMessage.getGameName();
-            Integer[][] mapContent = newGameMessage.getMapContent();
-            gameStateTracker.addNewGame(gameName, mapContent);
-        });
     }
 
 }

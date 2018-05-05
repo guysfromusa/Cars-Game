@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
 import com.google.common.collect.Maps;
-import com.guysfromusa.carsgame.game_state.dtos.CarState;
+import com.guysfromusa.carsgame.game_state.CarState;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
 import org.springframework.stereotype.Component;
@@ -23,10 +23,10 @@ public class CarController {
                 movementStrategyMap.put(movementStrategy.getType(), movementStrategy));
     }
 
-    public String calculateCarState(MovementMessage movementMessage, GameState gameState){
+    public String calculateCarState(MoveCommand moveCommand, GameState gameState){
 
-        Operation operation = movementMessage.getMovement().getOperation();
-        CarState carState = gameState.getCarState(movementMessage.getCarName());
+        Operation operation = moveCommand.getMovement().getOperation();
+        CarState carState = gameState.getCarState(moveCommand.getCarName());
 
         Integer[][] gameMapContent = gameState.getGameMapContent();
         MovementStrategy movementStrategy = movementStrategyMap.get(operation);

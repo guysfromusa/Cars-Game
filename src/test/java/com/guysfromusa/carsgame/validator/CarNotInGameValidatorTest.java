@@ -38,7 +38,7 @@ public class CarNotInGameValidatorTest {
         gameEntity.setName("game1");
         CarEntity carToAdd = new CarEntity();
         carToAdd.setName("carToAdd");
-        GameState gameState = new GameState("game1");
+        GameState gameState = new GameState("game1", new Integer[0][0]);
         gameState.addNewCar(carInGame1);
         when(activeGamesContainer.getGameState("game1")).thenReturn(gameState);
         CarGameAdditionValidationSubject validationSubject = CarGameAdditionValidationSubject.builder()
@@ -63,7 +63,7 @@ public class CarNotInGameValidatorTest {
         CarEntity carToAdd = new CarEntity();
         carToAdd.setName("carInGame1");
 
-        GameState gameState = new GameState("game1");
+        GameState gameState = new GameState("game1", new Integer[0][0]);
         gameState.addNewCar(carInGame1);
         when(activeGamesContainer.getGameState("game1")).thenReturn(gameState);
 

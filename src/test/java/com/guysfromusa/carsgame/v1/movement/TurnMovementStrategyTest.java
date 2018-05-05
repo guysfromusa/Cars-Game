@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.v1.movement;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.v1.model.Movement;
@@ -31,7 +32,7 @@ public class TurnMovementStrategyTest {
         movement.setTurnSide(TurnSide.RIGHT);
 
         //when
-        turnMovementStrategy.execute("game1", "car1", movement);
+        turnMovementStrategy.execute(new CarDto("game1", "car1", movement);
 
         //then
         verify(carServiceMock).turnCar("game1", "car1", TurnSide.RIGHT);
