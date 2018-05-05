@@ -7,6 +7,8 @@ import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -27,11 +29,48 @@ public class ForwardStrategyTest {
         Movement movement = createMovement(steps);
         
         //when
-        boolean isMoved = forwardStrategy.execute(car, gameMap, movement);
+        boolean isMoveSuccess = forwardStrategy.execute(car, gameMap, movement);
 
         //then
+        assertTrue(isMoveSuccess);
         assertThat(car.getPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(0, 2);
+    }
+
+    @Test
+    public void whenTwoStepsForwardOnEast_shouldChangePositionAccordingly(){
+        //given
+        Integer[][] gameMap = {{1, 1, 1}};
+        Point startPoint = new Point(0,0);
+        Integer steps = 2;
+        Direction south = Direction.EAST;
+        Car car = createCar(startPoint, south);
+        Movement movement = createMovement(steps);
+
+        //when
+        boolean isMoveSuccess = forwardStrategy.execute(car, gameMap, movement);
+
+        //then
+        assertTrue(isMoveSuccess);
+        assertThat(car.getPosition())
+                .extracting(Point::getX, Point::getY).containsExactly(0, 2);
+    }
+
+    @Test
+    public void whenDriveIntoWall_shouldMoveBeFailed(){
+        //given
+        Integer[][] gameMap = {{1, 1, 1}};
+        Point startPoint = new Point(0,0);
+        Integer steps = 2;
+        Direction south = Direction.NORTH;
+        Car car = createCar(startPoint, south);
+        Movement movement = createMovement(steps);
+
+        //when
+        boolean isMoveSuccess = forwardStrategy.execute(car, gameMap, movement);
+
+        //then
+        assertFalse(isMoveSuccess);
     }
 
     private Car createCar(Point point, Direction direction){
