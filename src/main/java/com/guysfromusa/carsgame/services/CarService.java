@@ -13,7 +13,6 @@ import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,7 @@ public class CarService {
 
     private final MovementsHistoryRepository movementsHistoryRepository;
 
-    private CarGameAdditionValidator carGameAdditionValidator;
+    private final CarGameAdditionValidator carGameAdditionValidator;
 
     @Inject
     public CarService(CarRepository carRepository, MovementsHistoryRepository movementsHistoryRepository,
@@ -113,7 +112,6 @@ public class CarService {
 
         car.setDirection(Direction.NORTH);
         car.setGame(gameEntity);
-
         return carRepository.save(car);
     }
 

@@ -24,7 +24,8 @@ public class GameService {
     private final MapService mapService;
 
     @Inject
-    public GameService(GameRepository gameRepository, MapService mapService) {
+    public GameService(GameRepository gameRepository,
+                       MapService mapService) {
         this.gameRepository = notNull(gameRepository);
         this.mapService = notNull(mapService);
     }

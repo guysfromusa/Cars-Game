@@ -62,7 +62,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
 
         startNewGame(template, "gameToPlay", "mapToPlay");
 
-        assignCarToTheGame(template, "carToTurn", "gameToPlay", new Point(2,2));
+        addCarToGame(template, "carToTurn", "gameToPlay", new Point(2,2));
 
         Movement movement = new Movement();
         movement.setType(TURN);
