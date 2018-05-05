@@ -8,30 +8,39 @@ import com.guysfromusa.carsgame.v1.MapApiAware;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Point;
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.List;
 
+import static com.guysfromusa.carsgame.utils.StreamUtils.convert;
+import static java.util.Arrays.asList;
 import static java.util.Objects.nonNull;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
+@SpringBootTest(webEnvironment = DEFINED_PORT, classes = SpringContextConfiguration.class)
 public class IntegrationTest implements CarApiAware, MapApiAware, GameApiAware {
 
     @Inject
     private TestRestTemplate template;
+
+    @Inject
+    private TaskExecutor taskExecutor;
 
     @Test
     @Sql("/sql/clean.sql")
@@ -57,16 +66,21 @@ public class IntegrationTest implements CarApiAware, MapApiAware, GameApiAware {
         addNewCar(template, zygzak, CarType.RACER);
         addNewCar(template, sally, CarType.NORMAL);
         startNewGame(template, gameName, mapName);
-        //TODO add concurrency invocation here
-        addCarToGame(template, zlomek, gameName, new Point(2, 0));
-        addCarToGame(template, maniek, gameName, new Point(2, 0));
-        addCarToGame(template, zygzak, gameName, new Point(2, 0));
+
+        taskExecutor.execute(() -> addCarToGame(template, zlomek, gameName, new Point(2, 0)));
+        taskExecutor.execute(() -> addCarToGame(template, maniek, gameName, new Point(2, 0)));
+        taskExecutor.execute(() -> addCarToGame(template, zygzak, gameName, new Point(2, 0)));
+
+        Awaitility.await()
+                .atMost(3, SECONDS)
+                .until(() -> convert(asList(findAllCars(template)), Car::getGame), hasSize(greaterThan(0)));
+
 
         //then
-        List<Car> allCars = Arrays.asList(findAllCars(template));
+        List<Car> allCars = asList(findAllCars(template));
         assertThat(allCars).hasSize(4);
         assertThat(allCars).filteredOn(Car::isCrashed).hasSize(0);
-        assertThat(allCars).filteredOn(car -> nonNull(car.getGame())).hasSize(3);
+        assertThat(allCars).filteredOn(car -> nonNull(car.getGame())).hasSize(1);
 
     }
 }

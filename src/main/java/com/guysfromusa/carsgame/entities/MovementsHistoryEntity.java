@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.model.Direction;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,6 +29,7 @@ import static java.time.LocalDateTime.now;
 @Entity(name = "MOVEMENT_HISTORY")
 @Table(name = "MOVEMENT_HISTORY")
 @NoArgsConstructor
+@ToString
 public class MovementsHistoryEntity {
 
     @Id

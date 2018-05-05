@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.repositories;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  * Created by Tomasz Bradlo, 27.02.18
  */
 @Repository
-public interface CarRepository extends CrudRepository<CarEntity, Long> {
+public interface CarRepository extends JpaRepository<CarEntity, Long> {
 
     Optional<CarEntity> findByName(String name);
 
