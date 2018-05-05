@@ -6,9 +6,9 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
@@ -16,9 +16,6 @@ import org.junit.rules.ExpectedException;
 public class StartingPointOccupiedValidatorTest {
 
     private StartingPointOccupiedValidator startingPointOccupiedValidator = new StartingPointOccupiedValidator();
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void shouldPassValidationWhenStartingPointNotOccupied() {
@@ -59,9 +56,6 @@ public class StartingPointOccupiedValidatorTest {
     @Test
     public void shouldThrowExceptionWhenStartingPointOccupied() {
         //given
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(StartingPointOccupiedValidator.STARTING_POINT_OCCUPIED_MESSAGE);
-
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
 
@@ -90,7 +84,10 @@ public class StartingPointOccupiedValidatorTest {
                 .gameState(gameState)
                 .startingPoint(startingPoint)
                 .build();
-        //when
-        startingPointOccupiedValidator.validate(subject);
+
+        //when then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> startingPointOccupiedValidator.validate(subject))
+                .withMessage(StartingPointOccupiedValidator.STARTING_POINT_OCCUPIED_MESSAGE);
     }
 }

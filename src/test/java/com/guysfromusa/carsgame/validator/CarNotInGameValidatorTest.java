@@ -5,15 +5,14 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,9 +26,6 @@ public class CarNotInGameValidatorTest {
 
     @InjectMocks
     private CarNotInGameValidator carNotInGameValidator;
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void shouldPassValidationWhenCarNotInGame() {
@@ -58,9 +54,6 @@ public class CarNotInGameValidatorTest {
     @Test
     public void shouldThrowExceptionWhenCarInGame() {
         //given
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(CarNotInGameValidator.CAR_EXISTS_IN_GAME_MESSAGE);
-
         GameEntity gameEntity = new GameEntity();
         CarEntity carInGame1 = new CarEntity();
         carInGame1.setName("carInGame1");
@@ -74,12 +67,15 @@ public class CarNotInGameValidatorTest {
         gameState.addNewCar(carInGame1);
         when(activeGamesContainer.getGameState("game1")).thenReturn(gameState);
 
-        CarGameAdditionValidationSubject validationSubject = CarGameAdditionValidationSubject.builder()
+        CarGameAdditionValidationSubject subject = CarGameAdditionValidationSubject.builder()
                 .carEntity(carToAdd)
                 .gameEntity(gameEntity)
                 .gameState(gameState)
                 .build();
-        //when
-        carNotInGameValidator.validate(validationSubject);
+
+        //when then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> carNotInGameValidator.validate(subject))
+                .withMessage(CarNotInGameValidator.CAR_EXISTS_IN_GAME_MESSAGE);
     }
 }
