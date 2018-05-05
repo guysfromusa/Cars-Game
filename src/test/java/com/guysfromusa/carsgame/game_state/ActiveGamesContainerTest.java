@@ -4,7 +4,6 @@ import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.CarEntityBuilder.aCarEntity;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
@@ -25,7 +24,7 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1");
 
         //then
-        assertThat(activeGamesContainer.getGameState("game1").getMovementHistory("someCar")).isNull();
+        assertThat(activeGamesContainer.getGameState("game1").getMovementHistory("someCar")).isEmpty();
     }
 
     @Test
@@ -68,11 +67,10 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addMovementHistory( "bmw", RIGHT);
 
         //when
-        Optional<Collection<MovementDto>> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
+        Collection<MovementDto> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
 
         //then
-        assertThat(result.isPresent());
-        assertThat(result.get())
+        assertThat(result)
                 .extracting(MovementDto::getOperation)
                 .containsExactly(RIGHT, RIGHT, FORWARD);
     }
@@ -84,10 +82,10 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
 
         //when
-        Optional<Collection<MovementDto>> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
+        Collection<MovementDto> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
 
         //then
-        assertThat(!result.isPresent());
+        assertThat(result.isEmpty());
     }
 
 }

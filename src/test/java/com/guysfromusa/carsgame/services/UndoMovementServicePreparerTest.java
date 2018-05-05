@@ -15,7 +15,6 @@ import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.LEF
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.RIGHT;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static java.util.Arrays.asList;
-import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +38,7 @@ public class UndoMovementServicePreparerTest {
     public void shouldPrepareBathPathFor2MoveBack(){
         //given
         when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
-                .thenReturn(of(asList(newMovementDto(RIGHT), newMovementDto(RIGHT))));
+                .thenReturn(asList(newMovementDto(RIGHT), newMovementDto(RIGHT)));
 
         //when
         List<MovementDto> result = service.prepareBackPath(gameId, carName, 2);
@@ -54,8 +53,8 @@ public class UndoMovementServicePreparerTest {
     public void shouldPrepareBathPathFor5MoveBack(){
         //given
         when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
-                .thenReturn(of(asList(newMovementDto(FORWARD), newMovementDto(RIGHT),
-                        newMovementDto(FORWARD), newMovementDto(LEFT), newMovementDto(RIGHT))));
+                .thenReturn(asList(newMovementDto(FORWARD), newMovementDto(RIGHT),
+                        newMovementDto(FORWARD), newMovementDto(LEFT), newMovementDto(RIGHT)));
 
         //when
         List<MovementDto> result  = service.prepareBackPath(gameId, carName, 2);

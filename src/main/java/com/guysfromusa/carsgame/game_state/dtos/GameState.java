@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
+import static java.util.Collections.*;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
 
@@ -66,7 +67,7 @@ public class GameState {
 
     public Collection<MovementDto> getMovementHistory(String carName) {
         return Optional.ofNullable(carsStatesMemory.get(carName))
-                .map(CarState::getMovementDtos).orElse(null);
+                .map(CarState::getMovementDtos).orElse(emptyList());
     }
 
     public CarDto getCar(String carName){

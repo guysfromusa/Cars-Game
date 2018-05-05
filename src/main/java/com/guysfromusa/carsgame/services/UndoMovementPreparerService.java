@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.LEFT;
@@ -39,8 +38,8 @@ public class UndoMovementPreparerService {
     }
 
     public List<MovementDto> prepareBackPath(String gameId, String carName, int numberOfStepBack) {
-        Optional<Collection<MovementDto>> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
-        return movementsHistory.isPresent() ? inverseMovement(movementsHistory.get()) : emptyList();
+        Collection<MovementDto> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
+        return !movementsHistory.isEmpty() ? inverseMovement(movementsHistory) : emptyList();
     }
 
     private List<MovementDto> inverseMovement(Collection<MovementDto> movementDtos) {
