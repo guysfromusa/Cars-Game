@@ -13,7 +13,7 @@ import static java.util.Optional.ofNullable;
  * Created by Tomasz Bradlo, 26.02.18
  */
 @Component
-public class CarConverter implements Converter<CarEntity, Car> {
+public class CarEntityConverter implements Converter<CarEntity, Car> {
 
     @Override
     public Car convert(CarEntity carEntity) {

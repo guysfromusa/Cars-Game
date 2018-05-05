@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
-import com.guysfromusa.carsgame.v1.model.Car;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,16 +18,16 @@ public class MoveData {
     @Getter
     private MoveCommand moveCommand;
 
-    public Car getCar(){
+    public CarDto getCar(){
         String carName = moveCommand.getCarName();
         return gameState.getCar(carName);
     }
 
-    public List<Car> getCars(){
+    public List<CarDto> getCars(){
         return gameState.getCarsInGame();
     }
 
-    public CompletableFuture<List<Car>> getFuture(){
+    public CompletableFuture<List<CarDto>> getFuture(){
         return moveCommand.getFuture();
     }
 }

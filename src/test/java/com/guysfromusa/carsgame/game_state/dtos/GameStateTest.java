@@ -1,7 +1,6 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
@@ -50,7 +49,7 @@ public class GameStateTest {
         gameState.addNewCar(carEntity);
 
         //then
-        Car car = gameState.getCar("bmw");
+        CarDto car = gameState.getCar("bmw");
         Point position = car.getPosition();
         assertThat(position)
                 .extracting(Point::getX, Point::getY)

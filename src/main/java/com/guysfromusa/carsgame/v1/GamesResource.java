@@ -6,8 +6,10 @@ import com.guysfromusa.carsgame.control.MoveCommand;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.services.GameService;
+import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
@@ -74,7 +76,8 @@ public class GamesResource {
                 .movement(newMovement)
                 .build();
 
-        return commandProducer.scheduleCommand(moveCommand);
+        List<CarDto> carDtoList = commandProducer.scheduleCommand(moveCommand);
+        return StreamUtils.convert(carDtoList, carDto -> conversionService.convert(carDto, Car.class));
     }
 
     @ApiOperation(value = "Starts the game with the given Map")

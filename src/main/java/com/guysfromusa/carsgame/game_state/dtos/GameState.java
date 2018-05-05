@@ -3,7 +3,6 @@ package com.guysfromusa.carsgame.game_state.dtos;
 import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.CarState;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,7 +54,7 @@ public class GameState {
     }
 
     public void addNewCar(CarEntity carEntity) {
-        Car car = Car.builder()
+        CarDto car = CarDto.builder()
                 .name(carEntity.getName())
                 .game(carEntity.getGame().getName())
                 .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
@@ -66,11 +65,10 @@ public class GameState {
         log.info("Car: {} added to game: {}", car.getName(), carEntity.getGame().getName());
     }
 
-    public List<Car> getAllCars(){
+    public List<CarDto> getAllCars(){
         return carsStatesMemory.values()
                 .stream()
                 .map(CarState::getCar)
-                .map(Car::clone)
                 .collect(toList());
     }
 
@@ -83,11 +81,11 @@ public class GameState {
         return Optional.ofNullable(carsStatesMemory.get(carName)).orElse(null);
     }
 
-    public Car getCar(String carName){
+    public CarDto getCar(String carName){
         return carsStatesMemory.get(carName).getCar();
     }
 
-    public List<Car> getCarsInGame(){
+    public List<CarDto> getCarsInGame(){
         return carsStatesMemory.values().stream().map(CarState::getCar).collect(toList());
     }
 }
