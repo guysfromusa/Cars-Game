@@ -8,10 +8,7 @@ import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,13 +31,14 @@ public class UndoMovementService {
 
     public List<MovementDto> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
         List<MovementDto> movementDtos = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
-        MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
         int delay = 1;
         for (MovementDto movementDto : movementDtos) {
+            MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
             moveCommand.setMovementDto(movementDto);
             Runnable task = createTask(gameId, moveCommand);
             scheduler.schedule(task, delay, TimeUnit.SECONDS);
             delay++;
+          //  List<CarDto> carDtos = moveCommand.getFuture().get();
         }
 
         return movementDtos;
