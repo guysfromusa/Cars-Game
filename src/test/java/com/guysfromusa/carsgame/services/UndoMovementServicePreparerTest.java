@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,10 +10,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.LEFT;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.RIGHT;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.newMovement;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.LEFT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.RIGHT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static java.util.Arrays.asList;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,14 +39,14 @@ public class UndoMovementServicePreparerTest {
     public void shouldPrepareBathPathFor2MoveBack(){
         //given
         when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
-                .thenReturn(of(asList(newMovement(RIGHT), newMovement(RIGHT))));
+                .thenReturn(of(asList(newMovementDto(RIGHT), newMovementDto(RIGHT))));
 
         //when
-        List<Movement> result = service.prepareBackPath(gameId, carName, 2);
+        List<MovementDto> result = service.prepareBackPath(gameId, carName, 2);
 
         //then
         assertThat(result)
-                .extracting(Movement::getOperation)
+                .extracting(MovementDto::getOperation)
                 .containsExactly(LEFT, LEFT);
     }
 
@@ -54,15 +54,15 @@ public class UndoMovementServicePreparerTest {
     public void shouldPrepareBathPathFor5MoveBack(){
         //given
         when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
-                .thenReturn(of(asList(newMovement(FORWARD), newMovement(RIGHT),
-                        newMovement(FORWARD), newMovement(LEFT), newMovement(RIGHT))));
+                .thenReturn(of(asList(newMovementDto(FORWARD), newMovementDto(RIGHT),
+                        newMovementDto(FORWARD), newMovementDto(LEFT), newMovementDto(RIGHT))));
 
         //when
-        List<Movement> result  = service.prepareBackPath(gameId, carName, 2);
+        List<MovementDto> result  = service.prepareBackPath(gameId, carName, 2);
 
         //then
         assertThat(result)
-                .extracting(Movement::getOperation)
+                .extracting(MovementDto::getOperation)
                 .containsExactly(LEFT, LEFT, FORWARD, LEFT, LEFT, LEFT, FORWARD, RIGHT, LEFT);
     }
 }

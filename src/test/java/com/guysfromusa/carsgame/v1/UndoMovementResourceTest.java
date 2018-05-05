@@ -3,7 +3,7 @@ package com.guysfromusa.carsgame.v1;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,9 +31,9 @@ public class UndoMovementResourceTest {
         //given
         activeGamesContainer.addNewGame("game1");
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("volvo").positionX(1).positionY(2).build());
-        activeGamesContainer.getGameState("game1").addMovementHistory("volvo", Movement.Operation.LEFT);
-        activeGamesContainer.getGameState("game1").addMovementHistory("volvo", Movement.Operation.RIGHT);
-        activeGamesContainer.getGameState("game1").addMovementHistory("volvo", Movement.Operation.FORWARD);
+        activeGamesContainer.getGameState("game1").addMovementHistory("volvo", MovementDto.Operation.LEFT);
+        activeGamesContainer.getGameState("game1").addMovementHistory("volvo", MovementDto.Operation.RIGHT);
+        activeGamesContainer.getGameState("game1").addMovementHistory("volvo", MovementDto.Operation.FORWARD);
 
         //when
         String url = String.join("/", "/v1/back-movements", "game1", "volvo", "3");

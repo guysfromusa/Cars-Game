@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.Collection;
 
 import static com.guysfromusa.carsgame.entities.CarEntityBuilder.aCarEntity;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GameStateTest {
@@ -21,7 +21,7 @@ public class GameStateTest {
         gameState.addNewCar(aCarEntity().name("bmw").build());
 
         //then
-        Collection<Movement> bmwMovement = gameState.getMovementHistory("bmw");
+        Collection<MovementDto> bmwMovement = gameState.getMovementHistory("bmw");
         assertThat(bmwMovement).isEmpty();
     }
 
@@ -34,8 +34,8 @@ public class GameStateTest {
         gameState.addMovementHistory("bmw", FORWARD);
 
         //then
-        Collection<Movement> bmwMovement = gameState.getMovementHistory("bmw");
-        assertThat(bmwMovement).extracting(Movement::getOperation).containsExactlyInAnyOrder(FORWARD);
+        Collection<MovementDto> bmwMovementDto = gameState.getMovementHistory("bmw");
+        assertThat(bmwMovementDto).extracting(MovementDto::getOperation).containsExactlyInAnyOrder(FORWARD);
     }
 
     @Test

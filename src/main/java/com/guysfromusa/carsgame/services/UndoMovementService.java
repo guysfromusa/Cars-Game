@@ -4,14 +4,11 @@ import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MoveCommand;
-import com.guysfromusa.carsgame.entities.CarEntity;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,20 +29,18 @@ public class UndoMovementService {
         this.scheduler = notNull(scheduler);
     }
 
-    public List<CarEntity> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
-        List<Movement> movements = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
-        List<CompletableFuture<List<CarEntity>>> result = new LinkedList<>();
+    public List<MovementDto> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
+        List<MovementDto> movementDtos = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
         MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
         int delay = 1;
-        for (Movement movement : movements) {
-            moveCommand.setMovement(movement);
+        for (MovementDto movementDto : movementDtos) {
+            moveCommand.setMovementDto(movementDto);
             Runnable task = createTask(gameId, moveCommand);
             scheduler.schedule(task, delay, TimeUnit.SECONDS);
             delay++;
-            result.add(moveCommand.getFuture());
         }
-        CompletableFuture<Void> allOfDone = CompletableFuture.allOf(result.toArray(new CompletableFuture[result.size()]));
-        return allOfDone.thenApply(v -> result.get(result.size()-1)).get().get();
+
+        return movementDtos;
 
     }
 

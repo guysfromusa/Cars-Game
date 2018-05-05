@@ -6,17 +6,17 @@ import lombok.Getter;
  * Created by Dominik Zurek 01.05.2018
  */
 
-public class Movement {
+public class MovementDto {
 
     @Getter
     private final Operation operation;
 
-    private Movement(Operation operation) {
+    private MovementDto(Operation operation) {
         this.operation = operation;
     }
 
-    public static Movement newMovement(Operation operation){
-        return new Movement(operation);
+    public static MovementDto newMovementDto(Operation operation){
+        return new MovementDto(operation);
     }
 
     public enum Operation {

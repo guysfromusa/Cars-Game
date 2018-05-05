@@ -1,15 +1,15 @@
 package com.guysfromusa.carsgame.game_state;
 
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.junit.Test;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.CarEntityBuilder.aCarEntity;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.LEFT;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.RIGHT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.LEFT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.RIGHT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActiveGamesContainerTest {
@@ -53,7 +53,7 @@ public class ActiveGamesContainerTest {
         //then
         assertThat(activeGamesContainer.getGameState("game1")
                 .getMovementHistory("bmw"))
-                .extracting(Movement::getOperation).containsExactly(FORWARD);
+                .extracting(MovementDto::getOperation).containsExactly(FORWARD);
     }
 
     @Test
@@ -68,12 +68,12 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addMovementHistory( "bmw", RIGHT);
 
         //when
-        Optional<Collection<Movement>> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
+        Optional<Collection<MovementDto>> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
 
         //then
         assertThat(result.isPresent());
         assertThat(result.get())
-                .extracting(Movement::getOperation)
+                .extracting(MovementDto::getOperation)
                 .containsExactly(RIGHT, RIGHT, FORWARD);
     }
 
@@ -84,7 +84,7 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
 
         //when
-        Optional<Collection<Movement>> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
+        Optional<Collection<MovementDto>> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
 
         //then
         assertThat(!result.isPresent());

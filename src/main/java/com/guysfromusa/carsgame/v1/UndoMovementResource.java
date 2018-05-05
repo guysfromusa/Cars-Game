@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -37,7 +38,7 @@ public class UndoMovementResource {
                                                @PathVariable("carName") String carName,
                                                @PathVariable("numberOfStepsBack") int numberOfStepsBack) throws ExecutionException, InterruptedException {
 
-        return undoMovementService.doNMoveBack(gameId, carName, numberOfStepsBack);
+        return Collections.emptyList();//undoMovementService.doNMoveBack(gameId, carName, numberOfStepsBack);
     }
 
 }

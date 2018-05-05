@@ -45,9 +45,9 @@ public class GameState {
         return added ? command.getFuture() : completedFuture(errorCallback.get());
     }
 
-    public void addMovementHistory(String carName, Movement.Operation operation) {
-        Collection<Movement> carsMovement = carsStatesMemory.get(carName).getMovements();
-        carsMovement.add(Movement.newMovement(operation));
+    public void addMovementHistory(String carName, MovementDto.Operation operation) {
+        Collection<MovementDto> carsMovementDto = carsStatesMemory.get(carName).getMovementDtos();
+        carsMovementDto.add(MovementDto.newMovementDto(operation));
     }
 
     public void addNewCar(CarEntity carEntity) {
@@ -69,9 +69,9 @@ public class GameState {
                 .collect(toList());
     }
 
-    public Collection<Movement> getMovementHistory(String carName) {
+    public Collection<MovementDto> getMovementHistory(String carName) {
         return Optional.ofNullable(carsStatesMemory.get(carName))
-                .map(CarState::getMovements).orElse(null);
+                .map(CarState::getMovementDtos).orElse(null);
     }
 
     public Car getCar(String carName){

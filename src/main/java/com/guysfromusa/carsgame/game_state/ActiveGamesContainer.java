@@ -2,7 +2,7 @@ package com.guysfromusa.carsgame.game_state;
 
 
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -33,20 +33,20 @@ public class ActiveGamesContainer {
     }
 
     @Deprecated //use gameState directly
-    public void addExecutedMove(String gameName, String carName, Movement.Operation operation){
+    public void addExecutedMove(String gameName, String carName, MovementDto.Operation operation){
         GameState gameState = this.gameStateMap.get(gameName);
         gameState.addMovementHistory(carName, operation);
     }
 
-    public Optional<Collection<Movement>> getNCarsMovementHistory(String gameId, String carName, int numberOfStepBack){
+    public Optional<Collection<MovementDto>> getNCarsMovementHistory(String gameId, String carName, int numberOfStepBack){
         GameState gameState = this.gameStateMap.get(gameId);
-        List<Movement> carsMovement = emptyList();
+        List<MovementDto> carsMovementDto = emptyList();
         if(gameState != null){
-            carsMovement = newArrayList(gameState.getMovementHistory(carName));
+            carsMovementDto = newArrayList(gameState.getMovementHistory(carName));
         }
 
-        return carsMovement.isEmpty() ? empty() :
-                of(reverse(carsMovement.subList(carsMovement.size() - numberOfStepBack, carsMovement.size())));
+        return carsMovementDto.isEmpty() ? empty() :
+                of(reverse(carsMovementDto.subList(carsMovementDto.size() - numberOfStepBack, carsMovementDto.size())));
     }
 
     public GameState getGameState(String gameName){

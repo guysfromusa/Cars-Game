@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +10,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.LEFT;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.RIGHT;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.newMovement;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.LEFT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.RIGHT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
 import static io.vavr.API.Match;
@@ -38,25 +38,25 @@ public class UndoMovementPreparerService {
         this.activeGamesContainer = notNull(activeGamesContainer);
     }
 
-    public List<Movement> prepareBackPath(String gameId, String carName, int numberOfStepBack) {
-        Optional<Collection<Movement>> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
+    public List<MovementDto> prepareBackPath(String gameId, String carName, int numberOfStepBack) {
+        Optional<Collection<MovementDto>> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
         return movementsHistory.isPresent() ? inverseMovement(movementsHistory.get()) : emptyList();
     }
 
-    private List<Movement> inverseMovement(Collection<Movement> movements) {
-        List<Movement> backPath = new ArrayList<>();
+    private List<MovementDto> inverseMovement(Collection<MovementDto> movementDtos) {
+        List<MovementDto> backPath = new ArrayList<>();
 
-        for (Movement movement : movements) {
-            Movement.Operation operation = movement.getOperation();
+        for (MovementDto movementDto : movementDtos) {
+            MovementDto.Operation operation = movementDto.getOperation();
             Match(operation).of(
-                    Case($(LEFT), run -> backPath.add(newMovement(RIGHT))),
-                    Case($(RIGHT), run -> backPath.add(newMovement(LEFT))),
-                    Case($(FORWARD), run -> backPath.addAll(asList(newMovement(LEFT), newMovement(LEFT), newMovement(FORWARD)))),
+                    Case($(LEFT), run -> backPath.add(newMovementDto(RIGHT))),
+                    Case($(RIGHT), run -> backPath.add(newMovementDto(LEFT))),
+                    Case($(FORWARD), run -> backPath.addAll(asList(newMovementDto(LEFT), newMovementDto(LEFT), newMovementDto(FORWARD)))),
                     Case($(), o -> run(() -> {
-                        throw new IllegalArgumentException(valueOf("Wrong operation of movement " + movement.getOperation()));
+                        throw new IllegalArgumentException(valueOf("Wrong operation of movementDto " + movementDto.getOperation()));
                     })));
         }
-        backPath.addAll(asList(newMovement(LEFT), newMovement(LEFT)));
+        backPath.addAll(asList(newMovementDto(LEFT), newMovementDto(LEFT)));
         return backPath;
     }
 }
