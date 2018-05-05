@@ -2,16 +2,19 @@ package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.model.Map;
+import com.guysfromusa.carsgame.v1.validator.MapValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -31,11 +34,13 @@ public class MapsResource {
     private final MapService mapService;
 
     private final ConversionService conversionService;
+    private final MapValidator mapValidator;
 
     @Inject
-    public MapsResource(MapService mapService, ConversionService conversionService) {
+    public MapsResource(MapService mapService, ConversionService conversionService, MapValidator mapValidator) {
         this.mapService = notNull(mapService);
         this.conversionService = notNull(conversionService);
+        this.mapValidator = notNull(mapValidator);
     }
 
     @GetMapping
@@ -50,7 +55,7 @@ public class MapsResource {
             @ApiResponse(code = 201, message = "Map successfully created"),
             @ApiResponse(code = 409, message = "Map with given name exist")})
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> createMap(@RequestBody Map map) {
+    public ResponseEntity<?> createMap(@Valid @RequestBody Map map) {
         String name = mapService.create(map.getName(), map.getContent()).getName();
 
         URI location = ServletUriComponentsBuilder
@@ -69,4 +74,10 @@ public class MapsResource {
         mapService.delete(name);
         return new ResponseEntity<>(NO_CONTENT);
     }
+
+    @InitBinder("map")
+    public void setupBinder(WebDataBinder binder) {
+        binder.addValidators(mapValidator);
+    }
+
 }

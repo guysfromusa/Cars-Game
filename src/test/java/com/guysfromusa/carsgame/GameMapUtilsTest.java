@@ -10,7 +10,7 @@ public class GameMapUtilsTest {
     @Test
     public void shouldNormalizeCarAvailableFieldsToOne() {
         //given
-        String content = "3,2\n1,0";
+        String content = "3,2\nx,0";
 
         //when
         Integer[][] map = GameMapUtils.getMapMatrixFromContent(content);
@@ -25,15 +25,23 @@ public class GameMapUtilsTest {
         String content = "1,1\n1,0";
 
         //when
-        Integer[][] mapMatrixContent = GameMapUtils.getMapMatrixFromContent(content);
+        Integer[][] map = GameMapUtils.getMapMatrixFromContent(content);
 
         //then
-        assertEquals(2, mapMatrixContent.length);
-        assertEquals(2, mapMatrixContent[0].length);
-        assertEquals(1, mapMatrixContent[0][0], 0);
-        assertEquals(1, mapMatrixContent[0][1], 0);
-        assertEquals(1, mapMatrixContent[1][0], 0);
-        assertEquals(0, mapMatrixContent[1][1], 0);
+        assertThat(map).isEqualTo(new Integer[][]{{1, 1}, {1, 0}});
     }
 
+    @Test
+    public void isReachable() {
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1}, {1, 1}})).isTrue();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1}})).isTrue();
+
+        assertThat(GameMapUtils.isReachable(new Integer[][]{})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 0}, {0, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 1}, {1, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{0, 1, 1}, {0, 1, 1}, {1, 0, 0}})).isFalse();
+        assertThat(GameMapUtils.isReachable(new Integer[][]{{1, 1, 1}, {}, {1, 1, 1}})).isFalse();
+    }
 }
