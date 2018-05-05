@@ -19,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 import static com.guysfromusa.carsgame.control.MessageType.ADD_CAR_TO_GAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -59,15 +58,15 @@ public class GameEngineTest {
         addedCar.setGame(gameEntity);
         addedCar.setPositionX(0);
         addedCar.setPositionY(0);
+        addedCar.setGame(gameEntity);
 
-        when(carService.addCarToGame("car1", "game1", new Point(1, 1)))
+
+        GameState gameState = new GameState("game1");
+        when(carService.addCarToGame("car1", gameState, new Point(1, 1)))
                 .thenReturn(addedCar);
 
-        GameState gameStateMock = mock(GameState.class);
-        when(gameStateMock.getGameName()).thenReturn("game1");
-
         when(activeGamesContainer.getGameState("game1"))
-                .thenReturn(gameStateMock);
+                .thenReturn(gameState);
 
 
         //when
@@ -80,7 +79,9 @@ public class GameEngineTest {
                 .isCompletedWithValueMatching(carEntity -> carEntity.getName().equals("car1"))
                 .isCompletedWithValueMatching(carEntity -> carEntity.getGame().getName().equals("game1"));
 
+        assertThat(gameState.getCar(addedCar.getName())).isNotNull();
+
         verify(applicationEventPublisher).publishEvent(any());
-        verify(gameStateMock).addNewCar(addedCar);
+
     }
 }

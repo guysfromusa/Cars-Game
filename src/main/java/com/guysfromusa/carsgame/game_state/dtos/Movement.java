@@ -2,6 +2,10 @@ package com.guysfromusa.carsgame.game_state.dtos;
 
 import lombok.Getter;
 
+/**
+ * Created by Dominik Zurek 01.05.2018
+ */
+
 public class Movement {
 
     @Getter

@@ -9,7 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -54,11 +58,20 @@ public class GameState {
     public void addNewCar(CarEntity carEntity) {
         Car car = Car.builder()
                 .name(carEntity.getName())
+                .game(carEntity.getGame().getName())
                 .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
 
         CarState carState = new CarState();
         carState.setCar(car);
         carsStatesMemory.put(car.getName(), carState);
+        log.info("Car: {} added to game: {}", car.getName(), carEntity.getGame().getName());
+    }
+
+    public List<Car> getAllCars(){
+        return carsStatesMemory.values()
+                .stream()
+                .map(CarState::getCar)
+                .collect(toList());
     }
 
     public Collection<Movement> getMovementHistory(String carName) {

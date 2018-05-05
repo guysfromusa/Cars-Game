@@ -4,10 +4,12 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
  */
+@ToString(callSuper = true)
 public class AddCarToGameCommand extends Command<CarEntity> {
 
     @Getter

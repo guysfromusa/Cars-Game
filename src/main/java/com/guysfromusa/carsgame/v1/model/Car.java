@@ -3,7 +3,12 @@ package com.guysfromusa.carsgame.v1.model;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.model.Direction;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Created by Tomasz Bradlo, 25.02.18
@@ -12,6 +17,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Car {
 
     @Getter @Setter

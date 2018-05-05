@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledExecutorService;
 
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
@@ -22,6 +24,8 @@ public class CommandProducer {
     private final ActiveGamesContainer activeGamesContainer;
 
     private final ApplicationEventPublisher applicationEventPublisher;
+    public ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
+
 
     private final MovementResultService movementResultService;
 
@@ -39,7 +43,7 @@ public class CommandProducer {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<List<Car>> result = state.addCommandToExecute(move, ArrayList::new);
+                    CompletableFuture<List<Car>> result = state.addCommandToExecute(move, Car::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })

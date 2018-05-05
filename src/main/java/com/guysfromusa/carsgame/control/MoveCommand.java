@@ -1,5 +1,9 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import lombok.Getter;
+import lombok.Setter;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.game_state.dtos.Movement.Operation;
 import com.guysfromusa.carsgame.v1.model.Car;
