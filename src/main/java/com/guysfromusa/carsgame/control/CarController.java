@@ -2,9 +2,9 @@ package com.guysfromusa.carsgame.control;
 
 import com.google.common.collect.Maps;
 import com.guysfromusa.carsgame.game_state.CarState;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.movement.MovementStrategy;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ public class CarController {
 
     public boolean moveCar(MoveCommand movementMessage, GameState gameState){
         CarState carState = gameState.getCarState(movementMessage.getCarName());
-        Car car = carState.getCar();
+        CarDto car = carState.getCar();
 
         Movement.Operation operation = movementMessage.getMovement().getOperation();
 
