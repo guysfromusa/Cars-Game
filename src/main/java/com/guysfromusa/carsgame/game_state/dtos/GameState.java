@@ -1,5 +1,18 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
+import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.CarState;
+import com.guysfromusa.carsgame.v1.model.Point;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Supplier;
 import com.guysfromusa.carsgame.v1.model.Car;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -8,37 +21,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.stream.Collectors.toList;
+
+@Slf4j
 public class GameState {
 
     @Getter
-    private Integer[][] gameMapContent;
-    private Map<String, CarState> carsMovementMap = new HashMap<>();
+    private final String gameName;
 
-    public GameState(Integer[][] gameMapContent) {
+    @Getter
+    private final Queue<Command> commandsQueue = new ConcurrentLinkedQueue<>();
+
+    @Setter @Getter
+    private volatile boolean roundInProgress = false;
+
+    private Map<String, CarState> carsStatesMemory = new ConcurrentHashMap<>();
+
+    @Getter
+    private Integer[][] gameMapContent;
+
+    public GameState(String gameName, Integer[][] gameMapContent) {
+        this.gameName = gameName;
         this.gameMapContent = gameMapContent;
     }
 
-    public void addNewMovement(String carName, Movement.Operation operation) {
-        List<Movement> carsMovement = carsMovementMap.get(carName).getMovements();
+
+    public <T> CompletableFuture<T> addCommandToExecute(Command command, Supplier<T> errorCallback) {
+        boolean added = commandsQueue.offer(command);
+        return added ? command.getFuture() : completedFuture(errorCallback.get());
+    }
+
+    public void addMovementHistory(String carName, Movement.Operation operation) {
+        Collection<Movement> carsMovement = carsStatesMemory.get(carName).getMovements();
         carsMovement.add(Movement.newMovement(operation));
     }
 
-    public void addNewCar(String carName) {
-        CarState carState = CarState.newCarState();
-        carState.getCar().setName(carName);
-        carsMovementMap.put(carName, carState);
+    public void addNewCar(CarEntity carEntity) {
+        CarDto car = CarDto.builder()
+                .name(carEntity.getName())
+                .game(carEntity.getGame().getName())
+                .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
+
+        CarState carState = new CarState();
+        carState.setCar(car);
+        carsStatesMemory.put(car.getName(), carState);
+        log.info("Car: {} added to game: {}", car.getName(), carEntity.getGame().getName());
     }
 
-    public CarState getCarState(String carName){
-        return carsMovementMap.get(carName);
+    public List<CarDto> getAllCars(){
+        return carsStatesMemory.values()
+                .stream()
+                .map(CarState::getCar)
+                .collect(toList());
     }
 
-    public List<Movement> getCarsMovement(String carName) {
-        return carsMovementMap.get(carName).getMovements();
+    public Collection<Movement> getMovementHistory(String carName) {
+        return Optional.ofNullable(carsStatesMemory.get(carName))
+                .map(CarState::getMovements).orElse(null);
     }
 
-    public String resolveCollision(Car car){
-        //TODO check collitions and return status - might be collision info
-        return StringUtils.EMPTY;
+    public CarDto getCar(String carName){
+        return carsStatesMemory.get(carName).getCar();
+    }
+
+
+    public CarState getCarState(String carName) {
+        return carsStatesMemory.get(carName);
     }
 }

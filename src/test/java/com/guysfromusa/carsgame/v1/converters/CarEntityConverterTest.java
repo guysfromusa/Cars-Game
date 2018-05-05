@@ -11,9 +11,9 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
-public class CarConverterTest {
+public class CarEntityConverterTest {
 
-    private final CarConverter carConverter = new CarConverter();
+    private final CarEntityConverter carEntityConverter = new CarEntityConverter();
 
     @Test
     public void shouldConvertAllFields() {
@@ -23,7 +23,7 @@ public class CarConverterTest {
         carEntity.setDirection(NORTH);
 
         //when
-        Car gotCar = carConverter.convert(carEntity);
+        Car gotCar = carEntityConverter.convert(carEntity);
 
         //then
         assertThat(gotCar.getName()).isEqualTo("car1");

@@ -5,15 +5,16 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
+import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
 import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
-import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
-import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.guysfromusa.carsgame.validator.BusinessValidator;
+import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
+@Slf4j
 @Service
 @Transactional
 public class CarService {
@@ -38,15 +40,17 @@ public class CarService {
 
     private final MovementsHistoryRepository movementsHistoryRepository;
 
-    private CarGameAdditionValidator carGameAdditionValidator;
+    private final List<BusinessValidator<CarGameAdditionValidationSubject>> validators;
 
     @Inject
-    public CarService(CarRepository carRepository, MovementsHistoryRepository movementsHistoryRepository,
-                      GameRepository gameRepository, CarGameAdditionValidator carGameAdditionValidator){
+    public CarService(CarRepository carRepository,
+                      MovementsHistoryRepository movementsHistoryRepository,
+                      GameRepository gameRepository,
+                      List<BusinessValidator<CarGameAdditionValidationSubject>> validators){
         this.carRepository = notNull(carRepository);
         this.movementsHistoryRepository = notNull(movementsHistoryRepository);
         this.gameRepository = notNull(gameRepository);
-        this.carGameAdditionValidator = notNull(carGameAdditionValidator);
+        this.validators = notNull(validators);
     }
 
 
@@ -94,16 +98,28 @@ public class CarService {
         return movementsHistoryRepository.save(movementEntity);
     }
 
-    public CarEntity addCarToGame(String carName, String gameName, Point startingPoint){
+
+    public CarEntity addCarToGame(String carName, GameState gameState, Point startingPoint) {
         CarEntity car = carRepository.findByName(carName)
                 .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));
 
-        GameEntity gameEntity = gameRepository.findByName(gameName)
-                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
+        log.debug("Found car: {}", car);
+
+        GameEntity gameEntity = gameRepository.findByName(gameState.getGameName())
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameState + "' not found"));
+
+        log.debug("Found game: {}", gameEntity);
 
         CarGameAdditionValidationSubject validationSubject =
-                new CarGameAdditionValidationSubject(car, gameEntity, startingPoint);
-        carGameAdditionValidator.validateCarBeforeAddition(validationSubject);
+                CarGameAdditionValidationSubject.builder()
+                        .carEntity(car)
+                        .gameEntity(gameEntity)
+                        .startingPoint(startingPoint)
+                        .gameState(gameState)
+                        .build();
+
+        validators.forEach(validator -> validator.validate(validationSubject));
+        log.debug("Validation successful");
 
         Integer positionX = startingPoint.getX();
         Integer positionY = startingPoint.getY();
@@ -113,7 +129,6 @@ public class CarService {
 
         car.setDirection(Direction.NORTH);
         car.setGame(gameEntity);
-
         return carRepository.save(car);
     }
 
