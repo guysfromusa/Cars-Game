@@ -1,7 +1,10 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.services.UndoMovementService;
+import com.guysfromusa.carsgame.utils.StreamUtils;
+import com.guysfromusa.carsgame.v1.converters.CarDtoConverter;
+import com.guysfromusa.carsgame.v1.model.Car;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +29,23 @@ public class UndoMovementResource {
 
     private final UndoMovementService undoMovementService;
 
+    private final CarDtoConverter carDtoConverter;
+
     @Autowired
-    public UndoMovementResource(UndoMovementService undoMovementService) {
+    public UndoMovementResource(UndoMovementService undoMovementService, CarDtoConverter carDtoConverter) {
         this.undoMovementService = notNull(undoMovementService);
+        this.carDtoConverter = notNull(carDtoConverter);
     }
 
     @ApiOperation(value = "Find history", response = List.class)
     @GetMapping("/{gameId}/{carName}/{numberOfStepBack}")
-    public List<CarEntity> findMovementHistory(@PathVariable("gameId") String gameId,
-                                               @PathVariable("carName") String carName,
-                                               @PathVariable("numberOfStepBack") int numberOfStepBack) throws ExecutionException, InterruptedException {
+    public List<Car> findMovementHistory(@PathVariable("gameId") String gameId,
+                                         @PathVariable("carName") String carName,
+                                         @PathVariable("numberOfStepBack") int numberOfStepBack) throws ExecutionException, InterruptedException {
 
-        return undoMovementService.doNMoveBack(gameId, carName, numberOfStepBack);
+        List<CarDto> carDtos = undoMovementService.doNMoveBack(gameId, carName, numberOfStepBack);
+
+        return StreamUtils.convert(carDtos, carDtoConverter::convert);
     }
 
 }
