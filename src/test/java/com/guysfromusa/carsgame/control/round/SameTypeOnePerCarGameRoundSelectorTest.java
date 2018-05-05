@@ -9,10 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.LinkedList;
-import java.util.Optional;
 
 import static com.guysfromusa.carsgame.control.MessageType.ADD_CAR_TO_GAME;
 import static com.guysfromusa.carsgame.control.MessageType.MOVE;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -27,7 +27,7 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
     @Test
     public void shouldThrowExceptionWhenQueueIsEmpty() {
-        assertThatThrownBy(() ->selector.selectCommand(new LinkedList<>(), "game"))
+        assertThatThrownBy(() -> selector.selectCommand(new LinkedList<>(), "game"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -46,9 +46,7 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
         GameRound gameRound = selector.selectCommand(queue, "game");
 
-        assertThat(gameRound.getCommands()).containsOnly(moveCommand);
-        assertThat(gameRound.getGameName()).isEqualTo("game");
-        assertThat(gameRound.getMessageType()).isEqualTo(MOVE);
+        assertThat(gameRound).isEqualTo(new GameRound("game", asList(moveCommand), MOVE));
 
         assertThat(queue).containsOnly(addCarToGameCommand);
     }
@@ -66,9 +64,7 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
         GameRound gameRound = selector.selectCommand(queue, "game");
 
-        assertThat(gameRound.getCommands()).containsOnly(firstMoveCarOne, firstMoveCarTwo);
-        assertThat(gameRound.getGameName()).isEqualTo("game");
-        assertThat(gameRound.getMessageType()).isEqualTo(MOVE);
+        assertThat(gameRound).isEqualTo(new GameRound("game", asList(firstMoveCarOne, firstMoveCarTwo), MOVE));
 
         assertThat(queue).containsOnly(secondMoveCarOne);
     }
