@@ -27,12 +27,12 @@ public class ForwardStrategy implements MovementStrategy{
         Integer xForwardPos = car.getDirection().getForwardXF().apply(position, forwardSteps);
         Integer yForwardPos = car.getDirection().getForwardYF().apply(position, forwardSteps);
 
-        boolean carOnRoad = GameMapUtils.isPointOnRoad(mapContent, position);
+        boolean carOnRoad = GameMapUtils.isPointOnRoad(mapContent, xForwardPos, yForwardPos);
         if(carOnRoad){
             updateCarPosition(car, xForwardPos, yForwardPos);
         }
 
-        return !carOnRoad;
+        return carOnRoad;
     }
 
     private void updateCarPosition(CarDto car, Integer x, Integer y){

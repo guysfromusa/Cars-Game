@@ -40,7 +40,7 @@ public enum Direction {
     }
 
     private static BiFunction<Point, Integer, Integer> moveNorth() {
-        return (point, steps) -> point.getY() + steps;
+        return (point, steps) -> point.getY() - steps;
     }
 
     private static BiFunction<Point, Integer, Integer> moveEast() {
@@ -52,7 +52,7 @@ public enum Direction {
     }
 
     private static BiFunction<Point, Integer, Integer> moveSouth() {
-        return (point, steps) -> point.getY() - steps;
+        return (point, steps) -> point.getY() + steps;
     }
 
     private static BiFunction<Point, Integer, Integer> noChangesCoordicateX() {

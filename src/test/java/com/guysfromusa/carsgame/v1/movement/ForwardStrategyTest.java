@@ -43,8 +43,8 @@ public class ForwardStrategyTest {
         Integer[][] gameMap = {{1, 1, 1}};
         Point startPoint = new Point(0,0);
         Integer steps = 2;
-        Direction south = Direction.EAST;
-        CarDto car = createCar(startPoint, south);
+        Direction east = Direction.EAST;
+        CarDto car = createCar(startPoint, east);
         Movement movement = createMovement(steps);
 
         //when
@@ -53,7 +53,7 @@ public class ForwardStrategyTest {
         //then
         assertTrue(isMoveSuccess);
         assertThat(car.getPosition())
-                .extracting(Point::getX, Point::getY).containsExactly(0, 2);
+                .extracting(Point::getX, Point::getY).containsExactly(2, 0);
     }
 
     @Test
