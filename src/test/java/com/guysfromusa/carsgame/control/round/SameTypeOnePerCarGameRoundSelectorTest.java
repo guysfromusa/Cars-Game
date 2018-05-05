@@ -14,6 +14,7 @@ import java.util.Optional;
 import static com.guysfromusa.carsgame.control.MessageType.ADD_CAR_TO_GAME;
 import static com.guysfromusa.carsgame.control.MessageType.MOVE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Created by Robert Mycek, 2018-05-05
@@ -25,10 +26,9 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
     private SameTypeOnePerCarGameRoundSelector selector;
 
     @Test
-    public void shouldReturnEmptyWhenQueueIsEmpty() {
-        Optional<GameRound> gameRound = selector.selectCommand(new LinkedList<>(), "game");
-
-        assertThat(gameRound).isEmpty();
+    public void shouldThrowExceptionWhenQueueIsEmpty() {
+        assertThatThrownBy(() ->selector.selectCommand(new LinkedList<>(), "game"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -44,12 +44,11 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
         queue.add(moveCommand);
         queue.add(addCarToGameCommand);
 
-        Optional<GameRound> gameRound = selector.selectCommand(queue, "game");
+        GameRound gameRound = selector.selectCommand(queue, "game");
 
-        assertThat(gameRound).isPresent();
-        assertThat(gameRound.get().getCommands()).containsOnly(moveCommand);
-        assertThat(gameRound.get().getGameName()).isEqualTo("game");
-        assertThat(gameRound.get().getMessageType()).isEqualTo(MOVE);
+        assertThat(gameRound.getCommands()).containsOnly(moveCommand);
+        assertThat(gameRound.getGameName()).isEqualTo("game");
+        assertThat(gameRound.getMessageType()).isEqualTo(MOVE);
 
         assertThat(queue).containsOnly(addCarToGameCommand);
     }
@@ -65,12 +64,11 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
         queue.add(firstMoveCarTwo);
         queue.add(secondMoveCarOne);
 
-        Optional<GameRound> gameRound = selector.selectCommand(queue, "game");
+        GameRound gameRound = selector.selectCommand(queue, "game");
 
-        assertThat(gameRound).isPresent();
-        assertThat(gameRound.get().getCommands()).containsOnly(firstMoveCarOne, firstMoveCarTwo);
-        assertThat(gameRound.get().getGameName()).isEqualTo("game");
-        assertThat(gameRound.get().getMessageType()).isEqualTo(MOVE);
+        assertThat(gameRound.getCommands()).containsOnly(firstMoveCarOne, firstMoveCarTwo);
+        assertThat(gameRound.getGameName()).isEqualTo("game");
+        assertThat(gameRound.getMessageType()).isEqualTo(MOVE);
 
         assertThat(queue).containsOnly(secondMoveCarOne);
     }

@@ -9,5 +9,5 @@ import java.util.Queue;
  * Created by Robert Mycek, 2018-05-05
  */
 public interface GameRoundSelector {
-    Optional<GameRound> selectCommand(Queue<Command> queue, String gameName);
+    GameRound selectCommand(Queue<Command> queue, String gameName);
 }

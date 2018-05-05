@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.control.round;
 
 import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.control.MessageType;
+import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,16 +14,10 @@ import java.util.*;
 public class SameTypeOnePerCarGameRoundSelector implements GameRoundSelector {
 
     @Override
-    public Optional<GameRound> selectCommand(Queue<Command> queue, String gameName) {
-        if (queue.isEmpty()) {
-            return Optional.empty();
-        }
+    public GameRound selectCommand(Queue<Command> queue, String gameName) {
+        Validate.notEmpty(queue);
 
-        GameRound gameRound = selectCommands(queue, queue.peek().getMessageType(), gameName);
-        return Optional.of(gameRound);
-    }
-
-    private GameRound selectCommands(Queue<Command> queue, MessageType type, String gameName) {
+        MessageType type = queue.peek().getMessageType();
         Set<String> cars = new HashSet<>();
         List<Command> commands = new ArrayList<>();
 
@@ -37,4 +32,5 @@ public class SameTypeOnePerCarGameRoundSelector implements GameRoundSelector {
 
         return new GameRound(gameName, commands, type);
     }
+
 }

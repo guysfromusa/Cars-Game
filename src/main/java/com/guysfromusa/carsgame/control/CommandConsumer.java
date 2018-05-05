@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -53,8 +52,8 @@ public class CommandConsumer {
 
     private void triggerRound(GameState gameState) {
         gameState.setRoundInProgress(true);
-        gameRoundSelector.selectCommand(gameState.getCommandsQueue(), gameState.getGameName())
-                .ifPresent(gameRound -> handle(gameRound.getMessageType(), gameRound.getCommands(), gameRound.getGameName()));
+        GameRound gameRound = gameRoundSelector.selectCommand(gameState.getCommandsQueue(), gameState.getGameName());
+        handle(gameRound.getMessageType(), gameRound.getCommands(), gameRound.getGameName());
     }
 
     private void handle(MessageType messageType, List<Command> commands, String gameName) {
