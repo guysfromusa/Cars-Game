@@ -1,4 +1,4 @@
-package com.guysfromusa.carsgame.v1.movement;
+package com.guysfromusa.carsgame.control.movement;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;

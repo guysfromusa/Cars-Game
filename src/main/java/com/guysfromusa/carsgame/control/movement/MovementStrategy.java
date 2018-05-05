@@ -1,4 +1,4 @@
-package com.guysfromusa.carsgame.v1.movement;
+package com.guysfromusa.carsgame.control.movement;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
@@ -10,5 +10,5 @@ public interface MovementStrategy {
 
     Movement.Operation getType();
 
-    boolean execute(CarDto car, Integer[][] mapContent, Movement movement);
+    MoveResult execute(CarDto car, Integer[][] mapContent, Movement movement);
 }

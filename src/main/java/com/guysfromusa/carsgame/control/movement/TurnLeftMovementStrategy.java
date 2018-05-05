@@ -1,7 +1,6 @@
-package com.guysfromusa.carsgame.v1.movement;
+package com.guysfromusa.carsgame.control.movement;
 
 
-import com.guysfromusa.carsgame.control.MoveStatus;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
@@ -19,9 +18,15 @@ public class TurnLeftMovementStrategy implements MovementStrategy {
     }
 
     @Override
-    public boolean execute(CarDto car, Integer[][] mapContent, Movement movement) {
+    public MoveResult execute(CarDto car, Integer[][] mapContent, Movement movement) {
         Direction direction = car.getDirection().turnLeft();
         car.setDirection(direction);
-        return MoveStatus.SUCCESS.isMoved();
+        return MoveResult
+                .builder()
+                .carName(car.getName())
+                .newDirection(direction)
+                .newPosition(car.getPosition())
+                .wall(false)
+                .build();
     }
 }
