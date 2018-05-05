@@ -36,5 +36,4 @@ public class SpringContextConfiguration {
         threadPoolTaskExecutor.setQueueCapacity(capacity);
         return threadPoolTaskExecutor;
     }
-
 }

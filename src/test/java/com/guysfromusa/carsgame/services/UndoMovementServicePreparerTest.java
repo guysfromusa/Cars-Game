@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.game_state.GameStateTracker;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ public class UndoMovementServicePreparerTest {
     private static final String gameId = "fifa";
 
     @Mock
-    private GameStateTracker gameStateTracker;
+    private ActiveGamesContainer activeGamesContainer;
 
     @InjectMocks
     private UndoMovementPreparerService service;
@@ -37,7 +37,7 @@ public class UndoMovementServicePreparerTest {
     @Test
     public void shouldPrepareBathPathFor2MoveBack(){
         //given
-        when(gameStateTracker.getNCarsMovementHistory(gameId, carName, 2))
+        when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
                 .thenReturn(asList(newMovement(RIGHT), newMovement(RIGHT)));
 
         //when
@@ -52,7 +52,7 @@ public class UndoMovementServicePreparerTest {
     @Test
     public void shouldPrepareBathPathFor5MoveBack(){
         //given
-        when(gameStateTracker.getNCarsMovementHistory(gameId, carName, 2))
+        when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
                 .thenReturn(asList(newMovement(FORWARD), newMovement(RIGHT),
                         newMovement(FORWARD), newMovement(LEFT), newMovement(RIGHT)));
 

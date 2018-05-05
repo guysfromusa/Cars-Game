@@ -1,11 +1,12 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.game_state.GameStateTracker;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
@@ -27,20 +28,20 @@ import static org.apache.commons.lang3.Validate.notNull;
 @Component
 public class UndoMovementPreparerService {
 
-    private final GameStateTracker gameStateTracker;
+    private final ActiveGamesContainer activeGamesContainer;
 
 
     @Autowired
-    public UndoMovementPreparerService(GameStateTracker gameStateTracker) {
-        this.gameStateTracker = notNull(gameStateTracker);
+    public UndoMovementPreparerService(ActiveGamesContainer activeGamesContainer) {
+        this.activeGamesContainer = notNull(activeGamesContainer);
     }
 
     public List<Movement> prepareBackPath(String gameId, String carName, int numberOfStepBack) {
-        List<Movement> movementsHistory = gameStateTracker.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
+        Collection<Movement> movementsHistory = activeGamesContainer.getNCarsMovementHistory(gameId, carName, numberOfStepBack);
         return inverseMovement(movementsHistory);
     }
 
-    private List<Movement> inverseMovement(List<Movement> movements) {
+    private List<Movement> inverseMovement(Collection<Movement> movements) {
         List<Movement> backPath = new ArrayList<>();
 
         for (Movement movement : movements) {

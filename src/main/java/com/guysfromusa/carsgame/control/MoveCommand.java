@@ -1,6 +1,9 @@
 package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
+import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -13,6 +16,8 @@ public class MoveCommand extends Command<List<CarEntity>> {
         super(gameName, carName, messageType);
     }
 
-    //TODO add fields for move command
+    @Getter @Setter
+    private Movement movement;
+
 
 }

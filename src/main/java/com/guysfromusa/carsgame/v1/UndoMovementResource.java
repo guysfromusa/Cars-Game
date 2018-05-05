@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.v1;
 
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.services.UndoMovementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,9 +33,9 @@ public class UndoMovementResource {
 
     @ApiOperation(value = "Find history", response = List.class)
     @GetMapping("/{gameId}/{carName}/{numberOfStepBack}")
-    public String findMovementHistory(@PathVariable("gameId") String gameId,
-                                      @PathVariable("carName") String carName,
-                                      @PathVariable("numberOfStepBack") int numberOfStepBack) throws ExecutionException, InterruptedException {
+    public List<CarEntity> findMovementHistory(@PathVariable("gameId") String gameId,
+                                               @PathVariable("carName") String carName,
+                                               @PathVariable("numberOfStepBack") int numberOfStepBack) throws ExecutionException, InterruptedException {
 
         return undoMovementService.doNMoveBack(gameId, carName, numberOfStepBack);
     }

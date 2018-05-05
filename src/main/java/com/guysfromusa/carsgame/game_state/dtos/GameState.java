@@ -1,8 +1,11 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.guysfromusa.carsgame.control.Command;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collection;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
@@ -10,9 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
-/**
- * Created by Dominik Zurek 02.05.2018
- */
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 @Slf4j
@@ -43,11 +43,12 @@ public class GameState {
         carsMovement.add(Movement.newMovement(operation));
     }
 
+    //FIXME why do we need this maybe getOrDefault()?
     public void addNewCar(String carName) {
-        carsMovementMap.put(carName, new ArrayList<>());
+        movementsHistoryByCar.put(carName, new ConcurrentLinkedQueue<>());
     }
 
-    public List<Movement> getCarsMovement(String carName) {
-        return carsMovementMap.get(carName);
+    public Collection<Movement> getMovementHistory(String carName) {
+        return movementsHistoryByCar.get(carName);
     }
 }

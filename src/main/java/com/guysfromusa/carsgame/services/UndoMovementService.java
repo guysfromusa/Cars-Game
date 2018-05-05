@@ -1,57 +1,53 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.control.GameController;
-import com.guysfromusa.carsgame.control.Message;
+import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.control.CommandProducer;
+import com.guysfromusa.carsgame.control.MessageType;
+import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
 public class UndoMovementService {
-    private final GameController gameController;
+
+    private final CommandProducer commandProducer;
     private final UndoMovementPreparerService undoMovementPreparerService;
 
     @Autowired
-    public UndoMovementService(GameController gameController, UndoMovementPreparerService undoMovementPreparerService) {
-        this.gameController = notNull(gameController);
+    public UndoMovementService(CommandProducer commandProducer, UndoMovementPreparerService undoMovementPreparerService) {
+        this.commandProducer = notNull(commandProducer);
         this.undoMovementPreparerService = notNull(undoMovementPreparerService);
     }
 
-    public List<String> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
+    public List<CarEntity> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
         List<Movement> movements = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
-        List<String> result = new ArrayList<>();
-        Message m = new Message();
-        m.setCarName(carName);
-        m.setGameName(gameId);
-        ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
+        List<CompletableFuture<List<CarEntity>>> result = new LinkedList<>();
+        MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE);
         for (Movement movement : movements) {
-            m.setMovement(movement);
-            Callable<String> task = createTask(m);
-            Future<String> schedule = scheduler.schedule(task, 1, TimeUnit.SECONDS);
-            result.add(schedule.get());
+            moveCommand.setMovement(movement);
+            Callable<CarEntity> task = createTask(gameId, moveCommand);
+            commandProducer.scheduler.schedule(task, 1, TimeUnit.SECONDS);
+            result.add(moveCommand.getFuture());
         }
-        return result;
+        CompletableFuture<Void> allOfDone = CompletableFuture.allOf(result.toArray(new CompletableFuture[result.size()]));
+        commandProducer.scheduler.shutdown();
+        return allOfDone.thenApply(v -> result.get(result.size())).get().get();
+
     }
 
-    private Callable<String> createTask(Message m) {
-        return () -> {
-            try {
-                gameController.handle(m);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return m.getFuture().get();
-        };
+    private Callable<CarEntity> createTask(String gameName, Command move) {
+        return () -> commandProducer.scheduleCommand(gameName, move);
     }
+
 }
