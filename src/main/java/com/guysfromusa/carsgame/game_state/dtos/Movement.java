@@ -7,12 +7,16 @@ public class Movement {
     @Getter
     private final Operation operation;
 
-    private Movement(Operation operation) {
+    @Getter
+    private final Integer forwardSteps;
+
+    private Movement(Operation operation, Integer forwardSteps) {
         this.operation = operation;
+        this.forwardSteps = forwardSteps;
     }
 
-    public static Movement newMovement(Operation operation){
-        return new Movement(operation);
+    public static Movement newMovement(Operation operation, Integer forwardSteps){
+        return new Movement(operation, forwardSteps);
     }
 
     public enum Operation {

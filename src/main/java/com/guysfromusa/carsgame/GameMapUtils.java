@@ -1,5 +1,7 @@
 package com.guysfromusa.carsgame;
 
+import com.guysfromusa.carsgame.v1.model.Point;
+
 import java.util.stream.Stream;
 
 public class GameMapUtils {
@@ -21,6 +23,23 @@ public class GameMapUtils {
                     .map(v -> v != 0 ? 1 : 0)
                     .toArray(Integer[]::new);
         }).toArray(Integer[][]::new);
+    }
+
+    public static boolean isPointOnRoad(Integer[][] content, Point point){
+        return isInMapReach(content, point) && isOnRoad(content, point);
+    }
+
+    private static boolean isOnRoad(Integer[][] mapContent, Point point) {
+        Integer x = point.getX();
+        Integer y = point.getY();
+        return mapContent[y][x]== 1;
+    }
+
+    private static boolean isInMapReach(Integer[][] mapContent, Point point) {
+        return point.getY() >= 0
+                && point.getX() >=0
+                && mapContent.length > point.getY()
+                && mapContent[mapContent.length-1].length > point.getX();
     }
 
 

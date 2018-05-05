@@ -51,7 +51,7 @@ public class CarGameAdditionValidatorTest {
 
         Point startingPoint = new Point(2, 1);
 
-        when(mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)).thenReturn(true);
+        when(mapService.isPointOnRoad(gameMapContent, startingPoint)).thenReturn(true);
 
         CarGameAdditionValidationSubject carGameAdditionValidationSubject =
                 new CarGameAdditionValidationSubject(carEntity, gameEntity, startingPoint);
@@ -59,7 +59,7 @@ public class CarGameAdditionValidatorTest {
         //when
         carGameAdditionValidator.validateCarBeforeAddition(carGameAdditionValidationSubject);
 
-        verify(mapService).isPositionValidOnGameMap(eq(gameMapContent), eq(startingPoint));
+        verify(mapService).isPointOnRoad(eq(gameMapContent), eq(startingPoint));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class CarGameAdditionValidatorTest {
 
         Point startingPoint = new Point(2, 1);
 
-        when(mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)).thenReturn(true);
+        when(mapService.isPointOnRoad(gameMapContent, startingPoint)).thenReturn(true);
 
         CarGameAdditionValidationSubject carGameAdditionValidationSubject =
                 new CarGameAdditionValidationSubject(carEntity, gameEntity, startingPoint);
@@ -109,7 +109,7 @@ public class CarGameAdditionValidatorTest {
 
         Point startingPoint = new Point(2, 1);
 
-        when(mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)).thenReturn(true);
+        when(mapService.isPointOnRoad(gameMapContent, startingPoint)).thenReturn(true);
 
         CarGameAdditionValidationSubject carGameAdditionValidationSubject =
                 new CarGameAdditionValidationSubject(carEntity, gameEntity, startingPoint);

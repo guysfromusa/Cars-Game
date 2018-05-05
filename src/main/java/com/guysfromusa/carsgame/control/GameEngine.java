@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -29,30 +28,28 @@ public class GameEngine {
 
     private final CarService carService;
 
+    private final CarMoveHandler carMoveHandler;
+
     @Inject
     public GameEngine(ActiveGamesContainer activeGamesContainer,
                       ApplicationEventPublisher applicationEventPublisher,
-                      CarService carService) {
+                      CarService carService,
+                      CarMoveHandler carMoveHandler) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
-        this.carService = carService;
+        this.carService = notNull(carService);
+        this.carMoveHandler = notNull(carMoveHandler);
     }
 
     @Async
-    public void handleMoves(List<Command> commands, String gameId) {
+    public void handleMoves(List<MoveCommand> commands, String gameId) {
+
         GameState gameState = activeGamesContainer.getGameState(gameId);
 
-        //TODO for all commands calculate movements and collisions
+        commands.stream().map(moveCommand -> new MoveData(gameState, moveCommand))
+                .forEach(carMoveHandler::handleMoveComand);
 
         //TODO store all state in DB
-
-        //TODO update memory state
-
-        commands.forEach(message -> {
-            CompletableFuture<String> future = message.getFuture();
-            log.info("Complete message");
-            future.complete("{status:'OK'}");
-        });
 
         gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent(this));

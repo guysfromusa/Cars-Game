@@ -1,6 +1,7 @@
 package com.guysfromusa.carsgame.v1.validator;
 
 
+import com.guysfromusa.carsgame.GameMapUtils;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.services.MapService;
@@ -66,8 +67,9 @@ public class CarGameAdditionValidator{
 
             MapEntity gameMap = validationSubject.getGameEntity().getMap();
             String gameMapContent = gameMap.getContent();
+            Integer[][] mapContent = GameMapUtils.getMapMatrixFromContent(gameMapContent);
 
-            if(!mapService.isPositionValidOnGameMap(gameMapContent, startingPoint)){
+            if(!GameMapUtils.isPointOnRoad(mapContent, startingPoint)){
                 throw new IllegalArgumentException(WRONG_STARTING_POINT_MESSAGE);
             }
         };
