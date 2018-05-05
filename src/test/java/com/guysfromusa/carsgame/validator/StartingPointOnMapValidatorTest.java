@@ -5,15 +5,15 @@ import com.guysfromusa.carsgame.entities.MapEntity;
 import com.guysfromusa.carsgame.services.MapService;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
@@ -26,9 +26,6 @@ public class StartingPointOnMapValidatorTest {
 
     @InjectMocks
     private StartingPointOnMapValidator startingPointOnMapValidator;
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void shouldPassValidationWhenStartingPointOnTheMap() {
@@ -55,9 +52,6 @@ public class StartingPointOnMapValidatorTest {
     @Test
     public void shouldThrowExceptionWhenStartingPointNotOnTheMap() {
         //given
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(StartingPointOnMapValidator.WRONG_STARTING_POINT_MESSAGE);
-
         MapEntity mapEntity = new MapEntity();
         mapEntity.setContent("0,1,1,0\n0,0,1,0");
         GameEntity gameEntity = new GameEntity();
@@ -71,9 +65,11 @@ public class StartingPointOnMapValidatorTest {
                 .gameEntity(gameEntity)
                 .startingPoint(startingPoint)
                 .build();
-        //when
 
-        startingPointOnMapValidator.validate(subject);
+        //when then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> startingPointOnMapValidator.validate(subject))
+                .withMessage(StartingPointOnMapValidator.WRONG_STARTING_POINT_MESSAGE);
 
     }
 }

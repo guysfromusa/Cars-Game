@@ -4,17 +4,18 @@ import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.validator.subject.CarGameAdditionValidationSubject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.List;
 
-import static com.guysfromusa.carsgame.utils.StreamUtils.convert;
+import static com.guysfromusa.carsgame.utils.StreamUtils.anyMatch;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
  * Created by Sebastian Mikucki, 04.05.18
  */
+@Slf4j
 @Component
 public class CarNotInGameValidator implements BusinessValidator<CarGameAdditionValidationSubject> {
 
