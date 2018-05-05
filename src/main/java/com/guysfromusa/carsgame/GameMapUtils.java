@@ -19,12 +19,8 @@ public class GameMapUtils {
 
         return Stream.of(gameMapRows).map(row -> {
             String[] columnsRow = row.split(COLUMN_MAP_SEPARATOR);
-            // TODO: handle rows with different length:
-            // 1) fail
-            // 2) find longest row and append all other with 0
             return Stream.of(columnsRow)
-                    .map(Integer::valueOf)
-                    .map(v -> v != 0 ? 1 : 0)
+                    .map(v -> "0".equals(v) ? 0 : 1)
                     .toArray(Integer[]::new);
         }).toArray(Integer[][]::new);
     }

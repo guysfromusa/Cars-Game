@@ -10,7 +10,7 @@ public class GameMapUtilsTest {
     @Test
     public void shouldNormalizeCarAvailableFieldsToOne() {
         //given
-        String content = "3,2\n1,0";
+        String content = "3,2\nx,0";
 
         //when
         Integer[][] map = GameMapUtils.getMapMatrixFromContent(content);
