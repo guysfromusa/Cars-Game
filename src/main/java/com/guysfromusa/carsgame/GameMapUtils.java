@@ -39,6 +39,7 @@ public class GameMapUtils {
     public static boolean isReachable(Integer[][] map) {
         // create visited array (mark walls as visited)
         // TODO: change map & visited to primitive arrays
+        // TODO: cleanup: change access to map[x][y] to map[y][x] to be consistent with rest of the code
         Boolean[][] visited = Stream.of(map)
                 .map(row -> Stream.of(row).map(v -> v == 0).toArray(Boolean[]::new))
                 .toArray(Boolean[][]::new);
