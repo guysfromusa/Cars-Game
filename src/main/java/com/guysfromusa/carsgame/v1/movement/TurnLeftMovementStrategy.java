@@ -1,6 +1,8 @@
 package com.guysfromusa.carsgame.v1.movement;
 
-import com.guysfromusa.carsgame.game_state.dtos.Movement.Operation;
+
+import com.guysfromusa.carsgame.control.MoveStatus;
+import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Car;
 import org.springframework.stereotype.Component;
@@ -12,14 +14,14 @@ import org.springframework.stereotype.Component;
 public class TurnLeftMovementStrategy implements MovementStrategy {
 
     @Override
-    public Operation getType() {
-        return Operation.LEFT;
+    public Movement.Operation getType() {
+        return Movement.Operation.LEFT;
     }
 
     @Override
-    public boolean execute(Car car, Integer[][] mapContent) {
+    public boolean execute(Car car, Integer[][] mapContent, Movement movement) {
         Direction direction = car.getDirection().turnLeft();
         car.setDirection(direction);
-        return true;
+        return MoveStatus.SUCCESS.isMoved();
     }
 }

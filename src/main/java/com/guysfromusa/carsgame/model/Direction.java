@@ -4,7 +4,7 @@ import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import static java.util.Arrays.asList;
 
@@ -13,16 +13,16 @@ import static java.util.Arrays.asList;
  */
 public enum Direction {
 
-    NORTH(Point::getX, moveNorth()), EAST(moveEast(), Point::getY),
-    SOUTH(Point::getX, moveSouth()), WEST(moveWest(), Point::getY);
+    NORTH(noChangesCoordicateX(), moveNorth()), EAST(moveEast(), noChangesCoordicateY()),
+    SOUTH(noChangesCoordicateX(), moveSouth()), WEST(moveWest(), noChangesCoordicateY());
 
     @Getter
-    private Function<Point, Integer> forwardXF;
+    private BiFunction<Point, Integer, Integer> forwardXF;
 
     @Getter
-    private Function<Point, Integer> forwardYF;
+    private BiFunction<Point, Integer, Integer> forwardYF;
 
-    Direction(Function<Point, Integer> forwardXF, Function<Point, Integer> forwardYF) {
+    Direction(BiFunction<Point, Integer, Integer> forwardXF, BiFunction<Point, Integer, Integer> forwardYF) {
         this.forwardXF = forwardXF;
         this.forwardYF = forwardYF;
     }
@@ -39,20 +39,28 @@ public enum Direction {
         return orderedDirections.get(--currentIndex);
     }
 
-    private static Function<Point, Integer> moveNorth() {
-        return point -> point.getY() + 1;
+    private static BiFunction<Point, Integer, Integer> moveNorth() {
+        return (point, steps) -> point.getY() + steps;
     }
 
-    private static Function<Point, Integer> moveEast() {
-        return point -> point.getX() + 1;
+    private static BiFunction<Point, Integer, Integer> moveEast() {
+        return (point, steps) -> point.getX() + steps;
     }
 
-    private static Function<Point, Integer> moveWest() {
-        return point -> point.getX() - 1;
+    private static BiFunction<Point, Integer, Integer> moveWest() {
+        return (point, steps) -> point.getX() - steps;
     }
 
-    private static Function<Point, Integer> moveSouth() {
-        return point -> point.getY() - 1;
+    private static BiFunction<Point, Integer, Integer> moveSouth() {
+        return (point, steps) -> point.getY() - steps;
+    }
+
+    private static BiFunction<Point, Integer, Integer> noChangesCoordicateX() {
+        return (point, steps) -> point.getX();
+    }
+
+    private static BiFunction<Point, Integer, Integer> noChangesCoordicateY() {
+        return (point, steps) -> point.getY();
     }
 
 }

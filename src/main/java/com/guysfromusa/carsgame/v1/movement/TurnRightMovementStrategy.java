@@ -19,7 +19,7 @@ public class TurnRightMovementStrategy implements MovementStrategy {
     }
 
     @Override
-    public boolean execute(Car car, Integer[][] mapContent) {
+    public boolean execute(Car car, Integer[][] mapContent, Movement movement) {
         Direction direction = car.getDirection().turnRight();
         car.setDirection(direction);
         return true;

@@ -35,7 +35,8 @@ public class CarController {
         Integer[][] gameMapContent = gameState.getGameMapContent();
         MovementStrategy movementStrategy = movementStrategyMap.get(operation);
 
-        return movementStrategy.execute(car, gameMapContent);
+        Movement movement = movementMessage.getMovement();
+        return movementStrategy.execute(car, gameMapContent, movement);
     }
 
 }

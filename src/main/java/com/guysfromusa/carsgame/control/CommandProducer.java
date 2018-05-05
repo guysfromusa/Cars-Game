@@ -3,14 +3,10 @@ package com.guysfromusa.carsgame.control;
 import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
-import com.guysfromusa.carsgame.services.MovementResultService;
-import com.guysfromusa.carsgame.v1.model.Car;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,24 +22,18 @@ public class CommandProducer {
     private final ApplicationEventPublisher applicationEventPublisher;
     public ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
 
-
-    private final MovementResultService movementResultService;
-
     @Inject
     public CommandProducer(ActiveGamesContainer activeGamesContainer,
-                           ApplicationEventPublisher applicationEventPublisher,
-                           MovementResultService movementResultService) {
+                           ApplicationEventPublisher applicationEventPublisher) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
-        this.movementResultService = notNull(movementResultService);
     }
 
-    //todo either? / optional / String?
-    public List<Car> scheduleCommand(String gameName, Command move) {
+    public CarEntity scheduleCommand(String gameName, Command move) {
 
          return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<List<Car>> result = state.addCommandToExecute(move, Car::new);
+                    CompletableFuture<CarEntity> result = state.addCommandToExecute(move, CarEntity::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })

@@ -9,11 +9,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MoveStatus {
 
-    SUCCESS("Ok"),
-    ALREADY_CRASHED("Move cannot be made as car is already crashed"),
-    CRASHED_INDO_WALL("Car was crashed into wall"),
-    CRASHED_WITH_OTHER("Car was crashed with other");
+    SUCCESS("Ok", true),
+    ALREADY_CRASHED("Move cannot be made as car is already crashed", false),
+    CRASHED_INDO_WALL("Car was crashed into wall", false),
+    CRASHED_WITH_OTHER("Car was crashed with other", false);
 
     @Getter
     private String message;
+
+    @Getter
+    private boolean moved;
 }

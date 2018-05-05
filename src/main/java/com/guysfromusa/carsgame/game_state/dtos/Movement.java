@@ -19,6 +19,10 @@ public class Movement {
         this.forwardSteps = forwardSteps;
     }
 
+    public static Movement newMovement(Operation operation){
+        return new Movement(operation, 1);
+    }
+
     public static Movement newMovement(Operation operation, Integer forwardSteps){
         return new Movement(operation, forwardSteps);
     }

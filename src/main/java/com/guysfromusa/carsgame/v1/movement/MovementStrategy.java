@@ -10,5 +10,5 @@ public interface MovementStrategy {
 
     Movement.Operation getType();
 
-    boolean execute(Car car, Integer[][] mapContent);
+    boolean execute(Car car, Integer[][] mapContent, Movement movement);
 }

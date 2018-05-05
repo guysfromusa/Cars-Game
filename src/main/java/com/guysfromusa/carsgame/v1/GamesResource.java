@@ -1,15 +1,16 @@
 package com.guysfromusa.carsgame.v1;
 
+import com.guysfromusa.carsgame.GameMapUtils;
 import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.services.GameService;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
 import com.guysfromusa.carsgame.v1.model.MovementResult;
@@ -55,7 +56,7 @@ public class GamesResource {
             @ApiResponse(code = 404, message = "Game not found"),
             @ApiResponse(code = 404, message = "Car not found")
     })
-    public List<Car> newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement) {
+    public CarEntity newMovement(@PathVariable String game, @PathVariable("car") String carName, @RequestBody /*@Validated*/ Movement newMovement) {
         MoveCommand moveCommand = MoveCommand.builder()
                 .carName(carName)
                 .gameName(game)
@@ -78,7 +79,9 @@ public class GamesResource {
     public Game startNewGame(@PathVariable("gameName") String gameName, @RequestBody String mapName) {
 
         GameEntity gameEntity = gameService.startNewGame(gameName, mapName);
-        activeGamesContainer.addNewGame(gameEntity.getName());
+        String content = gameEntity.getMap().getContent();
+        Integer[][] mapMatrixFromContent = GameMapUtils.getMapMatrixFromContent(content);
+        activeGamesContainer.addNewGame(gameName, mapMatrixFromContent);
         return conversionService.convert(gameEntity, Game.class);
     }
 

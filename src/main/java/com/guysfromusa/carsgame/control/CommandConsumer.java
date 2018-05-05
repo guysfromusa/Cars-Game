@@ -60,7 +60,7 @@ public class CommandConsumer {
         }
     }
 
-    private void handle(MessageType messageType, List<Command> commands, String gameName) {
+    private void handle(MessageType messageType, List commands, String gameName) {
         //TODO Strategy someday
         switch (messageType) {
             case MOVE:
