@@ -62,9 +62,7 @@ public class CarMoveHandler {
             GameState gameState = moveData.getGameState();
             boolean isCarCrashedIntoWall = carController.moveCar(moveData.getMoveCommand(), gameState);
 
-            String message = CAR_CRASHED_INTO_WALL;
-            CarDto car = moveData.getCar();
-            markCrashedWhenCollision(isCarCrashedIntoWall, car, future, message);
+            markCrashedWhenCollision(isCarCrashedIntoWall, moveData.getCar(), future, CAR_CRASHED_INTO_WALL);
         };
     }
 
@@ -80,16 +78,14 @@ public class CarMoveHandler {
             Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(carsInGame);
             boolean carCrashedWithOther = isCarCrashedWithOther(crashedCarNames, car);
 
-            String message = CAR_CRASHED_WITH_OTHER;
-            markCrashedWhenCollision(carCrashedWithOther, car, future, message);
+            markCrashedWhenCollision(carCrashedWithOther, car, future, CAR_CRASHED_WITH_OTHER);
         };
     }
 
     private Consumer<MoveData> doCarStateUpdate(){
         return moveData -> {
             CompletableFuture<List<CarDto>> future = moveData.getFuture();
-            List<CarDto> cars = moveData.getCars();
-            future.complete(cars);
+            future.complete(moveData.getCars());
         };
     }
 
