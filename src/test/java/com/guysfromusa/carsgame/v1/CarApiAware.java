@@ -16,6 +16,11 @@ import static org.springframework.http.HttpMethod.POST;
  */
 public interface CarApiAware {
 
+    default Car[] findAllCars(TestRestTemplate template){
+        ResponseEntity<Car[]> forEntity = template.getForEntity("/v1/cars", Car[].class);
+        return forEntity.getBody();
+    }
+
     default Car addNewCar(TestRestTemplate template, String name, CarType type){
         HttpEntity<Object> requestEntity = new RequestBuilder<>().body(type).build();
         String url = String.join("/", "/v1/cars", name);
@@ -25,7 +30,7 @@ public interface CarApiAware {
         return newCarResponse.getBody();
     }
 
-    default Car assignCarToTheGame(TestRestTemplate template, String carName, String gameName, Point startPoint){
+    default Car addCarToGame(TestRestTemplate template, String carName, String gameName, Point startPoint){
 
         HttpEntity<Point> requestEntity = new RequestBuilder<Point>().body(startPoint).build();
         String url = String.join("/", "/v1/cars", carName, "game", gameName);

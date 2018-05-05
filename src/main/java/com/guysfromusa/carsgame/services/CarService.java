@@ -5,7 +5,6 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
-import com.guysfromusa.carsgame.game_state.events.AddCarToGameEvent;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.model.TurnSide;
 import com.guysfromusa.carsgame.repositories.CarRepository;
@@ -14,7 +13,6 @@ import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.model.Point;
 import com.guysfromusa.carsgame.v1.validator.CarGameAdditionValidator;
 import com.guysfromusa.carsgame.v1.validator.subject.CarGameAdditionValidationSubject;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,17 +39,13 @@ public class CarService {
 
     private final CarGameAdditionValidator carGameAdditionValidator;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
-
     @Inject
     public CarService(CarRepository carRepository, MovementsHistoryRepository movementsHistoryRepository,
-                      GameRepository gameRepository, CarGameAdditionValidator carGameAdditionValidator,
-                      ApplicationEventPublisher applicationEventPublisher){
+                      GameRepository gameRepository, CarGameAdditionValidator carGameAdditionValidator){
         this.carRepository = notNull(carRepository);
         this.movementsHistoryRepository = notNull(movementsHistoryRepository);
         this.gameRepository = notNull(gameRepository);
         this.carGameAdditionValidator = notNull(carGameAdditionValidator);
-        this.applicationEventPublisher = notNull(applicationEventPublisher);
     }
 
 
@@ -99,7 +93,6 @@ public class CarService {
         return movementsHistoryRepository.save(movementEntity);
     }
 
-    //FIXME should be done in tour(round)
     public CarEntity addCarToGame(String carName, String gameName, Point startingPoint){
         CarEntity car = carRepository.findByName(carName)
                 .orElseThrow(() -> new EntityNotFoundException("Car '" + carName + "' not found"));
@@ -119,7 +112,6 @@ public class CarService {
 
         car.setDirection(Direction.NORTH);
         car.setGame(gameEntity);
-        applicationEventPublisher.publishEvent(new AddCarToGameEvent(this, gameName, carName));
         return carRepository.save(car);
     }
 
