@@ -1,5 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.round.GameRound;
+import com.guysfromusa.carsgame.control.round.GameRoundSelector;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +9,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +26,13 @@ public class CommandConsumer {
 
     private final GameEngine gameEngine;
 
+    private final GameRoundSelector gameRoundSelector;
+
     @Inject
-    public CommandConsumer(ActiveGamesContainer activeGamesContainer, GameEngine gameEngine) {
+    public CommandConsumer(ActiveGamesContainer activeGamesContainer, GameEngine gameEngine, GameRoundSelector gameRoundSelector) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.gameEngine = notNull(gameEngine);
+        this.gameRoundSelector = notNull(gameRoundSelector);
     }
 
     @EventListener(CommandEvent.class)
@@ -43,21 +47,14 @@ public class CommandConsumer {
 
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 
-            gameToPlayRoundOptional.ifPresent(gameState -> {
-                gameState.setRoundInProgress(true);
-
-                //FIXME filter messages by type and group different cars
-                List<Command> consumedCommands = new ArrayList<>();
-                while (!gameState.getCommandsQueue().isEmpty()) {
-                    consumedCommands.add(gameState.getCommandsQueue().poll());
-                }
-
-                consumedCommands.stream()
-                        .collect(groupingBy(Command::getMessageType))
-                        .forEach((messageType, commands) ->
-                                handle(messageType, commands, gameState.getGameName()));
-            });
+            gameToPlayRoundOptional.ifPresent(gameState -> triggerRound(gameState));
         }
+    }
+
+    private void triggerRound(GameState gameState) {
+        gameState.setRoundInProgress(true);
+        gameRoundSelector.selectCommand(gameState.getCommandsQueue(), gameState.getGameName())
+                .ifPresent(gameRound -> handle(gameRound.getMessageType(), gameRound.getCommands(), gameRound.getGameName()));
     }
 
     private void handle(MessageType messageType, List<Command> commands, String gameName) {
