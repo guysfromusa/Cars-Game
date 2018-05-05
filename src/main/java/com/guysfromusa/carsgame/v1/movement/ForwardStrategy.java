@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.v1.movement;
 
 import com.guysfromusa.carsgame.GameMapUtils;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class ForwardStrategy implements MovementStrategy{
     }
 
     @Override
-    public boolean execute(Car car, Integer[][] mapContent, Movement movement) {
+    public boolean execute(CarDto car, Integer[][] mapContent, Movement movement) {
         Point position = car.getPosition();
 
         Integer forwardSteps = movement.getForwardSteps();
@@ -35,7 +35,7 @@ public class ForwardStrategy implements MovementStrategy{
         return !carOnRoad;
     }
 
-    private void updateCarPosition(Car car, Integer x, Integer y){
+    private void updateCarPosition(CarDto car, Integer x, Integer y){
         car.getPosition().setY(y);
         car.getPosition().setX(x);
     }

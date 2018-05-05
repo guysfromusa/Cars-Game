@@ -40,13 +40,13 @@ public class CommandConsumerTest {
                 aGameState()
                         .gameName("game1")
                         .roundInProgress(false)
-                        .movementsQueue(new MoveCommand("g1", "c1", MOVE),
-                                new MoveCommand("g1", "c1", MOVE))
+                        .movementsQueue(new MoveCommand("g1", "c1", MOVE, null),
+                                new MoveCommand("g1", "c1", MOVE, null))
                         .build(),
                 aGameState()
                         .gameName("game2")
                         .roundInProgress(false)
-                        .movementsQueue(new MoveCommand("g1", "c1", MOVE)).build());
+                        .movementsQueue(new MoveCommand("g1", "c1", MOVE, null)).build());
 
         when(activeGamesContainer.getGameStates()).thenReturn(gameStates);
         when(activeGamesContainer.getGameState("game1")).thenReturn(gameStates.get(0));

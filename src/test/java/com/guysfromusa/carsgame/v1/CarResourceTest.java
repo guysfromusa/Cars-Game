@@ -102,7 +102,7 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
         Point point = new Point(1, 0);
 
-        activeGamesContainer.addNewGame(game, mapMatrixFromContent);
+        activeGamesContainer.addNewGame(game, null);
 
         //when
         Car car = addCarToGame(template, name, game, point);
@@ -120,7 +120,7 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
         String name = "car3";
         String game = "game1";
 
-        activeGamesContainer.addNewGame(game, mapMatrixFromContent);
+        activeGamesContainer.addNewGame(game, null);
 
         String url = String.join("/", "/v1/cars", name, "game", game);
         Point point = new Point(1, 0);

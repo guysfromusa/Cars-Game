@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.v1.movement;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class ForwardStrategyTest {
         Point startPoint = new Point(0,0);
         Integer steps = 2;
         Direction south = Direction.SOUTH;
-        Car car = createCar(startPoint, south);
+        CarDto car = createCar(startPoint, south);
         Movement movement = createMovement(steps);
         
         //when
@@ -44,7 +44,7 @@ public class ForwardStrategyTest {
         Point startPoint = new Point(0,0);
         Integer steps = 2;
         Direction south = Direction.EAST;
-        Car car = createCar(startPoint, south);
+        CarDto car = createCar(startPoint, south);
         Movement movement = createMovement(steps);
 
         //when
@@ -63,7 +63,7 @@ public class ForwardStrategyTest {
         Point startPoint = new Point(0,0);
         Integer steps = 2;
         Direction south = Direction.NORTH;
-        Car car = createCar(startPoint, south);
+        CarDto car = createCar(startPoint, south);
         Movement movement = createMovement(steps);
 
         //when
@@ -73,8 +73,8 @@ public class ForwardStrategyTest {
         assertFalse(isMoveSuccess);
     }
 
-    private Car createCar(Point point, Direction direction){
-        return Car.builder()
+    private CarDto createCar(Point point, Direction direction){
+        return CarDto.builder()
                 .direction(direction)
                 .position(point)
                 .build();

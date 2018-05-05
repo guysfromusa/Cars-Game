@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.v1.movement;
 
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
-import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class TurnLeftMovementStrategyTest {
         Point startPoint = new Point(0,0);
         Direction north = Direction.NORTH;
         Movement.Operation left = Movement.Operation.LEFT;
-        Car car = createCar(startPoint, north);
+        CarDto car = createCar(startPoint, north);
         Movement movement = createMovement(left);
 
         //when
@@ -36,8 +36,8 @@ public class TurnLeftMovementStrategyTest {
 
     }
 
-    private Car createCar(Point point, Direction direction){
-        return Car.builder()
+    private CarDto createCar(Point point, Direction direction){
+        return CarDto.builder()
                 .direction(direction)
                 .position(point)
                 .build();

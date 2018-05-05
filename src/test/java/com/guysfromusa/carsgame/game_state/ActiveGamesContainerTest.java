@@ -18,7 +18,7 @@ public class ActiveGamesContainerTest {
     @Test
     public void shouldAddNewGame(){
         //given
-        activeGamesContainer.addNewGame("game1", mapMatrixFromContent);
+        activeGamesContainer.addNewGame("game1", null);
 
         //when
         activeGamesContainer.getGameState("game1");
@@ -30,7 +30,7 @@ public class ActiveGamesContainerTest {
     @Test
     public void shouldAddNewCar(){
         //given
-        activeGamesContainer.addNewGame("game1", mapMatrixFromContent);
+        activeGamesContainer.addNewGame("game1", null);
 
         //when
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
@@ -42,7 +42,7 @@ public class ActiveGamesContainerTest {
     @Test
     public void shouldAddNewCarWithMovement(){
         //given
-        activeGamesContainer.addNewGame("game1", mapMatrixFromContent);
+        activeGamesContainer.addNewGame("game1", null);
         activeGamesContainer.getGameState("game1")
                 .addNewCar(aCarEntity().name("bmw").build());
 
@@ -58,7 +58,7 @@ public class ActiveGamesContainerTest {
     @Test
     public void shouldReturnTreeLastMove() {
         //given
-        activeGamesContainer.addNewGame("game1", mapMatrixFromContent);
+        activeGamesContainer.addNewGame("game1", null);
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
         activeGamesContainer.getGameState("game1").addMovementHistory( "bmw", FORWARD);
         activeGamesContainer.getGameState("game1").addMovementHistory( "bmw", LEFT);
@@ -78,7 +78,7 @@ public class ActiveGamesContainerTest {
     @Test
     public void shouldReturnEmpty(){
         //given
-        activeGamesContainer.addNewGame("game1", mapMatrixFromContent);
+        activeGamesContainer.addNewGame("game1", null);
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
 
         //when
