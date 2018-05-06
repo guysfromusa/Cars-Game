@@ -7,7 +7,6 @@ import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
@@ -52,13 +51,13 @@ public class CommandConsumerTest {
                 aGameState()
                         .gameName("game1")
                         .roundInProgress(false)
-                        .movementsQueue(new MoveCommand("g1", "c1", MOVE, newMovementDto(LEFT)),
-                                new MoveCommand("g1", "c1", MOVE, newMovementDto(RIGHT)))
+                        .movementsQueue(new MoveCommand("g1", "c1", MOVE, newMovementDto(LEFT), false),
+                                new MoveCommand("g1", "c1", MOVE, newMovementDto(RIGHT), false))
                         .build(),
                 aGameState()
                         .gameName("game2")
                         .roundInProgress(false)
-                        .movementsQueue(new MoveCommand("g1", "c1", MOVE, newMovementDto(LEFT))).build());
+                        .movementsQueue(new MoveCommand("g1", "c1", MOVE, newMovementDto(LEFT), false)).build());
 
         when(activeGamesContainer.getGameStates()).thenReturn(gameStates);
         when(activeGamesContainer.getGameState("game1")).thenReturn(gameStates.get(0));

@@ -34,7 +34,7 @@ public class UndoMovementService {
         undoMovementPreparerService.setUndoProcessFlag(gameId, carName, true);
         int delay = 1;
         for (MovementDto movementDto : movementDtos) {
-            MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE, movementDto);
+            MoveCommand moveCommand = new MoveCommand(gameId, carName, MessageType.MOVE, movementDto, true);
             Runnable task = createTask(gameId, moveCommand);
             scheduler.schedule(task, delay, TimeUnit.SECONDS);
             delay++;

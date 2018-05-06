@@ -35,7 +35,7 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
     @Test
     public void shouldSelectCommandOfTheSameMessageType() {
-        MoveCommand moveCommand = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT));
+        MoveCommand moveCommand = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT), false);
         AddCarToGameCommand addCarToGameCommand = AddCarToGameCommand.builder().carName("2")
                 .gameName("game")
                 .messageType(ADD_CAR_TO_GAME)
@@ -55,9 +55,9 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
     @Test
     public void shouldSelectOneCommandPerCar() {
-        MoveCommand firstMoveCarOne = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT));
-        MoveCommand firstMoveCarTwo = new MoveCommand("game", "2", MOVE, newMovementDto(Operation.LEFT));
-        MoveCommand secondMoveCarOne = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT));
+        MoveCommand firstMoveCarOne = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT), false);
+        MoveCommand firstMoveCarTwo = new MoveCommand("game", "2", MOVE, newMovementDto(Operation.LEFT), false);
+        MoveCommand secondMoveCarOne = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT), false);
 
         LinkedList<Command> queue = new LinkedList<>();
         queue.add(firstMoveCarOne);

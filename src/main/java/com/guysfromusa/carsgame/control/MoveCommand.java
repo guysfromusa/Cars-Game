@@ -14,8 +14,12 @@ public class MoveCommand extends Command<List<CarDto>> {
     @Getter
     private final MovementDto movementDto;
 
-    public MoveCommand(String gameName, String carName, MessageType messageType, MovementDto movementDto) {
+    @Getter
+    private final boolean isUndo;
+
+    public MoveCommand(String gameName, String carName, MessageType messageType, MovementDto movementDto, boolean isUndo) {
         super(gameName, carName, messageType);
         this.movementDto = movementDto;
+        this.isUndo = isUndo;
     }
 }
