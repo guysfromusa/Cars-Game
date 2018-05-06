@@ -84,10 +84,9 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         addCarToGame(template, carName, gameName, startingPoint);
 
         //when
-        Movement movement = Movement.newMovement(Movement.Operation.RIGHT);
+        Movement movement = new Movement(RIGHT, 2);
         doCarMove(template, gameName, carName, movement);
-
-        Movement movement2 = Movement.newMovement(Movement.Operation.FORWARD, 2);
+        Movement movement2 = new Movement(FORWARD, 2);
         List<Car> cars = doCarMove(template, gameName, carName, movement2);
 
         //then
@@ -113,7 +112,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         Point startingPoint = new Point(0,0);
         addCarToGame(template, carName, gameName, startingPoint);
 
-        Movement movement = Movement.newMovement(Movement.Operation.FORWARD, 2);
+        Movement movement = new Movement(FORWARD, 2);
 
         //when
         IllegalArgumentException illegalArgumentException = doCarMoveWithExpcetedError(template, gameName, carName, movement);
@@ -141,11 +140,10 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         Point startingPoint = new Point(0,0);
         addCarToGame(template, carName, gameName, startingPoint);
 
-
-        Movement turnRight = Movement.newMovement(Movement.Operation.RIGHT);
+        Movement turnRight = new Movement(RIGHT, 0);
         doCarMove(template, gameName, carName, turnRight);
 
-        Movement moveForward = Movement.newMovement(Movement.Operation.FORWARD, 1);
+        Movement moveForward = new Movement(FORWARD, 1);
         doCarMove(template, gameName, carName, moveForward);
 
         addCarToGame(template, secondCar, gameName, startingPoint);
