@@ -37,6 +37,9 @@ public class GameEngineTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Mock
+    private CarMoveHandler carMoveHandler;
+
     @InjectMocks
     private GameEngine gameEngine;
 

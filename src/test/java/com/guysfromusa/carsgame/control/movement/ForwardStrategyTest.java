@@ -6,6 +6,7 @@ import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
+import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 
@@ -31,6 +32,7 @@ public class ForwardStrategyTest {
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
+        assertThat(moveResult.getMoveStatus()).isEqualTo(SUCCESS);
         assertThat(moveResult.getNewPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(0, 2);
     }
@@ -49,7 +51,7 @@ public class ForwardStrategyTest {
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertThat(moveResult).extracting(MoveResult::isWall).containsExactly(true);
+        assertThat(moveResult.getMoveStatus()).isEqualTo(SUCCESS);
         assertThat(moveResult.getNewPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(2, 0);
     }
