@@ -19,4 +19,5 @@ public class Point {
 
     @Getter @Setter
     private Integer y;
+
 }

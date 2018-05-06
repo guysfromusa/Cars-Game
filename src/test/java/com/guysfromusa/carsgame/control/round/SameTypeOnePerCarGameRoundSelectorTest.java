@@ -15,6 +15,7 @@ import static com.guysfromusa.carsgame.control.MessageType.MOVE;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -48,7 +49,7 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
         GameRound gameRound = selector.selectCommand(queue, "game");
 
-        assertThat(gameRound).isEqualTo(new GameRound("game", asList(moveCommand), MOVE));
+        assertThat(gameRound).isEqualTo(new GameRound("game", singletonList(moveCommand), MOVE));
 
         assertThat(queue).containsOnly(addCarToGameCommand);
     }

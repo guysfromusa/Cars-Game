@@ -37,6 +37,9 @@ public class GameEngineTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Mock
+    private CarMoveHandler carMoveHandler;
+
     @InjectMocks
     private GameEngine gameEngine;
 
@@ -61,7 +64,7 @@ public class GameEngineTest {
         addedCar.setGame(gameEntity);
 
 
-        GameState gameState = new GameState("game1");
+        GameState gameState = new GameState("game1", null);
         when(carService.addCarToGame("car1", gameState, new Point(1, 1)))
                 .thenReturn(addedCar);
 

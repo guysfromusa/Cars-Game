@@ -2,8 +2,8 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
-import com.guysfromusa.carsgame.entities.MovementsHistoryEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
@@ -24,9 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
-import static com.guysfromusa.carsgame.model.Direction.NORTH;
-import static com.guysfromusa.carsgame.model.Direction.WEST;
-import static com.guysfromusa.carsgame.model.TurnSide.LEFT;
+import static com.guysfromusa.carsgame.entities.enums.CarType.RACER;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -106,31 +104,6 @@ public class CarServiceTest {
     }
 
     @Test
-    public void shouldTurnCar(){
-        //given
-        CarEntity carEntity = new CarEntity();
-        carEntity.setName("car1");
-        carEntity.setDirection(NORTH);
-        GameEntity gameEntity = new GameEntity();
-        gameEntity.setName("game1");
-        when(carRepository.findByGameAndName(any(), any()))
-                .thenReturn(Optional.of(carEntity));
-        when(gameRepository.findByName(any()))
-                .thenReturn(Optional.of(gameEntity));
-
-        //when
-        carService.turnCar("game1", "car1", LEFT);
-
-        //then
-        ArgumentCaptor<MovementsHistoryEntity> captor = ArgumentCaptor.forClass(MovementsHistoryEntity.class);
-        verify(movementsHistoryRepository).save(captor.capture());
-
-        MovementsHistoryEntity movement = captor.getValue();
-        assertEquals(WEST, movement.getDirection());
-        assertEquals(WEST, carEntity.getDirection());
-    }
-
-    @Test
     public void shouldAddCarToGame(){
         //given
         String carName = "My-Second-Car";
@@ -140,7 +113,7 @@ public class CarServiceTest {
         carEntity.setName(carName);
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
-        GameState gameState = new GameState(carGame);
+        GameState gameState = new GameState(carGame, null);
 
         when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
         when(carRepository.findByName(eq(carName))).thenReturn(Optional.of(carEntity));
@@ -164,4 +137,26 @@ public class CarServiceTest {
         }));
     }
 
+    @Test
+    public void shouldCrashAndRemoveFromGame() {
+        //given
+        CarDto car = CarDto.builder()
+                .name("skoda")
+                .type(RACER)
+                .crashed(true)
+                .build();
+
+        CarEntity carEntity = new CarEntity();
+        when(carRepository.findByGameAndName("game1", "skoda"))
+                .thenReturn(Optional.of(carEntity));
+
+        //when
+        carService.crashAndRemoveFromGame("game1", car);
+
+        //then
+        assertThat(carEntity.isCrashed()).isTrue();
+        assertThat(carEntity.getGame()).isNull();
+        assertThat(carEntity.getPositionX()).isNull();
+        assertThat(carEntity.getPositionY()).isNull();
+    }
 }

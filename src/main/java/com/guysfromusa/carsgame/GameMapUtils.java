@@ -1,5 +1,7 @@
 package com.guysfromusa.carsgame;
 
+import com.guysfromusa.carsgame.v1.model.Point;
+
 import io.vavr.Tuple2;
 
 import java.util.LinkedList;
@@ -23,6 +25,27 @@ public class GameMapUtils {
                     .map(v -> "0".equals(v) ? 0 : 1)
                     .toArray(Integer[]::new);
         }).toArray(Integer[][]::new);
+    }
+
+    public static boolean isPointOnRoad(Integer[][] content, Point point){
+        Integer x = point.getX();
+        Integer y = point.getY();
+        return isInMapReach(content, x, y) && isOnRoad(content, x, y);
+    }
+
+    public static boolean isPointOnRoad(Integer[][] content, Integer x, Integer y){
+        return isInMapReach(content, x, y) && isOnRoad(content, x, y);
+    }
+
+    private static boolean isOnRoad(Integer[][] mapContent, Integer x, Integer y) {
+        return mapContent[y][x]== 1;
+    }
+
+    private static boolean isInMapReach(Integer[][] mapContent, Integer x, Integer y) {
+        return y >= 0
+                && x >=0
+                && mapContent.length > y
+                && mapContent[mapContent.length-1].length > x;
     }
 
     /**
