@@ -1,7 +1,10 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.round.GameRoundSelector;
+import com.guysfromusa.carsgame.control.round.SameTypeOnePerCarGameRoundSelector;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,7 +24,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CommandConsumerTest {
 
-    @InjectMocks
     private CommandConsumer commandConsumer;
 
     @Mock
@@ -33,8 +35,15 @@ public class CommandConsumerTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
+    private GameRoundSelector gameRoundSelector = new SameTypeOnePerCarGameRoundSelector();
+
+    @Before
+    public void setUp() throws Exception {
+        commandConsumer = new CommandConsumer(activeGamesContainer, gameEngine, gameRoundSelector);
+    }
+
     @Test
-    public void whenTriggeredByTheEvent_shouldCleanAllQueues() {
+    public void whenTriggeredByTheEvent_shouldConsumeOneRoundPerGame() {
         //given
         List<GameState> gameStates = asList(
                 aGameState()
@@ -59,6 +68,7 @@ public class CommandConsumerTest {
         assertThat(gameStates)
                 .extracting(GameState::getCommandsQueue)
                 .extracting(Queue::size)
-                .containsExactly(0, 0);
+                .containsExactly(1, 0);
     }
+
 }

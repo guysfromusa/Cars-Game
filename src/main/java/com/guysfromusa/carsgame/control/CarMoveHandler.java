@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.movement.MoveResult;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.v1.model.Point;
@@ -60,9 +61,11 @@ public class CarMoveHandler {
                 return ;
             }
             GameState gameState = moveData.getGameState();
-            boolean isCarCrashedIntoWall = carController.moveCar(moveData.getMoveCommand(), gameState);
+            MoveResult moveResult = carController.moveCar(moveData.getMoveCommand(), gameState);
 
-            markCrashedWhenCollision(isCarCrashedIntoWall, moveData.getCar(), future, CAR_CRASHED_INTO_WALL);
+            //mark car move in db
+
+            markCrashedWhenCollision(moveResult.isWall(), moveData.getCar(), future, CAR_CRASHED_INTO_WALL);
         };
     }
 
@@ -93,6 +96,7 @@ public class CarMoveHandler {
         if(isCollision){
             car.setCrashed(true);
             removeFromGameMap(car);
+            //TODO mark car crashed in db
             future.completeExceptionally(new IllegalArgumentException(message));
         }
     }
@@ -102,9 +106,10 @@ public class CarMoveHandler {
         position.setY(null);
         position.setX(null);
         car.setGame(null);
+        //TODO mark car removed from map
     }
 
-    public boolean isCarCrashedWithOther(Set<String> crashedCars, CarDto handledCar){
+    private static boolean isCarCrashedWithOther(Set<String> crashedCars, CarDto handledCar){
         return crashedCars.contains(handledCar.getName());
     }
 

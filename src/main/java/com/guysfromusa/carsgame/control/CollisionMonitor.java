@@ -4,7 +4,15 @@ import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -21,7 +29,7 @@ public class CollisionMonitor {
 
         Map<Point, List<CarDto>> potentialCollisionPoints = cars.stream()
                 .filter(isCarNotRemovedFromGameMap())
-                .collect(groupingBy(o -> o.getPosition()));
+                .collect(groupingBy(CarDto::getPosition));
 
         potentialCollisionPoints.entrySet().stream().filter(isCollisionPoint())
                 .map(this::resolveSinglePointCollision)
