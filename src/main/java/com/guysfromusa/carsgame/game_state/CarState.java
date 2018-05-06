@@ -20,7 +20,4 @@ public class CarState {
     @Getter @Setter
     private CarDto car;
 
-    @Getter @Setter
-    private volatile boolean undoInProcess = false;
-
 }
