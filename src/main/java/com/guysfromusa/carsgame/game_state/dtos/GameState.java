@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
+import static java.util.Collections.*;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
 
@@ -40,9 +41,9 @@ public class GameState {
         return added ? command.getFuture() : completedFuture(errorCallback.get());
     }
 
-    public void addMovementHistory(String carName, Movement.Operation operation) {
-        Collection<Movement> carsMovement = carsStatesMemory.get(carName).getMovements();
-        carsMovement.add(Movement.newMovement(operation));
+    public void addMovementHistory(String carName, MovementDto.Operation operation) {
+        Collection<MovementDto> carsMovementDto = carsStatesMemory.get(carName).getMovementDtos();
+        carsMovementDto.add(MovementDto.newMovementDto(operation));
     }
 
     public void addNewCar(CarEntity carEntity) {
@@ -64,12 +65,16 @@ public class GameState {
                 .collect(toList());
     }
 
-    public Collection<Movement> getMovementHistory(String carName) {
+    public Collection<MovementDto> getMovementHistory(String carName) {
         return Optional.ofNullable(carsStatesMemory.get(carName))
-                .map(CarState::getMovements).orElse(null);
+                .map(CarState::getMovementDtos).orElse(emptyList());
     }
 
     public CarDto getCar(String carName){
         return carsStatesMemory.get(carName).getCar();
+    }
+
+    public void setUndoProcessFlag(String carName, boolean value){
+        carsStatesMemory.get(carName).setUndoInProcess(value);
     }
 }

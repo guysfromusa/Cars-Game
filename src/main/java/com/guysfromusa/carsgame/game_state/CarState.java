@@ -2,7 +2,7 @@ package com.guysfromusa.carsgame.game_state;
 
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +15,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class CarState {
 
     @Getter
-    private Collection<Movement> movements = new ConcurrentLinkedQueue<>();
+    private Collection<MovementDto> movementDtos = new ConcurrentLinkedQueue<>();
 
     @Getter @Setter
     private CarDto car;
+
+    @Getter @Setter
+    private volatile boolean undoInProcess = false;
 
 }

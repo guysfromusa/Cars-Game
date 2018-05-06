@@ -1,9 +1,8 @@
 package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -12,12 +11,15 @@ import java.util.List;
  */
 public class MoveCommand extends Command<List<CarDto>> {
 
-    public MoveCommand(String gameName, String carName, MessageType messageType) {
+    @Getter
+    private final MovementDto movementDto;
+
+    @Getter
+    private final boolean isUndo;
+
+    public MoveCommand(String gameName, String carName, MessageType messageType, MovementDto movementDto, boolean isUndo) {
         super(gameName, carName, messageType);
+        this.movementDto = movementDto;
+        this.isUndo = isUndo;
     }
-
-    @Getter @Setter
-    private Movement movement;
-
-
 }

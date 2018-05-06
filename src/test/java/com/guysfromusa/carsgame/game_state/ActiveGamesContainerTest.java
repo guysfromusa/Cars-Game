@@ -1,14 +1,14 @@
 package com.guysfromusa.carsgame.game_state;
 
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.junit.Test;
 
 import java.util.Collection;
 
 import static com.guysfromusa.carsgame.entities.CarEntityBuilder.aCarEntity;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.LEFT;
-import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.RIGHT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.LEFT;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.RIGHT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActiveGamesContainerTest {
@@ -24,7 +24,7 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1");
 
         //then
-        assertThat(activeGamesContainer.getGameState("game1").getMovementHistory("someCar")).isNull();
+        assertThat(activeGamesContainer.getGameState("game1").getMovementHistory("someCar")).isEmpty();
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ActiveGamesContainerTest {
         //then
         assertThat(activeGamesContainer.getGameState("game1")
                 .getMovementHistory("bmw"))
-                .extracting(Movement::getOperation).containsExactly(FORWARD);
+                .extracting(MovementDto::getOperation).containsExactly(FORWARD);
     }
 
     @Test
@@ -67,11 +67,11 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addMovementHistory( "bmw", RIGHT);
 
         //when
-        Collection<Movement> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
+        Collection<MovementDto> result = activeGamesContainer.getNCarsMovementHistory("game1", "bmw", 3);
 
         //then
         assertThat(result)
-                .extracting(Movement::getOperation)
+                .extracting(MovementDto::getOperation)
                 .containsExactly(RIGHT, RIGHT, FORWARD);
     }
 
@@ -82,10 +82,10 @@ public class ActiveGamesContainerTest {
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("bmw").build());
 
         //when
-        Collection<Movement> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
+        Collection<MovementDto> result = activeGamesContainer.getNCarsMovementHistory("fake", "bmw", 3);
 
         //then
-        assertThat(result).isEmpty();
+        assertThat(result.isEmpty());
     }
 
 }
