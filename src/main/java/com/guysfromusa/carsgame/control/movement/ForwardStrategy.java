@@ -6,7 +6,7 @@ import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.springframework.stereotype.Component;
 
-import static com.guysfromusa.carsgame.control.MoveStatus.CRASHED_INDO_WALL;
+import static com.guysfromusa.carsgame.control.MoveStatus.CRASHED_INTO_WALL;
 import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.FORWARD;
 
@@ -32,12 +32,12 @@ public class ForwardStrategy implements MovementStrategy{
         boolean carOnRoad = GameMapUtils.isPointOnRoad(mapContent, xForwardPos, yForwardPos);
 
         MoveResult.MoveResultBuilder builder = MoveResult.builder()
-                .wall(carOnRoad)
+                .wall(!carOnRoad)
                 .carName(car.getName())
                 .newDirection(car.getDirection());
 
         return carOnRoad
                 ? builder.newPosition(new Point(xForwardPos, yForwardPos)).moveStatus(SUCCESS).build()
-                : builder.newPosition(car.getPosition()).moveStatus(CRASHED_INDO_WALL).build();
+                : builder.newPosition(car.getPosition()).moveStatus(CRASHED_INTO_WALL).build();
     }
 }

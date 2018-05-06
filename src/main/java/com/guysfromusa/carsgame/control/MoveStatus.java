@@ -11,7 +11,7 @@ public enum MoveStatus {
 
     SUCCESS("Ok", true),
     ALREADY_CRASHED("Move cannot be made as car is already crashed", false),
-    CRASHED_INDO_WALL("Car was crashed into wall", false),
+    CRASHED_INTO_WALL("Car was crashed into wall", false),
     CRASHED_WITH_OTHER("Car was crashed with other", false);
 
     @Getter

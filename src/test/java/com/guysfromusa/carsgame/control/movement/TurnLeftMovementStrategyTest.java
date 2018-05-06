@@ -1,12 +1,13 @@
 package com.guysfromusa.carsgame.control.movement;
 
-import com.guysfromusa.carsgame.control.MoveStatus;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
+import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
+import static com.guysfromusa.carsgame.model.Direction.WEST;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**
@@ -30,10 +31,9 @@ public class TurnLeftMovementStrategyTest {
         MoveResult moveResult = turnLeftMovementStrategy.execute(car, gameMap, movement);
 
         //then
-        assertThat(moveResult.getMoveStatus()).isEqualTo(MoveStatus.SUCCESS);
-        assertThat(moveResult.getNewDirection()).isEqualTo(Direction.WEST);
-        assertThat(moveResult.getNewPosition())
-                .extracting(Point::getX, Point::getY).containsExactly(0, 0);
+        assertThat(moveResult)
+                .extracting(MoveResult::getCarName, MoveResult::getMoveStatus, MoveResult::getNewDirection, MoveResult::getNewPosition, MoveResult::isWall)
+                .containsExactly("car1", SUCCESS, WEST, new Point(0, 0), false);
 
     }
 
@@ -41,6 +41,7 @@ public class TurnLeftMovementStrategyTest {
         return CarDto.builder()
                 .direction(direction)
                 .position(point)
+                .name("car1")
                 .build();
     }
 

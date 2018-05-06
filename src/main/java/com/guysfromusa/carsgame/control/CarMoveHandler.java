@@ -66,6 +66,7 @@ public class CarMoveHandler {
             //TODO do it in better way, immutable car
             CarDto car = moveData.getCar();
             car.setPosition(moveResult.getNewPosition());
+            car.setDirection(moveResult.getNewDirection());
             //mark car move in db
 
             markCrashedWhenCollision(moveResult.isWall(), car, future, CAR_CRASHED_INTO_WALL);
