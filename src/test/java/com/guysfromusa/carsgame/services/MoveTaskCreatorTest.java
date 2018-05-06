@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static com.guysfromusa.carsgame.control.MessageType.MOVE;
@@ -44,15 +45,16 @@ public class MoveTaskCreatorTest {
         //given
         UndoState undoState = mock(UndoState.class);
         when(undoState.getGameName()).thenReturn(gameName);
+        when(undoState.getCarName()).thenReturn(carName);
         MoveCommand undoMove = new MoveCommand(gameName, carName, MOVE, newMovementDto(LEFT), true);
         when(undoState.createNextMove()).thenReturn(undoMove);
-        when(commandProducer.scheduleCommand(undoState.getGameName(), undoMove))
-                .thenReturn(CarDto.builder().crashed(true).build());
+        when(commandProducer.scheduleCommand(undoMove))
+                .thenReturn(Arrays.asList(CarDto.builder().crashed(true).build()));
         //when
         moveTaskCreator.performMoveAndScheduleNext(undoState);
 
         //then
-        verify(commandProducer, times(1)).scheduleCommand(undoState.getGameName(), undoMove);
+        verify(commandProducer, times(1)).scheduleCommand(undoMove);
     }
 
     @Test

@@ -36,7 +36,7 @@ public class MoveTaskCreator {
         long start = System.nanoTime();
         MoveCommand undoMove = undoState.createNextMove();
         boolean isCrashed = commandProducer.scheduleCommand(undoMove).stream()
-                .filter(c -> undoState.carName.equals(c.getName()))
+                .filter(c -> undoState.getCarName().equals(c.getName()))
                 .map(CarDto::isCrashed)
                 .findFirst()
                 .orElse(true);
