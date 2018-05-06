@@ -67,6 +67,10 @@ public class MovementsHistoryService {
                 .positionY(moveResult.getNewPosition().getY())
                 .build();
 
+        carEntity.setDirection(moveResult.getNewDirection());
+        carEntity.setPositionX(moveResult.getNewPosition().getX());
+        carEntity.setPositionY(moveResult.getNewPosition().getY());
+
         repository.save(movementsHistoryEntity);
     }
 }

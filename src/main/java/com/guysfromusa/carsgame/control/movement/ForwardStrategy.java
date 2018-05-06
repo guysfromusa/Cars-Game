@@ -34,10 +34,11 @@ public class ForwardStrategy implements MovementStrategy{
         MoveResult.MoveResultBuilder builder = MoveResult.builder()
                 .wall(!carOnRoad)
                 .carName(car.getName())
+                .newPosition(new Point(xForwardPos, yForwardPos))
                 .newDirection(car.getDirection());
 
         return carOnRoad
-                ? builder.newPosition(new Point(xForwardPos, yForwardPos)).moveStatus(SUCCESS).build()
-                : builder.newPosition(car.getPosition()).moveStatus(CRASHED_INTO_WALL).build();
+                ? builder.moveStatus(SUCCESS).build()
+                : builder.moveStatus(CRASHED_INTO_WALL).build();
     }
 }
