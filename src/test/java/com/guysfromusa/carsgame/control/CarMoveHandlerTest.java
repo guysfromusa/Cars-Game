@@ -41,19 +41,29 @@ public class CarMoveHandlerTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    @Test
+    public void whenCarNotInGame_shouldReturnCarNotInGameMessage() throws ExecutionException, InterruptedException {
+        MoveData moveData = createMoveData(false, false, 0, 0);
+        CompletableFuture<List<CarDto>> future = moveData.getFuture();
+        //when
+        carMoveHandler.handleMoveCommand(moveData);
+
+        //then
+        exception.expectMessage("Car not in game");
+        future.get();
+    }
 
     @Test
     public void whenCarAlreadyCrashed_shouldReturnAlreadyCrashedMessage() throws ExecutionException, InterruptedException {
         //given
-        boolean isCrashed = true;
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
 
-        MoveData moveData = createMoveData(isCrashed, xCarPosition, yCarPosition);
+        MoveData moveData = createMoveData(true, true, xCarPosition, yCarPosition);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
 
         //when
-        carMoveHandler.handleMoveComand(moveData);
+        carMoveHandler.handleMoveCommand(moveData);
 
         //then
         exception.expectMessage("Move cannot be made as car is already crashed.");
@@ -112,19 +122,23 @@ public class CarMoveHandlerTest {
                 .build();
     }
 
-    private MoveData createMoveData(boolean isCrashed, Integer xCarPosition, Integer yCarPosition) {
+    private MoveData createMoveData(boolean carInGame, boolean isCrashed, Integer xCarPosition, Integer yCarPosition, String carName) {
         MoveData moveData = mock(MoveData.class);
         CompletableFuture<List<CarDto>> future = new CompletableFuture<>();
 
         when(moveData.getFuture()).thenReturn(future);
 
-        CarDto carDto = CarDto.builder()
-                .crashed(isCrashed)
-                .name("car1")
-                .position(new Point(xCarPosition, yCarPosition))
-                .build();
-        when(moveData.getCars()).thenReturn(Arrays.asList(carDto));
-        when(moveData.getCar()).thenReturn(carDto);
+        if(carInGame){
+            CarDto carDto = CarDto.builder()
+                    .crashed(isCrashed)
+                    .position(new Point(xCarPosition, yCarPosition))
+                    .name(carName)
+                    .build();
+            when(moveData.getCar()).thenReturn(carDto);
+        }else{
+            when(moveData.getCar()).thenReturn(null);
+        }
+
 
         return moveData;
 

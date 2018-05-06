@@ -6,9 +6,12 @@ import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
+import static com.guysfromusa.carsgame.control.MoveStatus.CRASHED_INTO_WALL;
 import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
+import static com.guysfromusa.carsgame.model.Direction.EAST;
+import static com.guysfromusa.carsgame.model.Direction.NORTH;
+import static com.guysfromusa.carsgame.model.Direction.SOUTH;
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
 
 
 /**
@@ -32,9 +35,9 @@ public class ForwardStrategyTest {
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertThat(moveResult.getMoveStatus()).isEqualTo(SUCCESS);
-        assertThat(moveResult.getNewPosition())
-                .extracting(Point::getX, Point::getY).containsExactly(0, 2);
+        assertThat(moveResult)
+                .extracting(MoveResult::getCarName, MoveResult::getMoveStatus, MoveResult::getNewDirection, MoveResult::getNewPosition, MoveResult::isWall)
+                .containsExactly("car1", SUCCESS, SOUTH, new Point(0, 2), false);
     }
 
     @Test
@@ -51,9 +54,9 @@ public class ForwardStrategyTest {
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertThat(moveResult.getMoveStatus()).isEqualTo(SUCCESS);
-        assertThat(moveResult.getNewPosition())
-                .extracting(Point::getX, Point::getY).containsExactly(2, 0);
+        assertThat(moveResult)
+                .extracting(MoveResult::getCarName, MoveResult::getMoveStatus, MoveResult::getNewDirection, MoveResult::getNewPosition, MoveResult::isWall)
+                .containsExactly("car1", SUCCESS, EAST, new Point(2, 0), false);
     }
 
     @Test
@@ -70,12 +73,15 @@ public class ForwardStrategyTest {
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertFalse(moveResult.isWall());
+        assertThat(moveResult)
+                .extracting(MoveResult::getCarName, MoveResult::getMoveStatus, MoveResult::getNewDirection, MoveResult::getNewPosition, MoveResult::isWall)
+                .containsExactly("car1", CRASHED_INTO_WALL, NORTH, new Point(0, 0), true);
     }
 
     private CarDto createCar(Point point, Direction direction){
         return CarDto.builder()
                 .direction(direction)
+                .name("car1")
                 .position(point)
                 .build();
     }

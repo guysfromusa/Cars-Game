@@ -9,11 +9,16 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
+import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
 
@@ -70,16 +75,20 @@ public class GameState {
     }
 
     public Collection<Movement> getMovementHistory(String carName) {
-        return Optional.ofNullable(carsStatesMemory.get(carName))
-                .map(CarState::getMovements).orElse(null);
+        return ofNullable(carsStatesMemory.get(carName))
+                .map(CarState::getMovements)
+                .orElse(null);
     }
 
     public CarState getCarState(String carName){
-        return Optional.ofNullable(carsStatesMemory.get(carName)).orElse(null);
+        return ofNullable(carsStatesMemory.get(carName))
+                .orElse(null);
     }
 
     public CarDto getCar(String carName){
-        return carsStatesMemory.get(carName).getCar();
+        return ofNullable(carsStatesMemory.get(carName))
+                .map(CarState::getCar)
+                .orElse(null);
     }
 
 }

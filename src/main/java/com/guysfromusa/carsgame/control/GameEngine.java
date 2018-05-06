@@ -50,7 +50,7 @@ public class GameEngine {
                 .map(moveCmd -> Tuple.of(moveCmd.getFuture(), new MoveData(gameState, moveCmd)))
                 .forEach(moveData -> {
                     //TODO catch errors and completeExceptionally
-                    carMoveHandler.handleMoveComand(moveData._2);
+                    carMoveHandler.handleMoveCommand(moveData._2);
                     moveData._1.complete(gameState.getAllCars());
                 });
 

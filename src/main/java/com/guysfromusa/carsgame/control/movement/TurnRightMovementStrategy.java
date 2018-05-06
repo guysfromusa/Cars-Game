@@ -22,7 +22,6 @@ public class TurnRightMovementStrategy implements MovementStrategy {
     @Override
     public MoveResult execute(CarDto car, Integer[][] mapContent, Movement movement) {
         Direction direction = car.getDirection().turnRight();
-        car.setDirection(direction);
         return MoveResult
                 .builder()
                 .carName(car.getName())
