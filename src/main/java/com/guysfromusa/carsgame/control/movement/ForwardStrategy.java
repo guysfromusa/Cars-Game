@@ -32,7 +32,7 @@ public class ForwardStrategy implements MovementStrategy{
         boolean carOnRoad = GameMapUtils.isPointOnRoad(mapContent, xForwardPos, yForwardPos);
 
         MoveResult.MoveResultBuilder builder = MoveResult.builder()
-                .wall(carOnRoad)
+                .wall(!carOnRoad)
                 .carName(car.getName())
                 .newDirection(car.getDirection());
 

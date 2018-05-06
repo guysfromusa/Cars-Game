@@ -24,7 +24,7 @@ public class MoveData {
     }
 
     public List<CarDto> getCars(){
-        return gameState.getCarsInGame();
+        return gameState.getAllCars();
     }
 
     public CompletableFuture<List<CarDto>> getFuture(){

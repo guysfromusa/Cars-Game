@@ -1,18 +1,19 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by Dominik Zurek 01.05.2018
  */
-
+@NoArgsConstructor
 public class Movement {
 
     @Getter
-    private final Operation operation;
+    private Operation operation;
 
     @Getter
-    private final Integer forwardSteps;
+    private Integer forwardSteps;
 
     private Movement(Operation operation, Integer forwardSteps) {
         this.operation = operation;
