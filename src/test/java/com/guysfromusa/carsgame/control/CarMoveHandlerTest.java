@@ -10,10 +10,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +57,25 @@ public class CarMoveHandlerTest {
         future.get();
     }
 
+    @Test
+    public void whenCarCollision_shouldReturnCollisionMessage() throws ExecutionException, InterruptedException {
+        //given
+        boolean isCrashed = true;
+        Integer xCarPosition = 0;
+        Integer yCarPosition = 0;
+        HashSet carsCollided = new HashSet(Arrays.asList("car1"));
+
+        MoveData moveData = createMoveData(isCrashed, xCarPosition, yCarPosition);
+        CompletableFuture<List<CarDto>> future = moveData.getFuture();
+        when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
+        //when
+        carMoveHandler.handleMoveComand(moveData);
+
+        //then
+        exception.expectMessage("Move cannot be made as car is already crashed.");
+        future.get();
+    }
+
     private MoveData createMoveData(boolean isCrashed, Integer xCarPosition, Integer yCarPosition) {
         MoveData moveData = mock(MoveData.class);
         CompletableFuture<List<CarDto>> future = new CompletableFuture<>();
@@ -62,6 +84,7 @@ public class CarMoveHandlerTest {
 
         CarDto carDto = CarDto.builder()
                 .crashed(isCrashed)
+                .name("car1")
                 .position(new Point(xCarPosition, yCarPosition))
                 .build();
 
