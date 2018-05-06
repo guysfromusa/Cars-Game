@@ -1,10 +1,10 @@
 package com.guysfromusa.carsgame.v1;
 
-import com.guysfromusa.carsgame.game_state.dtos.CarDto;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import com.guysfromusa.carsgame.services.UndoMovementService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
-import com.guysfromusa.carsgame.v1.converters.CarDtoConverter;
-import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.converters.MovementDtoConverter;
+import com.guysfromusa.carsgame.v1.model.UndoNStepPath;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +28,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 public class UndoMovementResource {
 
     private final UndoMovementService undoMovementService;
-
-    private final CarDtoConverter carDtoConverter;
+    private final MovementDtoConverter movementDtoConverter;
 
     @Autowired
-    public UndoMovementResource(UndoMovementService undoMovementService, CarDtoConverter carDtoConverter) {
+    public UndoMovementResource(UndoMovementService undoMovementService, MovementDtoConverter movementDtoConverter) {
         this.undoMovementService = notNull(undoMovementService);
-        this.carDtoConverter = notNull(carDtoConverter);
+        this.movementDtoConverter = notNull(movementDtoConverter);
     }
 
     @ApiOperation(value = "Find history", response = List.class)
-    @GetMapping("/{gameId}/{carName}/{numberOfStepBack}")
-    public List<Car> findMovementHistory(@PathVariable("gameId") String gameId,
-                                         @PathVariable("carName") String carName,
-                                         @PathVariable("numberOfStepBack") int numberOfStepBack) throws ExecutionException, InterruptedException {
+    @GetMapping("/{gameId}/{carName}/{numberOfStepsBack}")
+    public List<UndoNStepPath> findMovementHistory(@PathVariable("gameId") String gameId,
+                                                   @PathVariable("carName") String carName,
+                                                   @PathVariable("numberOfStepsBack") int numberOfStepsBack) throws ExecutionException, InterruptedException {
 
-        List<CarDto> carDtos = undoMovementService.doNMoveBack(gameId, carName, numberOfStepBack);
-
-        return StreamUtils.convert(carDtos, carDtoConverter::convert);
+        List<MovementDto> movementDtos = undoMovementService.doNMoveBack(gameId, carName, numberOfStepsBack);
+        return StreamUtils.convert(movementDtos, movementDtoConverter::convert);
     }
 
 }

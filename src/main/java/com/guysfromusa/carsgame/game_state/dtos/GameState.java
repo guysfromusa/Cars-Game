@@ -8,10 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,9 +49,9 @@ public class GameState {
         return added ? command.getFuture() : completedFuture(errorCallback.get());
     }
 
-    public void addMovementHistory(String carName, Movement.Operation operation) {
-        Collection<Movement> carsMovement = carsStatesMemory.get(carName).getMovements();
-        carsMovement.add(Movement.newMovement(operation, 1)); //TODO take steps from command
+    public void addMovementHistory(String carName, Movement.MovementDto.Operation operation) {
+        Collection<MovementDto> carsMovementDto = carsStatesMemory.get(carName).getMovementDtos();
+        carsMovementDto.add(MovementDto.newMovementDto(operation));
     }
 
     public void addNewCar(CarEntity carEntity) {
@@ -74,6 +74,9 @@ public class GameState {
                 .collect(toList());
     }
 
+    public Collection<MovementDto> getMovementHistory(String carName) {
+        return Optional.ofNullable(carsStatesMemory.get(carName))
+                .map(CarState::getMovementDtos).orElse(emptyList());
     public Collection<Movement> getMovementHistory(String carName) {
         return ofNullable(carsStatesMemory.get(carName))
                 .map(CarState::getMovements)
@@ -91,4 +94,7 @@ public class GameState {
                 .orElse(null);
     }
 
+    public void setUndoProcessFlag(String carName, boolean value){
+        carsStatesMemory.get(carName).setUndoInProcess(value);
+    }
 }

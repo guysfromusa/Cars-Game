@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.Collections.emptyList;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
@@ -24,7 +23,6 @@ public class CommandProducer {
     private final ActiveGamesContainer activeGamesContainer;
 
     private final ApplicationEventPublisher applicationEventPublisher;
-    public ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor();
 
     @Inject
     public CommandProducer(ActiveGamesContainer activeGamesContainer,

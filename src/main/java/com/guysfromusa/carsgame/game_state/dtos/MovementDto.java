@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
  * Created by Dominik Zurek 01.05.2018
  */
 @NoArgsConstructor
-public class Movement {
+public class MovementDto {
 
     @Getter
     private Operation operation;
 
+    private MovementDto(Operation operation) {
     @Getter
     private Integer forwardSteps;
 
@@ -20,6 +21,8 @@ public class Movement {
         this.forwardSteps = forwardSteps;
     }
 
+    public static MovementDto newMovementDto(Operation operation){
+        return new MovementDto(operation);
     public static Movement newMovement(Operation operation){
         return new Movement(operation, 1);
     }
