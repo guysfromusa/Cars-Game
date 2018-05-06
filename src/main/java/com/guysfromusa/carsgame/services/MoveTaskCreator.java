@@ -6,10 +6,10 @@ import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
@@ -26,21 +26,26 @@ public class MoveTaskCreator {
         this.scheduler = notNull(scheduler);
     }
 
-    public void schedule(UndoState undoState) {
-        Timestamp before = new Timestamp(System.currentTimeMillis());
+    public void schedule(long delayInMillis, UndoState undoState) {
         Runnable task = () -> performMoveAndScheduleNext(undoState);
-        Timestamp after = new Timestamp(System.currentTimeMillis());
-        scheduler.schedule(task, 1 - (after.toLocalDateTime().getSecond() - before.toLocalDateTime().getSecond()), TimeUnit.SECONDS);
+        scheduler.schedule(task, delayInMillis, MILLISECONDS);
     }
 
     void performMoveAndScheduleNext(UndoState undoState) {
+        long start = System.nanoTime();
         MoveCommand undoMove = undoState.createNextMove();
-        System.out.println("Helloo");
         CarDto carDto = commandProducer.scheduleCommand(undoState.getGameName(), undoMove);
         if (carDto == null || carDto.isCrashed() || undoState.isLast()) {
             undoMovementPreparerService.setUndoProcessFlag(undoState.getGameName(), undoState.getCarName(), false);
         } else {
-            schedule(undoState);
+            long delayInMillis = getDelayInMillis(start, System.nanoTime());
+            schedule(delayInMillis, undoState);
         }
+    }
+
+    long getDelayInMillis(long start, long end) {
+        long elapsed = NANOSECONDS.toMillis(end - start);
+        long delay = 1000L - elapsed;
+        return Math.max(0, delay); // scheduler accept negative delay but let be strict here
     }
 }

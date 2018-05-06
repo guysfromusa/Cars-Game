@@ -29,7 +29,7 @@ public class UndoMovementService {
         //todo : add command which set flag as true and return List<movmentDto>
         List<MovementDto> movementDtos = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
         undoMovementPreparerService.setUndoProcessFlag(gameId, carName, true);
-        moveTaskCreator.schedule(new UndoState(gameId, carName, movementDtos));
+        moveTaskCreator.schedule(1000L, new UndoState(gameId, carName, movementDtos));
 
         return movementDtos;
     }
