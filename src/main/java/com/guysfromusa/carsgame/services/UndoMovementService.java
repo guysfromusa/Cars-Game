@@ -19,7 +19,7 @@ public class UndoMovementService {
     private final MoveTaskCreator moveTaskCreator;
 
     @Autowired
-    public UndoMovementService( UndoMovementPreparerService undoMovementPreparerService,MoveTaskCreator moveTaskCreator) {
+    public UndoMovementService(UndoMovementPreparerService undoMovementPreparerService, MoveTaskCreator moveTaskCreator) {
         this.undoMovementPreparerService = notNull(undoMovementPreparerService);
         this.moveTaskCreator = notNull(moveTaskCreator);
     }
@@ -44,7 +44,7 @@ class UndoState {
     List<MovementDto> movementDtos;
     int currentMove = 0;
 
-    UndoState(String gameName, String carName,  List<MovementDto> movementDtos) {
+    UndoState(String gameName, String carName, List<MovementDto> movementDtos) {
         this.gameName = gameName;
         this.carName = carName;
         this.movementDtos = movementDtos;
@@ -55,7 +55,7 @@ class UndoState {
         return new MoveCommand(gameName, carName, MessageType.MOVE, movementDtos.get(currentMove++), true);
     }
 
-    synchronized boolean isLast(){
+    synchronized boolean isLast() {
         return currentMove == movementDtos.size();
     }
 }

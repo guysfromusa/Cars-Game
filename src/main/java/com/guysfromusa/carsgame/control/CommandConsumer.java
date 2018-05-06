@@ -46,7 +46,7 @@ public class CommandConsumer {
 
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 
-            gameToPlayRoundOptional.ifPresent(gameState -> triggerRound(gameState));
+            gameToPlayRoundOptional.ifPresent(this::triggerRound);
         }
     }
 

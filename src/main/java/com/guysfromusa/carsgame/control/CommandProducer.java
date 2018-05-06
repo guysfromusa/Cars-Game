@@ -8,9 +8,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
@@ -28,22 +31,24 @@ public class CommandProducer {
     }
 
     //todo either? / optional / String?
-    public CarDto scheduleCommand(String gameName, Command move) {
+    //FIXME CarDto::new
+    public List<CarDto> scheduleCommand(MoveCommand move) {
 
-         return Optional.ofNullable(activeGamesContainer.getGameState(gameName)) //could be the game is already finished
+         return Optional.ofNullable(activeGamesContainer.getGameState(move.getGameName())) //could be the game is already finished
                 .map(state -> {
-                    CompletableFuture<CarDto> result = state.addCommandToExecute(move, CarDto::new);
+                    CompletableFuture<List<CarDto>> result = state.addCommandToExecute(move, Collections::emptyList);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })
                 .map(Futures::getUnchecked)
-                .orElse(null);
+                .orElse(emptyList());
     }
 
-    public CarEntity scheduleCommand(AddCarToGameCommand cmd) {
-        return Optional.ofNullable(activeGamesContainer.getGameState(cmd.getGameName()))
+    //FIXME CarEntity::new to completeExceptionally
+    public CarEntity scheduleCommand(AddCarToGameCommand addCmd) {
+        return Optional.ofNullable(activeGamesContainer.getGameState(addCmd.getGameName()))
                 .map(gameState -> {
-                    CompletableFuture<CarEntity> result = gameState.addCommandToExecute(cmd, CarEntity::new);
+                    CompletableFuture<CarEntity> result = gameState.addCommandToExecute(addCmd, CarEntity::new);
                     applicationEventPublisher.publishEvent(new CommandEvent(this));
                     return result;
                 })

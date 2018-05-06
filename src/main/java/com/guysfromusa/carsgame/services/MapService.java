@@ -46,24 +46,7 @@ public class MapService {
         return mapRepository.save(new MapEntity(name, content));
     }
 
-    public boolean isPositionValidOnGameMap(String content, Point point){
-        Integer[][] mapContent = GameMapUtils.getMapMatrixFromContent(content);
 
-        return isInMapReach(mapContent, point) && isOnRoad(mapContent, point);
-    }
-
-    private boolean isOnRoad(Integer[][] mapContent, Point point) {
-        Integer x = point.getX();
-        Integer y = point.getY();
-        return mapContent[y][x]== 1;
-    }
-
-    private boolean isInMapReach(Integer[][] mapContent, Point point) {
-        return point.getY() >= 0
-                && point.getX() >=0
-                && mapContent.length > point.getY()
-                && mapContent[mapContent.length-1].length > point.getX();
-    }
 
 
 }
