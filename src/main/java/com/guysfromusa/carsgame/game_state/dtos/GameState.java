@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +58,7 @@ public class GameState {
                 .name(carEntity.getName())
                 .game(carEntity.getGame().getName())
                 .direction(carEntity.getDirection())
+                .type(carEntity.getCarType())
                 .position(new Point(carEntity.getPositionX(), carEntity.getPositionY())).build();
 
         CarState carState = new CarState();
