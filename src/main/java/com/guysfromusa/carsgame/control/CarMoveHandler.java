@@ -73,7 +73,6 @@ public class CarMoveHandler {
                         //do nothing in case car is able to perform move
                     }))
             );
-            //TODO handle car is in undo
         };
     }
 
@@ -85,14 +84,7 @@ public class CarMoveHandler {
             }
             GameState gameState = moveData.getGameState();
             MoveResult moveResult = carController.moveCar(moveData.getMoveCommand(), gameState);
-
-            //TODO do it in better way, immutable car
-            CarDto car = moveData.getCar();
-            car.setPosition(moveResult.getNewPosition());
-            car.setDirection(moveResult.getNewDirection());
-            //mark car move in db
-
-            markCrashedWhenCollision(moveResult.isWall(), car, future, CAR_CRASHED_INTO_WALL);
+            markCrashedWhenCollision(moveResult.isWall(), moveData.getCar(), future, CAR_CRASHED_INTO_WALL);
         };
     }
 
@@ -135,7 +127,6 @@ public class CarMoveHandler {
         position.setY(null);
         position.setX(null);
         car.setGame(null);
-        //TODO mark car removed from map
     }
 
     private static boolean isCarCrashedWithOther(Set<String> crashedCars, CarDto handledCar){
