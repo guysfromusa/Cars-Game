@@ -71,6 +71,7 @@ public class GamesResourceTest extends TestGameAware {
     }
 
     @Test
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_car.sql"})
     public void whenTurnRightMoveForward_shouldCarBeHeadingEast(){
         //given
         String carName = "car4";
