@@ -33,6 +33,8 @@ public class CarMoveHandler {
 
     private static final String CAR_NOT_IN_GAME = "Car not in game";
 
+    private static final String CAR_IN_UNDO_PROCESS = "Car is in undo process";
+
     private final CollisionMonitor collisionMonitor;
 
     private final CarController carController;
@@ -62,6 +64,10 @@ public class CarMoveHandler {
                     Case($(CarDto::isCrashed), () -> run(() ->
                             moveData.getFuture()
                                     .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE))
+                    )),
+                    Case($(CarDto::isUndoInProcess), () -> run(() ->
+                            moveData.getFuture()
+                                    .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS))
                     )),
                     Case($(), () -> run(() -> {
                         //do nothing in case car is able to perform move

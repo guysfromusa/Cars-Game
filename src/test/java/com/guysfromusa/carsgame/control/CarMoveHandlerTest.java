@@ -44,7 +44,7 @@ public class CarMoveHandlerTest {
     @Test
     public void whenCarNotInGame_shouldReturnCarNotInGameMessage() throws ExecutionException, InterruptedException {
         String carName = "car1";
-        MoveData moveData = createMoveData(false, false, 0, 0, carName);
+        MoveData moveData = createMoveData(false, false, false, 0, 0, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         //when
         carMoveHandler.handleMoveCommand(moveData);
@@ -55,12 +55,25 @@ public class CarMoveHandlerTest {
     }
 
     @Test
+    public void whenCarInUndoProcess_shouldReturnCarInUndoMessage() throws ExecutionException, InterruptedException {
+        String carName = "car1";
+        MoveData moveData = createMoveData(true, false, true, 0, 0, carName);
+        CompletableFuture<List<CarDto>> future = moveData.getFuture();
+        //when
+        carMoveHandler.handleMoveCommand(moveData);
+
+        //then
+        exception.expectMessage("Car is in undo process");
+        future.get();
+    }
+
+    @Test
     public void whenCarAlreadyCrashed_shouldReturnAlreadyCrashedMessage() throws ExecutionException, InterruptedException {
         //given
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         String carName = "car1";
-        MoveData moveData = createMoveData(true, true, xCarPosition, yCarPosition, carName);
+        MoveData moveData = createMoveData(true, true, false, xCarPosition, yCarPosition, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
 
         //when
@@ -79,8 +92,7 @@ public class CarMoveHandlerTest {
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet(Arrays.asList("car1"));
-        boolean carInGame = true;
-        MoveData moveData = createMoveData(carInGame, isCrashed, xCarPosition, yCarPosition, carName);
+        MoveData moveData = createMoveData(true, isCrashed, false, xCarPosition, yCarPosition, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
 
@@ -98,13 +110,12 @@ public class CarMoveHandlerTest {
     public void whenCarMoveOk_shouldReturnCarList() throws ExecutionException, InterruptedException {
         //given
         boolean isCrashed = false;
-        boolean carInGame = true;
         String carName = "car1";
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet();
 
-        MoveData moveData = createMoveData(carInGame, isCrashed, xCarPosition, yCarPosition, carName);
+        MoveData moveData = createMoveData(true, isCrashed, false, xCarPosition, yCarPosition, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         MoveResult moveResult = createMoveResult();
 
@@ -126,7 +137,12 @@ public class CarMoveHandlerTest {
                 .build();
     }
 
-    private MoveData createMoveData(boolean carInGame, boolean isCrashed, Integer xCarPosition, Integer yCarPosition, String carName) {
+    private MoveData createMoveData(boolean carInGame,
+                                    boolean isCrashed,
+                                    boolean undo,
+                                    Integer xCarPosition,
+                                    Integer yCarPosition,
+                                    String carName) {
         MoveData moveData = mock(MoveData.class);
         CompletableFuture<List<CarDto>> future = new CompletableFuture<>();
 
@@ -137,6 +153,7 @@ public class CarMoveHandlerTest {
                     .crashed(isCrashed)
                     .position(new Point(xCarPosition, yCarPosition))
                     .name(carName)
+                    .undoInProcess(undo)
                     .build();
             when(moveData.getCar()).thenReturn(carDto);
         }else{

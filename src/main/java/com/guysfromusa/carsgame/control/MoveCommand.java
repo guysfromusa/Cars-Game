@@ -1,7 +1,7 @@
 package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,12 +15,16 @@ import java.util.List;
 public class MoveCommand extends Command<List<CarDto>> {
 
     @Getter
-    private Movement movement;
+    private final MovementDto movementDto;
+
+    @Getter
+    private final boolean isUndo;
 
     @Builder
     //TODO messageType can by hardcoded or via getMessageType
-    public MoveCommand(String gameName, String carName, MessageType messageType, Movement movement) {
+    public MoveCommand(String gameName, String carName, MessageType messageType, MovementDto movementDto, boolean isUndo) {
         super(gameName, carName, messageType);
-        this.movement = movement;
+        this.movementDto = movementDto;
+        this.isUndo = isUndo;
     }
 }

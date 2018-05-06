@@ -7,12 +7,13 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import com.guysfromusa.carsgame.services.GameService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
 import com.guysfromusa.carsgame.v1.model.GameStatusDto;
+import com.guysfromusa.carsgame.v1.model.Movement;
 import com.guysfromusa.carsgame.v1.model.MovementResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,7 +74,7 @@ public class GamesResource {
                 .carName(carName)
                 .gameName(game)
                 .messageType(MOVE)
-                .movement(newMovement)
+                .movementDto(conversionService.convert(newMovement, MovementDto.class))
                 .build();
 
         List<CarDto> carDtoList = commandProducer.scheduleCommand(moveCommand);
