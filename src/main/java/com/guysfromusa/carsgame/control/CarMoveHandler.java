@@ -6,6 +6,7 @@ import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.v1.model.Point;
 import io.vavr.Predicates;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  * Created by Konrad Rys, 05.05.2018
  */
 @Component
+@Slf4j
 public class CarMoveHandler {
 
     private static final String CAR_CRASHED_MESSAGE= "Move cannot be made as car is already crashed.";
@@ -63,21 +65,29 @@ public class CarMoveHandler {
         return moveData -> {
             CarDto car = moveData.getCar();
             Match(car).of(
-                    Case($(Predicates.isNull()), () -> run(() ->
-                            moveData.getFuture()
-                                    .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME))
+                    Case($(Predicates.isNull()), () -> run(() -> {
+                                log.debug("Car: {} is null", moveData.getMoveCommand().getCarName());
+                                moveData.getFuture()
+                                        .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME));
+                            }
                     )),
-                    Case($(CarDto::isCrashed), () -> run(() ->
-                            moveData.getFuture()
-                                    .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE))
+                    Case($(CarDto::isCrashed), () -> run(() -> {
+                                log.debug("Car: {} is crashed", car.getName());
+                                moveData.getFuture()
+                                        .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE));
+                            }
                     )),
-                    Case($(CarDto::isUndoInProcess), () -> run(() ->
-                            moveData.getFuture()
-                                    .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS))
+                    Case($(CarDto::isUndoInProcess), () -> run(() -> {
+                                log.debug("Car: {} is in undo state", car.getName());
+                                moveData.getFuture()
+                                        .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS));
+                            }
                     )),
-                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() ->
-                            moveData.getFuture()
-                                    .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS))
+                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() -> {
+                                log.debug("Car: {} has invalid number of forward steps: {}", car.getName(), moveData.getForwardSteps());
+                                moveData.getFuture()
+                                        .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS));
+                            }
                     )),
                     Case($(), () -> run(() -> {
                         //do nothing in case car is able to perform move
@@ -93,7 +103,10 @@ public class CarMoveHandler {
                 return ;
             }
             GameState gameState = moveData.getGameState();
+            log.debug("Move handled: {}", moveData.getMoveCommand());
+            log.debug("Car: {}", moveData.getCar());
             MoveResult moveResult = carController.moveCar(moveData.getMoveCommand(), gameState);
+            log.debug("Move performed: {}", moveResult);
             markCrashedWhenCollision(moveResult.isWall(), moveData, future, CAR_CRASHED_INTO_WALL);
         };
     }
@@ -107,7 +120,9 @@ public class CarMoveHandler {
             List<CarDto> carsInGame = moveData.getCars();
 
             Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(carsInGame);
+            log.debug("Crashed cars: {}", crashedCarNames);
             boolean carCrashedWithOther = isCarCrashedWithOther(crashedCarNames, moveData.getCar());
+            log.debug("Car: {} crashed with cars: {}", moveData.getCar().getName(), crashedCarNames);
             markCrashedWhenCollision(carCrashedWithOther, moveData, future, CAR_CRASHED_WITH_OTHER);
         };
     }
@@ -118,6 +133,7 @@ public class CarMoveHandler {
             if(future.isDone()){
                 return;
             }
+            log.debug("Move completed");
             future.complete(moveData.getCars());
         };
     }

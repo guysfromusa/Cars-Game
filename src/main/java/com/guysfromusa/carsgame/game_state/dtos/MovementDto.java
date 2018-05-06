@@ -2,11 +2,13 @@ package com.guysfromusa.carsgame.game_state.dtos;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Created by Dominik Zurek 01.05.2018
  */
 @NoArgsConstructor
+@ToString
 public class MovementDto {
 
     @Getter
