@@ -9,19 +9,9 @@ import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.utils.StreamUtils;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Point;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -73,6 +63,16 @@ public class CarResource {
     public Car addCar(@PathVariable("name") String name, @RequestBody CarType carType){
         CarEntity addedCar = carService.addCar(carType, name);
         return conversionService.convert(addedCar, Car.class);
+    }
+
+    @PostMapping(path = "{name}/repair")
+    @ApiOperation(value = "Repair car", response = Car.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Car successfully repaired")
+    })
+    public Car repairCar(@PathVariable("name") String carName){
+        CarEntity carEntity = carService.repairCar(carName);
+        return  conversionService.convert(carEntity, Car.class);
     }
 
     @PostMapping(path = "{name}/game/{game}")
