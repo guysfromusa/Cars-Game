@@ -42,6 +42,7 @@ public class CarDto {
 
     @Getter
     @Setter
+    @Builder.Default
     private volatile boolean undoInProcess = false;
 
 }
