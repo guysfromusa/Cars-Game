@@ -33,7 +33,7 @@ import static org.springframework.http.HttpMethod.POST;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
-public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
+public class CarResourceTest extends TestGameAware {
 
     private RestExceptionHandler restExceptionHandler = new RestExceptionHandler();
 
@@ -139,6 +139,28 @@ public class CarResourceTest implements CarApiAware, GameApiAware, MapApiAware {
 
     }
 
+    @Test
+    public void whenCarCrashed_shouldRepairIt(){
+        //given
+        String carName = "car8";
+        String gameName = "game10";
+        String mapName = "map2";
 
+        //when
+        IllegalArgumentException illegalArgumentException = crashCarIntoWall(template, gameName, carName, mapName);
+        Car repairCar = repairCar(template, carName);
+
+        //then
+        ResponseEntity<ApiError> apiErrorResponseEntity = restExceptionHandler.handleBadRequest(illegalArgumentException);
+
+        assertThat(apiErrorResponseEntity.getBody())
+                .extracting(ApiError::getMessage)
+                .containsExactly("Car was crashed into wall");
+
+        assertThat(repairCar)
+                .extracting(Car::getName, Car::isCrashed)
+                .containsExactly(carName, false);
+
+    }
 
 }

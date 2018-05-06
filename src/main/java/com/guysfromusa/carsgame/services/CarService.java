@@ -107,4 +107,11 @@ public class CarService {
         carEntity.setPositionX(null);
         carEntity.setPositionY(null);
     }
+
+    public CarEntity repairCar(String name) {
+        CarEntity car = carRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Car with name " + name + " does not exist"));
+        car.setCrashed(false);
+
+        return car;
+    }
 }
