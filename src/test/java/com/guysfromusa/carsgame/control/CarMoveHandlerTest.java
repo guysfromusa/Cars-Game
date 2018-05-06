@@ -2,6 +2,8 @@ package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.control.movement.MoveResult;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
+import com.guysfromusa.carsgame.game_state.dtos.GameState;
+import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +23,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,6 +37,9 @@ public class CarMoveHandlerTest {
 
     @Mock
     private CarController carController;
+
+    @Mock
+    private CarService carService;
 
     @InjectMocks
     private CarMoveHandler carMoveHandler;
@@ -93,6 +99,9 @@ public class CarMoveHandlerTest {
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet(Arrays.asList("car1"));
         MoveData moveData = createMoveData(true, isCrashed, false, xCarPosition, yCarPosition, carName);
+        GameState gameMock = mock(GameState.class);
+        when(gameMock.getGameName()).thenReturn("game1");
+        when(moveData.getGameState()).thenReturn(gameMock);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
 
@@ -104,6 +113,8 @@ public class CarMoveHandlerTest {
         //then
         exception.expectMessage("Car was crashed with other");
         future.get();
+        verify(gameMock).removeCar(carName);
+        verify(carService).crashAndRemoveFromGame("game1", moveData.getCar());
     }
 
     @Test

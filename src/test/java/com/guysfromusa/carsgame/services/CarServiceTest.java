@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.services;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.repositories.GameRepository;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.MONSTER;
+import static com.guysfromusa.carsgame.entities.enums.CarType.RACER;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -135,4 +137,26 @@ public class CarServiceTest {
         }));
     }
 
+    @Test
+    public void shouldCrashAndRemoveFromGame() {
+        //given
+        CarDto car = CarDto.builder()
+                .name("skoda")
+                .type(RACER)
+                .crashed(true)
+                .build();
+
+        CarEntity carEntity = new CarEntity();
+        when(carRepository.findByGameAndName("game1", "skoda"))
+                .thenReturn(Optional.of(carEntity));
+
+        //when
+        carService.crashAndRemoveFromGame("game1", car);
+
+        //then
+        assertThat(carEntity.isCrashed()).isTrue();
+        assertThat(carEntity.getGame()).isNull();
+        assertThat(carEntity.getPositionX()).isNull();
+        assertThat(carEntity.getPositionY()).isNull();
+    }
 }

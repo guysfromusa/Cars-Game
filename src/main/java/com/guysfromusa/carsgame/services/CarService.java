@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.exceptions.EntityNotFoundException;
+import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.repositories.CarRepository;
@@ -97,4 +98,13 @@ public class CarService {
         return carRepository.save(car);
     }
 
+    public void crashAndRemoveFromGame(String gameName, CarDto car) {
+        CarEntity carEntity = carRepository.findByGameAndName(gameName, car.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Car '" + car.getName() + "' not found"));
+
+        carEntity.setCrashed(true);
+        carEntity.setGame(null);
+        carEntity.setPositionX(null);
+        carEntity.setPositionY(null);
+    }
 }

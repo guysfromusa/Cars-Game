@@ -95,4 +95,8 @@ public class GameState {
     public void setUndoProcessFlag(String carName, boolean value) {
         carsStatesMemory.get(carName).getCar().setUndoInProcess(value);
     }
+
+    public void removeCar(String carName) {
+        carsStatesMemory.remove(carName);
+    }
 }

@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.control;
 import com.guysfromusa.carsgame.control.movement.MoveResult;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
+import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.v1.model.Point;
 import io.vavr.Predicates;
 import org.springframework.stereotype.Component;
@@ -39,10 +40,13 @@ public class CarMoveHandler {
 
     private final CarController carController;
 
+    private final CarService carService;
+
     @Inject
-    public CarMoveHandler(CollisionMonitor collisionMonitor, CarController carController){
+    public CarMoveHandler(CollisionMonitor collisionMonitor, CarController carController, CarService carService){
         this.collisionMonitor = notNull(collisionMonitor);
         this.carController = notNull(carController);
+        this.carService = notNull(carService);
     }
 
     public void handleMoveCommand(MoveData moveData) {
@@ -84,7 +88,7 @@ public class CarMoveHandler {
             }
             GameState gameState = moveData.getGameState();
             MoveResult moveResult = carController.moveCar(moveData.getMoveCommand(), gameState);
-            markCrashedWhenCollision(moveResult.isWall(), moveData.getCar(), future, CAR_CRASHED_INTO_WALL);
+            markCrashedWhenCollision(moveResult.isWall(), moveData, future, CAR_CRASHED_INTO_WALL);
         };
     }
 
@@ -95,11 +99,10 @@ public class CarMoveHandler {
                 return;
             }
             List<CarDto> carsInGame = moveData.getCars();
-            CarDto car = moveData.getCar();
 
             Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(carsInGame);
-            boolean carCrashedWithOther = isCarCrashedWithOther(crashedCarNames, car);
-            markCrashedWhenCollision(carCrashedWithOther, car, future, CAR_CRASHED_WITH_OTHER);
+            boolean carCrashedWithOther = isCarCrashedWithOther(crashedCarNames, moveData.getCar());
+            markCrashedWhenCollision(carCrashedWithOther, moveData, future, CAR_CRASHED_WITH_OTHER);
         };
     }
 
@@ -113,11 +116,14 @@ public class CarMoveHandler {
         };
     }
 
-    private void markCrashedWhenCollision(boolean isCollision, CarDto car, CompletableFuture future, String message){
+    private void markCrashedWhenCollision(boolean isCollision, MoveData moveData, CompletableFuture future, String message){
         if(isCollision){
+            CarDto car = moveData.getCar();
+            GameState gameState = moveData.getGameState();
             car.setCrashed(true);
             removeFromGameMap(car);
-            //TODO mark car crashed in db
+            gameState.removeCar(car.getName());
+            carService.crashAndRemoveFromGame(gameState.getGameName(), car);
             future.completeExceptionally(new IllegalArgumentException(message));
         }
     }
