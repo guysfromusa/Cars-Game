@@ -62,7 +62,10 @@ public class CarMoveHandler {
                     Case($(CarDto::isCrashed), () -> run(() ->
                             moveData.getFuture()
                                     .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE))
-                    ))
+                    )),
+                    Case($(), () -> run(() -> {
+                        //do nothing in case car is able to perform move
+                    }))
             );
             //TODO handle car is in undo
         };
