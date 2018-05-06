@@ -43,7 +43,8 @@ public class CarMoveHandlerTest {
 
     @Test
     public void whenCarNotInGame_shouldReturnCarNotInGameMessage() throws ExecutionException, InterruptedException {
-        MoveData moveData = createMoveData(false, false, 0, 0);
+        String carName = "car1";
+        MoveData moveData = createMoveData(false, false, 0, 0, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         //when
         carMoveHandler.handleMoveCommand(moveData);
@@ -58,8 +59,8 @@ public class CarMoveHandlerTest {
         //given
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
-
-        MoveData moveData = createMoveData(true, true, xCarPosition, yCarPosition);
+        String carName = "car1";
+        MoveData moveData = createMoveData(true, true, xCarPosition, yCarPosition, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
 
         //when
@@ -74,18 +75,19 @@ public class CarMoveHandlerTest {
     public void whenCarCollision_shouldReturnCollisionMessage() throws ExecutionException, InterruptedException {
         //given
         boolean isCrashed = false;
+        String carName= "car1";
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet(Arrays.asList("car1"));
-
-        MoveData moveData = createMoveData(isCrashed, xCarPosition, yCarPosition);
+        boolean carInGame = true;
+        MoveData moveData = createMoveData(carInGame, isCrashed, xCarPosition, yCarPosition, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
 
         MoveResult moveResult = createMoveResult();
         when(carController.moveCar(any(), any())).thenReturn(moveResult);
         //when
-        carMoveHandler.handleMoveComand(moveData);
+        carMoveHandler.handleMoveCommand(moveData);
 
         //then
         exception.expectMessage("Car was crashed with other");
@@ -96,11 +98,13 @@ public class CarMoveHandlerTest {
     public void whenCarMoveOk_shouldReturnCarList() throws ExecutionException, InterruptedException {
         //given
         boolean isCrashed = false;
+        boolean carInGame = true;
+        String carName = "car1";
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet();
 
-        MoveData moveData = createMoveData(isCrashed, xCarPosition, yCarPosition);
+        MoveData moveData = createMoveData(carInGame, isCrashed, xCarPosition, yCarPosition, carName);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         MoveResult moveResult = createMoveResult();
 
@@ -108,7 +112,7 @@ public class CarMoveHandlerTest {
         when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
 
         //when
-        carMoveHandler.handleMoveComand(moveData);
+        carMoveHandler.handleMoveCommand(moveData);
 
         //then
         List<CarDto> carDtos = future.get();
