@@ -7,6 +7,7 @@ import com.guysfromusa.carsgame.game_state.CarState;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
+import com.guysfromusa.carsgame.services.MovementsHistoryService;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -21,10 +22,13 @@ public class CarController {
 
     private final Map<MovementDto.Operation, MovementStrategy> movementStrategyMap = Maps.newEnumMap(MovementDto.Operation.class);
 
+    private final MovementsHistoryService movementsHistoryService;
+
     @Inject
-    public CarController(List<MovementStrategy> movementStrategies) {
+    public CarController(List<MovementStrategy> movementStrategies, MovementsHistoryService movementsHistoryService) {
         movementStrategies.forEach(movementStrategy ->
                 movementStrategyMap.put(movementStrategy.getType(), movementStrategy));
+        this.movementsHistoryService = movementsHistoryService;
     }
 
     public MoveResult moveCar(MoveCommand moveCmd, GameState gameState){
@@ -38,11 +42,10 @@ public class CarController {
 
         MovementDto movement = moveCmd.getMovementDto();
         MoveResult moveResult = movementStrategy.execute(car, gameMapContent, movement);
-        //TODO refactor game and car state
         gameState.addMovementHistory(car.getName(), operation);
-        gameState.getCarState(moveResult.getCarName()).getMovementDtos().add(movement);
-        gameState.getCar(moveResult.getCarName()).setDirection(moveResult.getNewDirection());
-        gameState.getCar(moveResult.getCarName()).setPosition(moveResult.getNewPosition());
+        car.setDirection(moveResult.getNewDirection());
+        car.setPosition(moveResult.getNewPosition());
+        movementsHistoryService.saveMove(gameState.getGameName(), moveResult);
         return moveResult;
     }
 
