@@ -6,6 +6,7 @@ import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -24,15 +25,16 @@ public class MoveTaskCreator {
     }
 
     public void schedule(UndoState undoState) {
-        Runnable task = () -> perfomMoveAndScheduleNext(undoState);
+        Runnable task = () -> performMoveAndScheduleNext(undoState);
         //todo : timestamp
         scheduler.schedule(task, 1, TimeUnit.SECONDS);
     }
 
-    private void perfomMoveAndScheduleNext(UndoState undoState) {
+    private void performMoveAndScheduleNext(UndoState undoState) {
         MoveCommand undoMove = undoState.createNextMove();
-        CarDto carDto = commandProducer.scheduleCommand(undoState.getGameName(), undoMove);
-        if (carDto.isCrashed() || undoState.isLast()) {
+        //TODO check if this is correct
+        List<CarDto> carDto = commandProducer.scheduleCommand(undoMove);
+        if (carDto.stream().anyMatch(CarDto::isCrashed) || undoState.isLast()) {
             undoMovementPreparerService.setUndoProcessFlag(undoState.getGameName(), undoState.getCarName(), false);
         } else {
             schedule(undoState);

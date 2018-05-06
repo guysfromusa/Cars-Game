@@ -6,7 +6,7 @@ import com.guysfromusa.carsgame.control.movement.MovementStrategy;
 import com.guysfromusa.carsgame.game_state.CarState;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class CarController {
 
-    private final Map<Movement.Operation, MovementStrategy> movementStrategyMap = Maps.newEnumMap(Movement.Operation.class);
+    private final Map<MovementDto.Operation, MovementStrategy> movementStrategyMap = Maps.newEnumMap(MovementDto.Operation.class);
 
     @Inject
     public CarController(List<MovementStrategy> movementStrategies) {
@@ -31,16 +31,16 @@ public class CarController {
         CarState carState = gameState.getCarState(moveCmd.getCarName());
         CarDto car = carState.getCar();
 
-        Movement.Operation operation = moveCmd.getMovement().getOperation();
+        MovementDto.Operation operation = moveCmd.getMovementDto().getOperation();
 
         Integer[][] gameMapContent = gameState.getGameMapContent();
         MovementStrategy movementStrategy = movementStrategyMap.get(operation);
 
-        Movement movement = moveCmd.getMovement();
+        MovementDto movement = moveCmd.getMovementDto();
         MoveResult moveResult = movementStrategy.execute(car, gameMapContent, movement);
         //TODO refactor game and car state
         gameState.addMovementHistory(car.getName(), operation);
-        gameState.getCarState(moveResult.getCarName()).getMovements().add(movement);
+        gameState.getCarState(moveResult.getCarName()).getMovementDtos().add(movement);
         gameState.getCar(moveResult.getCarName()).setDirection(moveResult.getNewDirection());
         gameState.getCar(moveResult.getCarName()).setPosition(moveResult.getNewPosition());
         return moveResult;

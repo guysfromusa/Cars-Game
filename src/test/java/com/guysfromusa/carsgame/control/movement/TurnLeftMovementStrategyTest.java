@@ -1,12 +1,13 @@
 package com.guysfromusa.carsgame.control.movement;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
 import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static com.guysfromusa.carsgame.model.Direction.WEST;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -23,9 +24,9 @@ public class TurnLeftMovementStrategyTest {
         Integer[][] gameMap = {{1,0, 0}, {1, 0, 0}, {1,1,1}};
         Point startPoint = new Point(0,0);
         Direction north = Direction.NORTH;
-        Movement.Operation left = Movement.Operation.LEFT;
+        MovementDto.Operation left = MovementDto.Operation.LEFT;
         CarDto car = createCar(startPoint, north);
-        Movement movement = createMovement(left);
+        MovementDto movement = createMovement(left);
 
         //when
         MoveResult moveResult = turnLeftMovementStrategy.execute(car, gameMap, movement);
@@ -45,7 +46,7 @@ public class TurnLeftMovementStrategyTest {
                 .build();
     }
 
-    private Movement createMovement(Movement.Operation operation){
-        return Movement.newMovement(operation);
+    private MovementDto createMovement(MovementDto.Operation operation){
+        return newMovementDto(operation);
     }
 }

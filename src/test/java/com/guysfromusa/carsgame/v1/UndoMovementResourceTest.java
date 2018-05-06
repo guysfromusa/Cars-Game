@@ -33,7 +33,7 @@ public class UndoMovementResourceTest {
     @Sql(value = {"/sql/clean.sql","/sql/undo_resource_insert.sql"})
     public void shouldBackCar3Step(){
         //given
-        activeGamesContainer.addNewGame("game1");
+        activeGamesContainer.addNewGame("game1", null);
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("volvo").positionX(1).positionY(2).build());
         activeGamesContainer.getGameState("game1").addMovementHistory("volvo", Operation.LEFT);
         activeGamesContainer.getGameState("game1").addMovementHistory("volvo", Operation.RIGHT);

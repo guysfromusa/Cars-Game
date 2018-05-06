@@ -1,9 +1,9 @@
 package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.RequestBuilder;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Game;
+import com.guysfromusa.carsgame.v1.model.Movement;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;

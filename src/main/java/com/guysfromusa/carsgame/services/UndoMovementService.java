@@ -1,12 +1,9 @@
 package com.guysfromusa.carsgame.services;
 
-import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Getter;
-import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +19,7 @@ public class UndoMovementService {
     private final MoveTaskCreator moveTaskCreator;
 
     @Autowired
-    public UndoMovementService( UndoMovementPreparerService undoMovementPreparerService,MoveTaskCreator moveTaskCreator) {
+    public UndoMovementService(UndoMovementPreparerService undoMovementPreparerService, MoveTaskCreator moveTaskCreator) {
         this.undoMovementPreparerService = notNull(undoMovementPreparerService);
         this.moveTaskCreator = notNull(moveTaskCreator);
     }
@@ -47,7 +44,7 @@ class UndoState {
     List<MovementDto> movementDtos;
     int currentMove = 0;
 
-    UndoState(String gameName, String carName,  List<MovementDto> movementDtos) {
+    UndoState(String gameName, String carName, List<MovementDto> movementDtos) {
         this.gameName = gameName;
         this.carName = carName;
         this.movementDtos = movementDtos;
@@ -58,7 +55,7 @@ class UndoState {
         return new MoveCommand(gameName, carName, MessageType.MOVE, movementDtos.get(currentMove++), true);
     }
 
-    synchronized boolean isLast(){
+    synchronized boolean isLast() {
         return currentMove == movementDtos.size();
     }
 }

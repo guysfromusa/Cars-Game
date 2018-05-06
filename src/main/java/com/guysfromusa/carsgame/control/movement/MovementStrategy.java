@@ -1,14 +1,14 @@
 package com.guysfromusa.carsgame.control.movement;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 
 /**
  * Created by Tomasz Bradlo, 26.02.18
  */
 public interface MovementStrategy {
 
-    Movement.Operation getType();
+    MovementDto.Operation getType();
 
-    MoveResult execute(CarDto car, Integer[][] mapContent, Movement movement);
+    MoveResult execute(CarDto car, Integer[][] mapContent, MovementDto movement);
 }

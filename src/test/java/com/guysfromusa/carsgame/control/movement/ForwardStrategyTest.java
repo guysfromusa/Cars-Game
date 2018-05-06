@@ -1,13 +1,15 @@
 package com.guysfromusa.carsgame.control.movement;
 
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import com.guysfromusa.carsgame.game_state.dtos.Movement;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 
 import static com.guysfromusa.carsgame.control.MoveStatus.CRASHED_INTO_WALL;
 import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation.FORWARD;
+import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static com.guysfromusa.carsgame.model.Direction.EAST;
 import static com.guysfromusa.carsgame.model.Direction.NORTH;
 import static com.guysfromusa.carsgame.model.Direction.SOUTH;
@@ -29,7 +31,7 @@ public class ForwardStrategyTest {
         Integer steps = 2;
         Direction south = Direction.SOUTH;
         CarDto car = createCar(startPoint, south);
-        Movement movement = createMovement(steps);
+        MovementDto movement = createMovement(steps);
         
         //when
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
@@ -48,7 +50,7 @@ public class ForwardStrategyTest {
         Integer steps = 2;
         Direction east = Direction.EAST;
         CarDto car = createCar(startPoint, east);
-        Movement movement = createMovement(steps);
+        MovementDto movement = createMovement(steps);
 
         //when
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
@@ -67,7 +69,7 @@ public class ForwardStrategyTest {
         Integer steps = 2;
         Direction south = Direction.NORTH;
         CarDto car = createCar(startPoint, south);
-        Movement movement = createMovement(steps);
+        MovementDto movement = createMovement(steps);
 
         //when
         MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
@@ -86,8 +88,8 @@ public class ForwardStrategyTest {
                 .build();
     }
     
-    private Movement createMovement(Integer steps){
-        return Movement.newMovement(Movement.Operation.FORWARD, steps);
+    private MovementDto createMovement(Integer steps){
+        return newMovementDto(FORWARD, steps);
     }
 
 }
