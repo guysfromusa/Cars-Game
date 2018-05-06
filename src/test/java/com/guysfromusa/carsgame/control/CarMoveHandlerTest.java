@@ -51,7 +51,7 @@ public class CarMoveHandlerTest {
 
         //then
         exception.expectMessage("Move cannot be made as car is already crashed.");
-
+        future.get();
     }
 
     private MoveData createMoveData(boolean isCrashed, Integer xCarPosition, Integer yCarPosition) {

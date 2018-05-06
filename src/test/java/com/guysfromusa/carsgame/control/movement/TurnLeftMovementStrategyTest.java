@@ -26,10 +26,10 @@ public class TurnLeftMovementStrategyTest {
         Movement movement = createMovement(left);
 
         //when
-        boolean isMoveSuccess = turnLeftMovementStrategy.execute(car, gameMap, movement);
+        MoveResult moveResult = turnLeftMovementStrategy.execute(car, gameMap, movement);
 
         //then
-        assertThat(isMoveSuccess).isTrue();
+        assertThat(moveResult.isWall()).isFalse();
         assertThat(car.getDirection()).isEqualTo(Direction.WEST);
         assertThat(car.getPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(0, 0);

@@ -1,5 +1,7 @@
 package com.guysfromusa.carsgame.v1.movement;
 
+import com.guysfromusa.carsgame.control.movement.MoveResult;
+import com.guysfromusa.carsgame.control.movement.TurnRightMovementStrategy;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
@@ -26,10 +28,10 @@ public class TurnRightMovementStrategyTest {
         Movement movement = createMovement(right);
 
         //when
-        boolean isMoveSuccess = turnRightMovementStrategy.execute(car, gameMap, movement);
+        MoveResult execute = turnRightMovementStrategy.execute(car, gameMap, movement);
 
         //then
-        assertThat(isMoveSuccess).isTrue();
+
         assertThat(car.getDirection()).isEqualTo(Direction.EAST);
         assertThat(car.getPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(0, 0);

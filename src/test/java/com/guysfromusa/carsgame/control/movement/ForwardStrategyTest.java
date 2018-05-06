@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -29,11 +28,10 @@ public class ForwardStrategyTest {
         Movement movement = createMovement(steps);
         
         //when
-        boolean isMoveSuccess = forwardStrategy.execute(car, gameMap, movement);
+        MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertTrue(isMoveSuccess);
-        assertThat(car.getPosition())
+        assertThat(moveResult.getNewPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(0, 2);
     }
 
@@ -48,11 +46,11 @@ public class ForwardStrategyTest {
         Movement movement = createMovement(steps);
 
         //when
-        boolean isMoveSuccess = forwardStrategy.execute(car, gameMap, movement);
+        MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertTrue(isMoveSuccess);
-        assertThat(car.getPosition())
+        assertThat(moveResult).extracting(MoveResult::isWall).containsExactly(true);
+        assertThat(moveResult.getNewPosition())
                 .extracting(Point::getX, Point::getY).containsExactly(2, 0);
     }
 
@@ -67,10 +65,10 @@ public class ForwardStrategyTest {
         Movement movement = createMovement(steps);
 
         //when
-        boolean isMoveSuccess = forwardStrategy.execute(car, gameMap, movement);
+        MoveResult moveResult = forwardStrategy.execute(car, gameMap, movement);
 
         //then
-        assertFalse(isMoveSuccess);
+        assertFalse(moveResult.isWall());
     }
 
     private CarDto createCar(Point point, Direction direction){
