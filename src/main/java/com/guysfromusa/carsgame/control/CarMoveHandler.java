@@ -63,9 +63,12 @@ public class CarMoveHandler {
             GameState gameState = moveData.getGameState();
             MoveResult moveResult = carController.moveCar(moveData.getMoveCommand(), gameState);
 
+            //TODO do it in better way, immutable car
+            CarDto car = moveData.getCar();
+            car.setPosition(moveResult.getNewPosition());
             //mark car move in db
 
-            markCrashedWhenCollision(moveResult.isWall(), moveData.getCar(), future, CAR_CRASHED_INTO_WALL);
+            markCrashedWhenCollision(moveResult.isWall(), car, future, CAR_CRASHED_INTO_WALL);
         };
     }
 
@@ -80,7 +83,6 @@ public class CarMoveHandler {
 
             Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(carsInGame);
             boolean carCrashedWithOther = isCarCrashedWithOther(crashedCarNames, car);
-
             markCrashedWhenCollision(carCrashedWithOther, car, future, CAR_CRASHED_WITH_OTHER);
         };
     }

@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control.movement;
 
+import com.guysfromusa.carsgame.control.MoveStatus;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Builder;
@@ -21,5 +22,7 @@ public class MoveResult {
     private Direction newDirection;
 
     private boolean wall;
+
+    private MoveStatus moveStatus;
 
 }

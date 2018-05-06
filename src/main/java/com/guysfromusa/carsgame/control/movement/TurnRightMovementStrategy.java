@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.game_state.dtos.Movement;
 import com.guysfromusa.carsgame.model.Direction;
 import org.springframework.stereotype.Component;
 
+import static com.guysfromusa.carsgame.control.MoveStatus.SUCCESS;
 import static com.guysfromusa.carsgame.game_state.dtos.Movement.Operation.RIGHT;
 
 /**
@@ -28,6 +29,7 @@ public class TurnRightMovementStrategy implements MovementStrategy {
                 .newDirection(direction)
                 .newPosition(car.getPosition())
                 .wall(false)
+                .moveStatus(SUCCESS)
                 .build();
     }
 }
