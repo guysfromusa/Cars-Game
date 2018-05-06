@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -65,29 +66,21 @@ public class CarMoveHandler {
         return moveData -> {
             CarDto car = moveData.getCar();
             Match(car).of(
-                    Case($(Predicates.isNull()), () -> run(() -> {
-                                log.debug("Car: {} is null", moveData.getMoveCommand().getCarName());
+                    Case($(Predicates.isNull()), () -> run(() ->
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME));
-                            }
+                                        .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME))
                     )),
-                    Case($(CarDto::isCrashed), () -> run(() -> {
-                                log.debug("Car: {} is crashed", car.getName());
+                    Case($(CarDto::isCrashed), () -> run(() ->
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE));
-                            }
+                                        .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE))
                     )),
-                    Case($(CarDto::isUndoInProcess), () -> run(() -> {
-                                log.debug("Car: {} is in undo state", car.getName());
+                    Case($(CarDto::isUndoInProcess), () -> run(() ->
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS));
-                            }
+                                        .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS))
                     )),
-                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() -> {
-                                log.debug("Car: {} has invalid number of forward steps: {}", car.getName(), moveData.getForwardSteps());
+                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() ->
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS));
-                            }
+                                        .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS))
                     )),
                     Case($(), () -> run(() -> {
                         //do nothing in case car is able to perform move
@@ -107,7 +100,11 @@ public class CarMoveHandler {
             log.debug("Car: {}", moveData.getCar());
             MoveResult moveResult = carController.moveCar(moveData.getMoveCommand(), gameState);
             log.debug("Move performed: {}", moveResult);
-            markCrashedWhenCollision(moveResult.isWall(), moveData, future, CAR_CRASHED_INTO_WALL);
+
+            if (moveResult.isWall()) {
+                crashCar(gameState, moveData.getCar());
+                moveData.getFuture().completeExceptionally(new IllegalArgumentException(CAR_CRASHED_INTO_WALL));
+            }
         };
     }
 
@@ -121,9 +118,15 @@ public class CarMoveHandler {
 
             Set<String> crashedCarNames = collisionMonitor.getCrashedCarNames(carsInGame);
             log.debug("Crashed cars: {}", crashedCarNames);
+            //TODO move collisions handling to other class
             boolean carCrashedWithOther = isCarCrashedWithOther(crashedCarNames, moveData.getCar());
             log.debug("Car: {} crashed with cars: {}", moveData.getCar().getName(), crashedCarNames);
-            markCrashedWhenCollision(carCrashedWithOther, moveData, future, CAR_CRASHED_WITH_OTHER);
+            if (!crashedCarNames.isEmpty()) {
+                handleCollisions(crashedCarNames, moveData.getGameState());
+            }
+            if (carCrashedWithOther) {
+                future.completeExceptionally(new IllegalArgumentException(CAR_CRASHED_WITH_OTHER));
+            }
         };
     }
 
@@ -138,18 +141,6 @@ public class CarMoveHandler {
         };
     }
 
-    private void markCrashedWhenCollision(boolean isCollision, MoveData moveData, CompletableFuture future, String message){
-        if(isCollision){
-            CarDto car = moveData.getCar();
-            GameState gameState = moveData.getGameState();
-            car.setCrashed(true);
-            removeFromGameMap(car);
-            gameState.removeCar(car.getName());
-            carService.crashAndRemoveFromGame(gameState.getGameName(), car);
-            future.completeExceptionally(new IllegalArgumentException(message));
-        }
-    }
-
     private void removeFromGameMap(CarDto car) {
         Point position = car.getPosition();
         position.setY(null);
@@ -159,6 +150,20 @@ public class CarMoveHandler {
 
     private static boolean isCarCrashedWithOther(Set<String> crashedCars, CarDto handledCar){
         return crashedCars.contains(handledCar.getName());
+    }
+
+    private void handleCollisions(Set<String> crashedCarNames, GameState gameState) {
+        crashedCarNames.stream()
+                .map(gameState::getCar)
+                .filter(Objects::nonNull)
+                .forEach(carDto -> crashCar(gameState, carDto));
+    }
+
+    private void crashCar(GameState gameState, CarDto carDto) {
+        carDto.setCrashed(true);
+        removeFromGameMap(carDto);
+        gameState.removeCar(carDto.getName());
+        carService.crashAndRemoveFromGame(gameState.getGameName(), carDto);
     }
 
 }
