@@ -36,6 +36,8 @@ public class CarMoveHandler {
 
     private static final String CAR_IN_UNDO_PROCESS = "Car is in undo process";
 
+    private static final String CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS = "Car cannot perform move due to invalid number of steps";
+
     private final CollisionMonitor collisionMonitor;
 
     private final CarController carController;
@@ -72,6 +74,10 @@ public class CarMoveHandler {
                     Case($(CarDto::isUndoInProcess), () -> run(() ->
                             moveData.getFuture()
                                     .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS))
+                    )),
+                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() ->
+                            moveData.getFuture()
+                                    .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS))
                     )),
                     Case($(), () -> run(() -> {
                         //do nothing in case car is able to perform move

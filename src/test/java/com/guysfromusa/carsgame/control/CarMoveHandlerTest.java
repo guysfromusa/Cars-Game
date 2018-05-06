@@ -1,8 +1,10 @@
 package com.guysfromusa.carsgame.control;
 
 import com.guysfromusa.carsgame.control.movement.MoveResult;
+import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import com.guysfromusa.carsgame.services.CarService;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Rule;
@@ -19,6 +21,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static com.guysfromusa.carsgame.entities.enums.CarType.NORMAL;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
@@ -50,7 +54,7 @@ public class CarMoveHandlerTest {
     @Test
     public void whenCarNotInGame_shouldReturnCarNotInGameMessage() throws ExecutionException, InterruptedException {
         String carName = "car1";
-        MoveData moveData = createMoveData(false, false, false, 0, 0, carName);
+        MoveData moveData = createMoveData(false, false, false, 0, 0, carName, CarType.MONSTER, null);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         //when
         carMoveHandler.handleMoveCommand(moveData);
@@ -63,7 +67,7 @@ public class CarMoveHandlerTest {
     @Test
     public void whenCarInUndoProcess_shouldReturnCarInUndoMessage() throws ExecutionException, InterruptedException {
         String carName = "car1";
-        MoveData moveData = createMoveData(true, false, true, 0, 0, carName);
+        MoveData moveData = createMoveData(true, false, true, 0, 0, carName, CarType.MONSTER, null);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         //when
         carMoveHandler.handleMoveCommand(moveData);
@@ -79,7 +83,7 @@ public class CarMoveHandlerTest {
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         String carName = "car1";
-        MoveData moveData = createMoveData(true, true, false, xCarPosition, yCarPosition, carName);
+        MoveData moveData = createMoveData(true, true, false, xCarPosition, yCarPosition, carName, CarType.MONSTER, null);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
 
         //when
@@ -91,14 +95,37 @@ public class CarMoveHandlerTest {
     }
 
     @Test
+    public void whenCarIsNormal_shouldNotPerformTwoStepsForward() throws ExecutionException, InterruptedException {
+        //given
+        Integer xCarPosition = 0;
+        Integer yCarPosition = 0;
+        String carName = "car1";
+        MoveData moveData = createMoveData(true,
+                false,
+                false,
+                xCarPosition,
+                yCarPosition,
+                carName,
+                NORMAL, MovementDto.newMovementDto(MovementDto.Operation.FORWARD, 2));
+
+        CompletableFuture<List<CarDto>> future = moveData.getFuture();
+
+        //when
+        carMoveHandler.handleMoveCommand(moveData);
+
+        //then
+        exception.expectMessage("Car cannot perform move due to invalid number of steps");
+        future.get();
+    }
+
+    @Test
     public void whenCarCollision_shouldReturnCollisionMessage() throws ExecutionException, InterruptedException {
         //given
-        boolean isCrashed = false;
         String carName= "car1";
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet(Arrays.asList("car1"));
-        MoveData moveData = createMoveData(true, isCrashed, false, xCarPosition, yCarPosition, carName);
+        MoveData moveData = createMoveData(true, false, false, xCarPosition, yCarPosition, carName, CarType.MONSTER, MovementDto.newMovementDto(MovementDto.Operation.FORWARD, 1));
         GameState gameMock = mock(GameState.class);
         when(gameMock.getGameName()).thenReturn("game1");
         when(moveData.getGameState()).thenReturn(gameMock);
@@ -120,13 +147,19 @@ public class CarMoveHandlerTest {
     @Test
     public void whenCarMoveOk_shouldReturnCarList() throws ExecutionException, InterruptedException {
         //given
-        boolean isCrashed = false;
         String carName = "car1";
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet();
 
-        MoveData moveData = createMoveData(true, isCrashed, false, xCarPosition, yCarPosition, carName);
+        MoveData moveData = createMoveData(true,
+                false,
+                false,
+                xCarPosition,
+                yCarPosition,
+                carName,
+                CarType.MONSTER,
+                MovementDto.newMovementDto(MovementDto.Operation.FORWARD, 1));
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         MoveResult moveResult = createMoveResult();
 
@@ -153,11 +186,17 @@ public class CarMoveHandlerTest {
                                     boolean undo,
                                     Integer xCarPosition,
                                     Integer yCarPosition,
-                                    String carName) {
+                                    String carName,
+                                    CarType carType,
+                                    MovementDto movementDto) {
         MoveData moveData = mock(MoveData.class);
         CompletableFuture<List<CarDto>> future = new CompletableFuture<>();
 
         when(moveData.getFuture()).thenReturn(future);
+
+        if (movementDto != null) {
+            when(moveData.getForwardSteps()).thenReturn(movementDto.getForwardSteps());
+        }
 
         if(carInGame){
             CarDto carDto = CarDto.builder()
@@ -165,9 +204,10 @@ public class CarMoveHandlerTest {
                     .position(new Point(xCarPosition, yCarPosition))
                     .name(carName)
                     .undoInProcess(undo)
+                    .type(carType)
                     .build();
             when(moveData.getCar()).thenReturn(carDto);
-            when(moveData.getCars()).thenReturn(Arrays.asList(carDto));
+            when(moveData.getCars()).thenReturn(singletonList(carDto));
         }else{
             when(moveData.getCar()).thenReturn(null);
         }

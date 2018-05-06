@@ -84,9 +84,9 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
         addCarToGame(template, carName, gameName, startingPoint);
 
         //when
-        Movement movement = new Movement(RIGHT, 2);
+        Movement movement = new Movement(RIGHT, 1);
         doCarMove(template, gameName, carName, movement);
-        Movement movement2 = new Movement(FORWARD, 2);
+        Movement movement2 = new Movement(FORWARD, 1);
         List<Car> cars = doCarMove(template, gameName, carName, movement2);
 
         //then
@@ -95,7 +95,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
                 .containsExactly(Direction.EAST, "car4", "game4", false);
 
         assertThat(cars).extracting(Car::getPosition).extracting(Point::getX, Point::getY)
-                .containsExactly(tuple(2, 0));
+                .containsExactly(tuple(1, 0));
     }
 
 

@@ -23,6 +23,10 @@ public class MoveData {
         return gameState.getCar(carName);
     }
 
+    public int getForwardSteps(){
+        return moveCommand.getMovementDto().getForwardSteps();
+    }
+
     public List<CarDto> getCars(){
         return gameState.getAllCars();
     }

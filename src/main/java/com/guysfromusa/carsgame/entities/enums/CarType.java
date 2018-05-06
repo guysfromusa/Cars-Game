@@ -19,4 +19,8 @@ public enum CarType {
         this.weightRatio = weightRatio;
     }
 
+    public boolean isValidStepsPerMove(int forwardSteps) {
+        return forwardSteps >= 0 && forwardSteps <= stepsPerMove;
+    }
+
 }

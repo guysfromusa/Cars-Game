@@ -66,7 +66,7 @@ public class ForwardStrategyTest {
         //given
         Integer[][] gameMap = {{1, 1, 1}};
         Point startPoint = new Point(0,0);
-        Integer steps = 2;
+        Integer steps = 1;
         Direction south = Direction.NORTH;
         CarDto car = createCar(startPoint, south);
         MovementDto movement = createMovement(steps);
@@ -77,7 +77,7 @@ public class ForwardStrategyTest {
         //then
         assertThat(moveResult)
                 .extracting(MoveResult::getCarName, MoveResult::getMoveStatus, MoveResult::getNewDirection, MoveResult::getNewPosition, MoveResult::isWall)
-                .containsExactly("car1", CRASHED_INTO_WALL, NORTH, new Point(0, 0), true);
+                .containsExactly("car1", CRASHED_INTO_WALL, NORTH, new Point(0, -1), true);
     }
 
     private CarDto createCar(Point point, Direction direction){
