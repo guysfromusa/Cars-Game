@@ -55,7 +55,7 @@ public class CarMoveHandler {
 
     private Consumer<MoveData> doMove(){
         return moveData -> {
-            CompletableFuture<List<CarDto>> future = moveData.getMoveCommand().getFuture();
+            CompletableFuture<List<CarDto>> future = moveData.getFuture();
             if(future.isDone()){
                 return ;
             }
