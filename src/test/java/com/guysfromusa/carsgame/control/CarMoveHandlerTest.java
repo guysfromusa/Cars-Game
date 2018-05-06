@@ -156,6 +156,7 @@ public class CarMoveHandlerTest {
                     .undoInProcess(undo)
                     .build();
             when(moveData.getCar()).thenReturn(carDto);
+            when(moveData.getCars()).thenReturn(Arrays.asList(carDto));
         }else{
             when(moveData.getCar()).thenReturn(null);
         }
