@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.control.movement.MoveResult;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.v1.model.Point;
+import io.vavr.Predicates;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -12,6 +13,10 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static io.vavr.API.run;
 import static org.apache.commons.lang3.Validate.notNull;
 
 /**
@@ -26,6 +31,8 @@ public class CarMoveHandler {
 
     private static final String CAR_CRASHED_WITH_OTHER = "Car was crashed with other";
 
+    private static final String CAR_NOT_IN_GAME = "Car not in game";
+
     private final CollisionMonitor collisionMonitor;
 
     private final CarController carController;
@@ -36,7 +43,7 @@ public class CarMoveHandler {
         this.carController = notNull(carController);
     }
 
-    public void handleMoveComand(MoveData moveData){
+    public void handleMoveCommand(MoveData moveData) {
         checkCarAbilityToMove()
                 .andThen(doMove())
                 .andThen(checkCarCollisions())
@@ -47,10 +54,17 @@ public class CarMoveHandler {
     private Consumer<MoveData> checkCarAbilityToMove(){
         return moveData -> {
             CarDto car = moveData.getCar();
-
-            if(car.isCrashed()){
-                moveData.getFuture().completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE));
-            }
+            Match(car).of(
+                    Case($(Predicates.isNull()), () -> run(() ->
+                            moveData.getFuture()
+                                    .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME))
+                    )),
+                    Case($(CarDto::isCrashed), () -> run(() ->
+                            moveData.getFuture()
+                                    .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE))
+                    ))
+            );
+            //TODO handle car is in undo
         };
     }
 
