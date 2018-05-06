@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.movement.MoveResult;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Rule;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -60,7 +63,7 @@ public class CarMoveHandlerTest {
     @Test
     public void whenCarCollision_shouldReturnCollisionMessage() throws ExecutionException, InterruptedException {
         //given
-        boolean isCrashed = true;
+        boolean isCrashed = false;
         Integer xCarPosition = 0;
         Integer yCarPosition = 0;
         HashSet carsCollided = new HashSet(Arrays.asList("car1"));
@@ -68,12 +71,45 @@ public class CarMoveHandlerTest {
         MoveData moveData = createMoveData(isCrashed, xCarPosition, yCarPosition);
         CompletableFuture<List<CarDto>> future = moveData.getFuture();
         when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
+
+        MoveResult moveResult = createMoveResult();
+        when(carController.moveCar(any(), any())).thenReturn(moveResult);
         //when
         carMoveHandler.handleMoveComand(moveData);
 
         //then
-        exception.expectMessage("Move cannot be made as car is already crashed.");
+        exception.expectMessage("Car was crashed with other");
         future.get();
+    }
+
+    @Test
+    public void whenCarMoveOk_shouldReturnCarList() throws ExecutionException, InterruptedException {
+        //given
+        boolean isCrashed = false;
+        Integer xCarPosition = 0;
+        Integer yCarPosition = 0;
+        HashSet carsCollided = new HashSet();
+
+        MoveData moveData = createMoveData(isCrashed, xCarPosition, yCarPosition);
+        CompletableFuture<List<CarDto>> future = moveData.getFuture();
+        MoveResult moveResult = createMoveResult();
+
+        when(carController.moveCar(any(), any())).thenReturn(moveResult);
+        when(collisionMonitor.getCrashedCarNames(anyList())).thenReturn(carsCollided);
+
+        //when
+        carMoveHandler.handleMoveComand(moveData);
+
+        //then
+        List<CarDto> carDtos = future.get();
+        assertThat(carDtos).extracting(CarDto::getName).containsExactly("car1");
+
+    }
+
+    private MoveResult createMoveResult() {
+        return MoveResult.builder()
+                .newPosition(new Point(2, 4))
+                .build();
     }
 
     private MoveData createMoveData(boolean isCrashed, Integer xCarPosition, Integer yCarPosition) {
@@ -87,7 +123,7 @@ public class CarMoveHandlerTest {
                 .name("car1")
                 .position(new Point(xCarPosition, yCarPosition))
                 .build();
-
+        when(moveData.getCars()).thenReturn(Arrays.asList(carDto));
         when(moveData.getCar()).thenReturn(carDto);
 
         return moveData;
