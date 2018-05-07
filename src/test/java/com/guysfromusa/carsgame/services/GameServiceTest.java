@@ -98,4 +98,19 @@ public class GameServiceTest {
         //when
         gameService.getStatus(gameName);
     }
+
+    @Test
+    public void shouldRemoveGame(){
+        //given
+        GameEntity gameEntity = new GameEntity();
+        String gameName = "game1";
+        when(gameRepositoryMock.findByName(gameName))
+                .thenReturn(Optional.of(gameEntity));
+
+        //when
+        GameEntity removedGame = gameService.removeGame(gameName);
+
+        //then
+        assertThat(removedGame.getGameStatus()).isEqualTo(GameStatus.ARCHIVED);
+    }
 }

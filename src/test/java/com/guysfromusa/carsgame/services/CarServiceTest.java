@@ -159,4 +159,5 @@ public class CarServiceTest {
         assertThat(carEntity.getPositionX()).isNull();
         assertThat(carEntity.getPositionY()).isNull();
     }
+
 }

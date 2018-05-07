@@ -5,14 +5,10 @@ import com.guysfromusa.carsgame.control.commands.Command;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 import static com.guysfromusa.carsgame.control.MessageType.STOP_GAME;
+import static java.util.Objects.*;
 
 /**
  * Created by Robert Mycek, 2018-05-05
@@ -31,7 +27,7 @@ public class SameTypeOnePerCarGameRoundSelector implements GameRoundSelector {
         for (Iterator<Command> it = queue.iterator(); it.hasNext(); ) {
             Command command = it.next();
 
-            boolean isThisCarCommandNotAddedToRound = Objects.nonNull(command.getCarName())
+            boolean isThisCarCommandNotAddedToRound = nonNull(command.getCarName())
                     && !uniqueRoundSelectors.contains(command.getCarName())
                     && command.getMessageType() == type;
 
@@ -41,7 +37,7 @@ public class SameTypeOnePerCarGameRoundSelector implements GameRoundSelector {
             if (isThisCarCommandNotAddedToRound || isStopWatchCommandNotAdded) {
                 it.remove();
                 commands.add(command);
-                if(Objects.nonNull(command.getCarName())){
+                if(nonNull(command.getCarName())){
                     uniqueRoundSelectors.add(command.getCarName());
                 }else{
                     uniqueRoundSelectors.add(type.toString());
