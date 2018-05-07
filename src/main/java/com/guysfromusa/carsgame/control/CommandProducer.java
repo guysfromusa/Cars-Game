@@ -3,9 +3,11 @@ package com.guysfromusa.carsgame.control;
 import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.control.commands.AddCarToGameCommand;
 import com.guysfromusa.carsgame.control.commands.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.UndoCommand;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
+import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -59,5 +61,17 @@ public class CommandProducer {
                 })
                 .map(Futures::getUnchecked)
                 .orElse(null);
+    }
+
+    public List<MovementDto> scheduleCommand(UndoCommand undoCommand) {
+        log.debug("Schedule command: {}", undoCommand);
+        return Optional.ofNullable(activeGamesContainer.getGameState(undoCommand.getGameName()))
+                .map(gameState -> {
+                    CompletableFuture<List<MovementDto>> result = gameState.addCommandToExecute(undoCommand, Collections::emptyList);
+                    applicationEventPublisher.publishEvent(new CommandEvent(this));
+                    return result;
+                })
+                .map(Futures::getUnchecked)
+                .orElse(emptyList());
     }
 }

@@ -71,6 +71,9 @@ public class CommandConsumer {
             case ADD_CAR_TO_GAME:
                 gameEngine.handleAddCars(commands, gameName);
                 break;
+            case UNDO:
+                gameEngine.handleUndo(commands, gameName);
+                break;
             default:
                 throw new IllegalStateException("Undefined message type");
         }

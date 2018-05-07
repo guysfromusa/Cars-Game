@@ -14,7 +14,7 @@ import lombok.ToString;
 public class AddCarToGameCommand extends Command<CarEntity> {
 
     @Getter
-    private Point startingPoint;
+    private final Point startingPoint;
 
     @Builder
     //TODO messageType can by hardcoded or via getMessageType

@@ -3,9 +3,11 @@ package com.guysfromusa.carsgame.control;
 import com.guysfromusa.carsgame.control.commands.AddCarToGameCommand;
 import com.guysfromusa.carsgame.control.commands.Command;
 import com.guysfromusa.carsgame.control.commands.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.UndoCommand;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.services.UndoMovementService;
 import io.vavr.Tuple;
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
@@ -33,15 +35,19 @@ public class GameEngine {
 
     private final CarMoveHandler carMoveHandler;
 
+    private final UndoMovementService undoMovementService;
+
     @Inject
     public GameEngine(ActiveGamesContainer activeGamesContainer,
                       ApplicationEventPublisher applicationEventPublisher,
                       CarService carService,
-                      CarMoveHandler carMoveHandler) {
+                      CarMoveHandler carMoveHandler,
+                      UndoMovementService undoMovementService) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
         this.carService = notNull(carService);
         this.carMoveHandler = notNull(carMoveHandler);
+        this.undoMovementService = notNull(undoMovementService);
     }
 
     @Async
@@ -86,5 +92,20 @@ public class GameEngine {
 
         gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent(this));
+    }
+
+    @Async
+    public void handleUndo(List<Command> commands, String gameName) {
+        log.debug("Handle undo commands: {}", commands);
+        commands.stream()
+                .map(command -> (UndoCommand) command)
+                .map(cmd -> Tuple.of(cmd.getFuture(),
+                        undoMovementService.doNMoveBack(gameName, cmd.getCarName(), cmd.getNumberOfStepBack())))
+                .forEach(tuple2 -> {
+                    tuple2._1.complete(tuple2._2);
+                });
+
+        //do we need this
+//        applicationEventPublisher.publishEvent(new CommandEvent(this));
     }
 }
