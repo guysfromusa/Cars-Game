@@ -107,7 +107,7 @@ public class CarService {
     }
 
     public void removeAllCarsFromGame(String gameName) {
-        carRepository.findByGame(gameName).stream().forEach(this::removeCarFromGame);
+        carRepository.findByGame(gameName).forEach(this::removeCarFromGame);
     }
 
     private void removeCarFromGame(CarEntity carEntity){
@@ -117,9 +117,9 @@ public class CarService {
     }
 
     public CarEntity repairCar(String name) {
-        CarEntity car = carRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Car with name " + name + " does not exist"));
+        CarEntity car = carRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Car with name " + name + " does not exist"));
         car.setCrashed(false);
-
         return car;
     }
 }

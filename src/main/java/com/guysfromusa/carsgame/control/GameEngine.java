@@ -124,6 +124,6 @@ public class GameEngine {
                     gameMoveWatcher.watchLastGameMoves(gameName);
                 });
 
-        applicationEventPublisher.publishEvent(new CommandEvent(this));
+        applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleGameWatchCommand"));
     }
 }

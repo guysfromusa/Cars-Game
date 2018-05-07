@@ -10,7 +10,11 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -111,6 +115,7 @@ public class GameState {
 
     public boolean isGameToBeFinished(){
         long currentTimeStamp = Instant.now().getEpochSecond();
-        return currentTimeStamp - lastMovetimeStampMillis > 3;
+        //TODO configurable to make tests faster
+        return currentTimeStamp - lastMovetimeStampMillis > 30;
     }
 }

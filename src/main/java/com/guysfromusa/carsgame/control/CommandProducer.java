@@ -76,11 +76,10 @@ public class CommandProducer {
     }
 
     public void scheduleCommand(LastMoveWachCommand lastMoveWachCommand) {
-        activeGamesContainer.getGameStates()
-                .stream().forEach(gameState -> {
-                    gameState.addCommandToExecute(lastMoveWachCommand, Optional::empty);
-
-            applicationEventPublisher.publishEvent(new CommandEvent(this));
+        log.debug("Schedule command: {}", lastMoveWachCommand);
+        activeGamesContainer.getGameStates().forEach(gameState -> {
+            gameState.addCommandToExecute(lastMoveWachCommand, () -> "error");
+            applicationEventPublisher.publishEvent(new CommandEvent("CommandProducer:scheduleCommand(LastMoveWachCommand)"));
         });
     }
 
