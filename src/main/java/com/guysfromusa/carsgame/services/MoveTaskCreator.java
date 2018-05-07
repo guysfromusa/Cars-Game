@@ -50,7 +50,7 @@ public class MoveTaskCreator {
                 .orElse(true);
 
         if (isCrashed || undoState.isLast()) {
-            log.debug("Car '{}' crashed during undo", undoState.getCarName());
+            log.debug("Car '{}' finished undo: crashed: {}, last: {}", undoState.getCarName(), isCrashed, undoState.isLast());
             undoMovementPreparerService.setUndoProcessFlag(undoState.getGameName(), undoState.getCarName(), false);
         } else {
             long delayInMillis = getDelayInMillis(start, System.nanoTime());
