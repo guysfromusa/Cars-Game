@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.config;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,8 +13,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
-import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
+import static java.util.concurrent.Executors.newScheduledThreadPool;
 
 /**
  * Created by Tomasz Bradlo, 25.02.18
@@ -38,11 +40,17 @@ public class SpringContextConfiguration {
         threadPoolTaskExecutor.setCorePoolSize(corePoolSize);
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
         threadPoolTaskExecutor.setQueueCapacity(capacity);
+        threadPoolTaskExecutor.setThreadGroupName("carsPool");
+        threadPoolTaskExecutor.setThreadNamePrefix("task-");
         return threadPoolTaskExecutor;
     }
 
     @Bean
-    public ScheduledExecutorService scheduledPollExecutor(){
-        return  newSingleThreadScheduledExecutor();
+    public ScheduledExecutorService scheduledPollExecutor(@Value("${threads.pool.scheduler.coreSize}") int corePoolSize){
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("scheduler-%d").build();
+        return newScheduledThreadPool(corePoolSize, threadFactory);
     }
+
+
+
 }

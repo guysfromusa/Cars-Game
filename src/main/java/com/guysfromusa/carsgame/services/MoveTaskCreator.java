@@ -30,6 +30,7 @@ public class MoveTaskCreator {
     }
 
     public void schedule(long delayInMillis, UndoState undoState) {
+        log.debug("schedule task: delay: {}, undoState: {}", delayInMillis, undoState);
         Runnable task = () -> performMoveAndScheduleNext(undoState);
         scheduler.schedule(task, delayInMillis, MILLISECONDS);
     }

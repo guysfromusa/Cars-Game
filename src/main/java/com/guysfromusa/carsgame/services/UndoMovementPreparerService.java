@@ -2,6 +2,7 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,6 @@ import static io.vavr.API.Case;
 import static io.vavr.API.Match;
 import static io.vavr.control.Try.run;
 import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -27,6 +27,7 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 
 @Component
+@Slf4j
 public class UndoMovementPreparerService {
 
     private final ActiveGamesContainer activeGamesContainer;
@@ -65,6 +66,7 @@ public class UndoMovementPreparerService {
     }
 
     public void setUndoProcessFlag(String gameId, String carName, boolean value) {
+        log.debug("Set undo flag: game '{}', car: '{}' flag: '{}'", gameId, carName, value);
         activeGamesContainer.getGameState(gameId).setUndoProcessFlag(carName, value);
     }
 }

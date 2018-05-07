@@ -68,7 +68,7 @@ public class GameEngine {
         //TODO store all state in DB
 
         gameState.setRoundInProgress(false);
-        applicationEventPublisher.publishEvent(new CommandEvent(this));
+        applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleMoves"));
     }
 
     @Async
@@ -91,7 +91,7 @@ public class GameEngine {
                         }));
 
         gameState.setRoundInProgress(false);
-        applicationEventPublisher.publishEvent(new CommandEvent(this));
+        applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleAddCars"));
     }
 
     @Async
@@ -107,6 +107,6 @@ public class GameEngine {
                 });
 
         gameState.setRoundInProgress(false);
-        applicationEventPublisher.publishEvent(new CommandEvent(this));
+        applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleUndo"));
     }
 }
