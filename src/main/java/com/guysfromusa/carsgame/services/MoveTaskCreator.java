@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.services;
 import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
+@Slf4j
 public class MoveTaskCreator {
 
     private final CommandProducer commandProducer;

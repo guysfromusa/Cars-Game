@@ -1,13 +1,11 @@
 package com.guysfromusa.carsgame.v1.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UndoNStepPath {
 
     @Getter
