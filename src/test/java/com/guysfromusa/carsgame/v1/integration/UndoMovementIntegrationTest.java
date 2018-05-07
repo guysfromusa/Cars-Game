@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.v1.integration;
 
-import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
-import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
+import com.guysfromusa.carsgame.model.Direction;
+import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.v1.CarApiAware;
 import com.guysfromusa.carsgame.v1.GameApiAware;
 import com.guysfromusa.carsgame.v1.MapApiAware;
@@ -10,8 +10,6 @@ import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Map;
 import com.guysfromusa.carsgame.v1.model.Movement;
 import com.guysfromusa.carsgame.v1.model.Point;
-import io.vavr.collection.List;
-import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,13 +19,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.NORMAL;
-import static com.guysfromusa.carsgame.v1.model.Movement.Operation.FORWARD;
-import static com.guysfromusa.carsgame.v1.model.Movement.Operation.LEFT;
-import static com.guysfromusa.carsgame.v1.model.Movement.Operation.RIGHT;
+import static com.guysfromusa.carsgame.model.Direction.NORTH;
+import static com.guysfromusa.carsgame.v1.model.Movement.Operation.*;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasSize;
@@ -49,53 +47,42 @@ public class UndoMovementIntegrationTest implements CarApiAware, MapApiAware, Ga
     private AsyncTaskExecutor taskExecutor;
 
     @Inject
-    private MovementsHistoryRepository movementsHistoryRepository;
+    private CarRepository carRepository;
+
+    public static final String MAP_CONTENT = "1,1,1,1,1\n" +
+            "1,1,1,1,1\n" +
+            "1,1,1,1,1\n" +
+            "1,1,1,1,1\n" +
+            "1,1,1,1,1\n";
 
     @Test
     @Sql("/sql/clean.sql")
-    public void shouldStartGameFromZeroAndUndo() {
+    public void shouldPerformUndo() {
         //given
-        final String mapName = "map1";
-        final String mapContent =
-                "1,1,1,1,1\n" +
-                        "1,1,1,1,1\n" +
-                        "1,1,1,1,1\n" +
-                        "1,1,1,1,1\n" +
-                        "1,1,1,1,1\n";
-
-        final String zlomek = "zlomek";
-        final String gameName = "race1";
+        addNewMap(template, new Map("map", MAP_CONTENT));
+        addNewCar(template, "car", NORMAL);
+        startNewGame(template, "game", "map");
+        addCarToGame(template, "car", "game", new Point(2, 2));
+        moves("car", "game", FORWARD, RIGHT, FORWARD, LEFT);
 
         //when
-        addNewMap(template, new Map(mapName, mapContent));
-        addNewCar(template, zlomek, NORMAL);
-        startNewGame(template, gameName, mapName);
+        undo(template, "game", "car", 4);
 
-        //add cars to game
-        addCarsToGameAwait(zlomek, gameName);
-
-        //moves F R F L
-        move(zlomek, gameName, FORWARD);
-        move(zlomek, gameName, RIGHT);
-        move(zlomek, gameName, FORWARD);
-        move(zlomek, gameName, LEFT);
-
-        //perform undo
-        undo(template, gameName, zlomek, 4);
-
-        Awaitility.await().atMost(15, SECONDS)
-                .until(() -> movementsHistoryRepository.findAll(), hasSize(14));
+        //then
+        await().atMost(15, SECONDS).until(() -> carIsInPoint(new Point(2, 2), NORTH));
     }
 
-    private void addCarsToGameAwait(String zlomek, String gameName) {
-        List<Future<Car>> addedCars = List.<Callable<Car>>of(
-                () -> addCarToGame(template, zlomek, gameName, new Point(2, 2)))
-                .map(taskExecutor::submit);
-        await().atMost(2, SECONDS)
-                .until(() -> addedCars.map(Futures::getUnchecked).toJavaList(), hasSize(1));
+    private boolean carIsInPoint(Point point, Direction direction) {
+        return carRepository.findByName("car")
+                .filter(v -> v.getPositionX() == point.getX()
+                        && v.getPositionY() == point.getY()
+                        && v.getDirection().equals(direction))
+                .isPresent();
     }
 
-    private List<Car> move(String zlomek, String gameName, Movement.Operation operation) {
-        return List.ofAll(doCarMove(template, gameName, zlomek, new Movement(operation, 1)));
+    private List<List<Car>> moves(String zlomek, String gameName, Movement.Operation... operations) {
+        return Stream.of(operations)
+                .map(operation -> doCarMove(template, gameName, zlomek, new Movement(operation, 1)))
+                .collect(Collectors.toList());
     }
 }
