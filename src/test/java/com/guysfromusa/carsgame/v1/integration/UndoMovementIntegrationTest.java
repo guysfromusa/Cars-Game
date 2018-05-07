@@ -2,12 +2,16 @@ package com.guysfromusa.carsgame.v1.integration;
 
 import com.google.common.util.concurrent.Futures;
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
-import com.guysfromusa.carsgame.repositories.CarRepository;
+import com.guysfromusa.carsgame.repositories.MovementsHistoryRepository;
 import com.guysfromusa.carsgame.v1.CarApiAware;
 import com.guysfromusa.carsgame.v1.GameApiAware;
 import com.guysfromusa.carsgame.v1.MapApiAware;
-import com.guysfromusa.carsgame.v1.model.*;
+import com.guysfromusa.carsgame.v1.model.Car;
+import com.guysfromusa.carsgame.v1.model.Map;
+import com.guysfromusa.carsgame.v1.model.Movement;
+import com.guysfromusa.carsgame.v1.model.Point;
 import io.vavr.collection.List;
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +25,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.NORMAL;
-import static com.guysfromusa.carsgame.v1.model.Movement.Operation.*;
+import static com.guysfromusa.carsgame.v1.model.Movement.Operation.FORWARD;
+import static com.guysfromusa.carsgame.v1.model.Movement.Operation.LEFT;
+import static com.guysfromusa.carsgame.v1.model.Movement.Operation.RIGHT;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasSize;
@@ -43,11 +49,11 @@ public class UndoMovementIntegrationTest implements CarApiAware, MapApiAware, Ga
     private AsyncTaskExecutor taskExecutor;
 
     @Inject
-    private CarRepository carRepository;
+    private MovementsHistoryRepository movementsHistoryRepository;
 
     @Test
     @Sql("/sql/clean.sql")
-    public void shouldStartGameFromZero() throws InterruptedException {
+    public void shouldStartGameFromZeroAndUndo() {
         //given
         final String mapName = "map1";
         final String mapContent =
@@ -74,9 +80,11 @@ public class UndoMovementIntegrationTest implements CarApiAware, MapApiAware, Ga
         move(zlomek, gameName, FORWARD);
         move(zlomek, gameName, LEFT);
 
-        java.util.List<UndoNStepPath> undo = undo(template, gameName, zlomek, 4);
+        //perform undo
+        undo(template, gameName, zlomek, 4);
 
-        System.out.println(undo);
+        Awaitility.await().atMost(15, SECONDS)
+                .until(() -> movementsHistoryRepository.findAll(), hasSize(14));
     }
 
     private void addCarsToGameAwait(String zlomek, String gameName) {

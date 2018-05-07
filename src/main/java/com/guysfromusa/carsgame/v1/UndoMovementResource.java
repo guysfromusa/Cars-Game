@@ -7,6 +7,7 @@ import com.guysfromusa.carsgame.v1.converters.MovementDtoConverter;
 import com.guysfromusa.carsgame.v1.model.UndoNStepPath;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @RestController
 @RequestMapping(value = "/v1/back-movements", produces = APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "back-movements", produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+@Slf4j
 public class UndoMovementResource {
 
     private final UndoMovementService undoMovementService;
@@ -41,7 +43,7 @@ public class UndoMovementResource {
     public List<UndoNStepPath> findMovementHistory(@PathVariable("gameId") String gameId,
                                                    @PathVariable("carName") String carName,
                                                    @PathVariable("numberOfStepsBack") int numberOfStepsBack) throws ExecutionException, InterruptedException {
-
+        log.info("Handle undo operation: game: {}, car: {}, steps: {}", gameId, carName, numberOfStepsBack);
         List<MovementDto> movementDtos = undoMovementService.doNMoveBack(gameId, carName, numberOfStepsBack);
         return StreamUtils.convert(movementDtos, movementDtoConverter::convert);
     }

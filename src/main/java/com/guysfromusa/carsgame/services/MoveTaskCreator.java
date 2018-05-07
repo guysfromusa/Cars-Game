@@ -37,13 +37,20 @@ public class MoveTaskCreator {
     void performMoveAndScheduleNext(UndoState undoState) {
         long start = System.nanoTime();
         MoveCommand undoMove = undoState.createNextMove();
-        boolean isCrashed = commandProducer.scheduleCommand(undoMove).stream()
+
+        List<CarDto> result = commandProducer.scheduleCommand(undoMove);
+
+        log.debug("Move: {}", undoMove);
+        log.debug("Result: {}", result);
+
+        boolean isCrashed = result.stream()
                 .filter(c -> undoState.getCarName().equals(c.getName()))
                 .map(CarDto::isCrashed)
                 .findFirst()
                 .orElse(true);
 
         if (isCrashed || undoState.isLast()) {
+            log.debug("Car '{}' crashed during undo", undoState.getCarName());
             undoMovementPreparerService.setUndoProcessFlag(undoState.getGameName(), undoState.getCarName(), false);
         } else {
             long delayInMillis = getDelayInMillis(start, System.nanoTime());

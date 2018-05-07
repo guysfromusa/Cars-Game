@@ -27,6 +27,10 @@ public class MoveData {
         return moveCommand.getMovementDto().getForwardSteps();
     }
 
+    public boolean isUndo(){
+        return moveCommand.isUndo();
+    }
+
     public List<CarDto> getCars(){
         return gameState.getAllCars();
     }

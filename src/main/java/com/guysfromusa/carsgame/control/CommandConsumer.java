@@ -36,6 +36,7 @@ public class CommandConsumer {
 
     @EventListener(CommandEvent.class)
     public synchronized void handle(@SuppressWarnings("unused") CommandEvent event) {
+        log.debug("Handle command event");
         boolean queuesNotEmpty = true;
 
         while (queuesNotEmpty) {
@@ -44,6 +45,8 @@ public class CommandConsumer {
                     .filter(state -> !state.getCommandsQueue().isEmpty())
                     .findAny();
 
+            log.debug("GameState: {}", gameToPlayRoundOptional);
+
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 
             gameToPlayRoundOptional.ifPresent(this::triggerRound);
@@ -51,12 +54,14 @@ public class CommandConsumer {
     }
 
     private void triggerRound(GameState gameState) {
+        log.debug("Round triggered: {}", gameState.getGameName());
         gameState.setRoundInProgress(true);
         GameRound gameRound = gameRoundSelector.selectCommand(gameState.getCommandsQueue(), gameState.getGameName());
         handle(gameRound.getMessageType(), gameRound.getCommands(), gameRound.getGameName());
     }
 
     private void handle(MessageType messageType, List<Command> commands, String gameName) {
+        log.debug("Handle round: {}, {}", messageType, commands);
         //TODO Strategy someday
         switch (messageType) {
             case MOVE:

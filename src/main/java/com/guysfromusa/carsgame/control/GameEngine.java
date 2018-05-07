@@ -49,7 +49,6 @@ public class GameEngine {
                 .map(command -> (MoveCommand)command)
                 .map(moveCmd -> Tuple.of(moveCmd.getFuture(), new MoveData(gameState, moveCmd)))
                 .forEach(moveData -> {
-                    //TODO catch errors and completeExceptionally
                     carMoveHandler.handleMoveCommand(moveData._2);
                     moveData._1.complete(gameState.getAllCars());
                 });
