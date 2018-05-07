@@ -46,4 +46,14 @@ public interface CarApiAware {
         ResponseEntity<Long> modifiedCar =  template.exchange(url, DELETE, null, Long.class);
         return modifiedCar.getBody();
     }
+
+    default Car repairCar(TestRestTemplate template, String carName){
+
+        String url = String.join("/", "/v1/cars", carName, "repair");
+
+        ResponseEntity<Car> car = template.exchange(url, POST, null, Car.class);
+        return car.getBody();
+    }
+
+
 }

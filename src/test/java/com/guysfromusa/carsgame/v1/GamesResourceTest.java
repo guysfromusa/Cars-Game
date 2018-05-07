@@ -35,7 +35,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
-public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware {
+public class GamesResourceTest extends TestGameAware {
 
     @Inject
     private TestRestTemplate template;
@@ -71,6 +71,7 @@ public class GamesResourceTest implements CarApiAware, MapApiAware, GameApiAware
     }
 
     @Test
+    @Sql(value = {"/sql/clean.sql", "/sql/car_resource_insert_car.sql"})
     public void whenTurnRightMoveForward_shouldCarBeHeadingEast(){
         //given
         String carName = "car4";
