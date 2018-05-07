@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class UndoMovementServicePreparerTest {
+public class UndoMovementPreparerServiceTest {
 
     private static final String carName = "toyota";
     private static final String gameId = "fifa";
@@ -35,7 +35,7 @@ public class UndoMovementServicePreparerTest {
     private UndoMovementPreparerService service;
 
     @Test
-    public void shouldPrepareBathPathFor2MoveBack(){
+    public void shouldPrepareBathPathFor2MoveBack() {
         //given
         when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
                 .thenReturn(asList(newMovementDto(RIGHT), newMovementDto(RIGHT)));
@@ -46,22 +46,22 @@ public class UndoMovementServicePreparerTest {
         //then
         assertThat(result)
                 .extracting(MovementDto::getOperation)
-                .containsExactly(LEFT, LEFT, LEFT, LEFT);
+                .containsExactly(LEFT, LEFT, LEFT, LEFT, LEFT, LEFT);
     }
 
     @Test
-    public void shouldPrepareBathPathFor5MoveBack(){
+    public void shouldPrepareBathPathFor5MoveBack() {
         //given
         when(activeGamesContainer.getNCarsMovementHistory(gameId, carName, 2))
                 .thenReturn(asList(newMovementDto(FORWARD), newMovementDto(RIGHT),
                         newMovementDto(FORWARD), newMovementDto(LEFT), newMovementDto(RIGHT)));
 
         //when
-        List<MovementDto> result  = service.prepareBackPath(gameId, carName, 2);
+        List<MovementDto> result = service.prepareBackPath(gameId, carName, 2);
 
         //then
         assertThat(result)
                 .extracting(MovementDto::getOperation)
-                .containsExactly(LEFT, LEFT, FORWARD, LEFT, LEFT, LEFT, FORWARD, RIGHT, LEFT, LEFT, LEFT);
+                .containsExactly(LEFT, LEFT, FORWARD, LEFT, FORWARD, RIGHT, LEFT, LEFT, LEFT);
     }
 }

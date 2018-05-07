@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,10 @@ public class MoveData {
 
     public int getForwardSteps(){
         return moveCommand.getMovementDto().getForwardSteps();
+    }
+
+    public boolean isUndo(){
+        return moveCommand.isUndo();
     }
 
     public List<CarDto> getCars(){

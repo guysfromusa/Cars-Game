@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.game_state;
 
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import static java.util.Collections.emptyList;
  */
 @Component
 @Slf4j
+@ToString
 public class ActiveGamesContainer {
 
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();

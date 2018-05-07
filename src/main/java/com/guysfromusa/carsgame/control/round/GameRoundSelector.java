@@ -1,8 +1,7 @@
 package com.guysfromusa.carsgame.control.round;
 
-import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.control.commands.Command;
 
-import java.util.Optional;
 import java.util.Queue;
 
 /**

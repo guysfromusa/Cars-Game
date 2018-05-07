@@ -5,7 +5,6 @@ package com.guysfromusa.carsgame.control;
  */
 public enum MessageType {
 
-    MOVE, ADD_CAR_TO_GAME,
-    STOP_GAME
+    MOVE, ADD_CAR_TO_GAME, UNDO, STOP_GAME
 
 }

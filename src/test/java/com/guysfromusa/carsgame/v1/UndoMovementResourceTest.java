@@ -31,7 +31,7 @@ public class UndoMovementResourceTest {
 
     @Test
     @Sql(value = {"/sql/clean.sql","/sql/undo_resource_insert.sql"})
-    public void shouldBackCar3Step(){
+    public void shouldBackCar3Step() {
         //given
         activeGamesContainer.addNewGame("game1", null);
         activeGamesContainer.getGameState("game1").addNewCar(aCarEntity().name("volvo").positionX(1).positionY(2).build());
@@ -48,7 +48,5 @@ public class UndoMovementResourceTest {
         assertThat(movements.getBody())
                 .extracting(UndoNStepPath::getOperation)
                 .containsExactly("LEFT", "LEFT", "FORWARD", "LEFT", "RIGHT", "LEFT", "LEFT");
-        //TODO : ADD TEST TO GET CARS POSITION WHEN MOVE WILL BE DONE
     }
-
 }

@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.commands.Command;
 import com.guysfromusa.carsgame.control.round.GameRound;
 import com.guysfromusa.carsgame.control.round.GameRoundSelector;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
@@ -36,6 +37,10 @@ public class CommandConsumer {
 
     @EventListener(CommandEvent.class)
     public synchronized void handle(@SuppressWarnings("unused") CommandEvent event) {
+        if(log.isDebugEnabled()){
+            log.debug("Handle command event: {}", event);
+            log.debug("ActiveGames: {}", activeGamesContainer);
+        }
         boolean queuesNotEmpty = true;
 
         while (queuesNotEmpty) {
@@ -44,6 +49,8 @@ public class CommandConsumer {
                     .filter(state -> !state.getCommandsQueue().isEmpty())
                     .findAny();
 
+            log.debug("GameStateToPlayRound: {}", gameToPlayRoundOptional);
+
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 
             gameToPlayRoundOptional.ifPresent(this::triggerRound);
@@ -51,12 +58,14 @@ public class CommandConsumer {
     }
 
     private void triggerRound(GameState gameState) {
+        log.debug("Round triggered: {}", gameState.getGameName());
         gameState.setRoundInProgress(true);
         GameRound gameRound = gameRoundSelector.selectCommand(gameState.getCommandsQueue(), gameState.getGameName());
         handle(gameRound.getMessageType(), gameRound.getCommands(), gameRound.getGameName());
     }
 
     private void handle(MessageType messageType, List<Command> commands, String gameName) {
+        log.debug("Handle round: {}, {}", messageType, commands);
         //TODO Strategy someday
         switch (messageType) {
             case MOVE:
@@ -64,6 +73,9 @@ public class CommandConsumer {
                 break;
             case ADD_CAR_TO_GAME:
                 gameEngine.handleAddCars(commands, gameName);
+                break;
+            case UNDO:
+                gameEngine.handleUndo(commands, gameName);
                 break;
             case STOP_GAME:
                 gameEngine.handleGameWatchCommand(commands, gameName);

@@ -1,18 +1,20 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.control.MessageType;
-import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Getter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
+@Slf4j
 public class UndoMovementService {
 
     private final UndoMovementPreparerService undoMovementPreparerService;
@@ -24,17 +26,19 @@ public class UndoMovementService {
         this.moveTaskCreator = notNull(moveTaskCreator);
     }
 
-    public List<MovementDto> doNMoveBack(String gameId, String carName, int numberOfStepBack) throws InterruptedException, ExecutionException {
+    public List<MovementDto> doNMoveBack(String gameId, String carName, int numberOfStepBack) {
 
         //todo : add command which set flag as true and return List<movmentDto>
         List<MovementDto> movementDtos = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
+        log.debug("BackPath: {}", movementDtos);
         undoMovementPreparerService.setUndoProcessFlag(gameId, carName, true);
-        moveTaskCreator.schedule(new UndoState(gameId, carName, movementDtos));
+        moveTaskCreator.schedule(1000L, new UndoState(gameId, carName, movementDtos));
 
         return movementDtos;
     }
 }
 
+@ToString
 class UndoState {
 
     @Getter

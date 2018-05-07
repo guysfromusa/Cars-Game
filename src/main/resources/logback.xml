@@ -2,5 +2,6 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="org.springframework.transaction.interceptor" level="INFO"/>
-    <logger name="com.guysfromusa.carsgame" level="INFO"/>
+    <logger name="com.guysfromusa.carsgame" level="DEBUG"/>
+    <logger name="org.springframework" level="INFO"/>
 </configuration>

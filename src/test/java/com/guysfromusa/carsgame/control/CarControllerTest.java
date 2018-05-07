@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.control.movement.MoveResult;
 import com.guysfromusa.carsgame.control.movement.MovementStrategy;
 import com.guysfromusa.carsgame.game_state.CarState;
