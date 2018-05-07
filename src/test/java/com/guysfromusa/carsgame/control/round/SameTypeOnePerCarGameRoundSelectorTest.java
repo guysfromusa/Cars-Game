@@ -3,6 +3,10 @@ package com.guysfromusa.carsgame.control.round;
 import com.guysfromusa.carsgame.control.commands.AddCarToGameCommand;
 import com.guysfromusa.carsgame.control.commands.Command;
 import com.guysfromusa.carsgame.control.commands.MoveCommand;
+import com.guysfromusa.carsgame.control.AddCarToGameCommand;
+import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.control.LastMoveWachCommand;
+import com.guysfromusa.carsgame.control.MoveCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -75,8 +79,8 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
     @Test
     public void shouldSelectOneStopGameCommand() {
-        MoveCommand firstStopGame = new MoveCommand("game", null, STOP_GAME, newMovementDto(Operation.LEFT), false);
-        MoveCommand secondStopGame = new MoveCommand("game", null, STOP_GAME, newMovementDto(Operation.LEFT), false);
+        LastMoveWachCommand firstStopGame = new LastMoveWachCommand("game", null, STOP_GAME);
+        LastMoveWachCommand secondStopGame = new LastMoveWachCommand("game", null, STOP_GAME);
         MoveCommand secondMoveCarOne = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT), false);
 
         LinkedList<Command> queue = new LinkedList<>();
@@ -88,7 +92,7 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
 
         assertThat(gameRound).isEqualTo(new GameRound("game", asList(firstStopGame), STOP_GAME));
 
-        assertThat(queue).containsOnly(firstStopGame);
+        assertThat(queue).containsOnly(secondStopGame, secondMoveCarOne);
     }
 
 }
