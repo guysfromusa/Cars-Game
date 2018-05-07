@@ -1,5 +1,6 @@
 package com.guysfromusa.carsgame.control;
 
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.control.round.GameRoundSelector;
 import com.guysfromusa.carsgame.control.round.SameTypeOnePerCarGameRoundSelector;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;

@@ -1,9 +1,9 @@
 package com.guysfromusa.carsgame.control.round;
 
-import com.guysfromusa.carsgame.control.AddCarToGameCommand;
-import com.guysfromusa.carsgame.control.Command;
 import com.guysfromusa.carsgame.control.LastMoveWachCommand;
-import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.AddCarToGameCommand;
+import com.guysfromusa.carsgame.control.commands.Command;
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

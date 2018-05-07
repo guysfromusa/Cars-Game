@@ -1,15 +1,20 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
-import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.control.commands.Command;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.game_state.CarState;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -21,6 +26,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
+@ToString(exclude = {"gameName", "gameMapContent"})
 public class GameState {
 
     @Getter
@@ -109,6 +115,7 @@ public class GameState {
 
     public boolean isGameToBeFinished(){
         long currentTimeStamp = Instant.now().getEpochSecond();
-        return currentTimeStamp - lastMovetimeStampMillis > 3;
+        //TODO configurable to make tests faster
+        return currentTimeStamp - lastMovetimeStampMillis > 30;
     }
 }

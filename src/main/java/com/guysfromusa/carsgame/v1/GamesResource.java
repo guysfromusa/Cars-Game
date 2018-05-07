@@ -2,7 +2,7 @@ package com.guysfromusa.carsgame.v1;
 
 import com.guysfromusa.carsgame.GameMapUtils;
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.entities.enums.GameStatus;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;

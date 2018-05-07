@@ -1,5 +1,6 @@
-package com.guysfromusa.carsgame.control;
+package com.guysfromusa.carsgame.control.commands;
 
+import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.ToString;
 public class AddCarToGameCommand extends Command<CarEntity> {
 
     @Getter
-    private Point startingPoint;
+    private final Point startingPoint;
 
     @Builder
     //TODO messageType can by hardcoded or via getMessageType

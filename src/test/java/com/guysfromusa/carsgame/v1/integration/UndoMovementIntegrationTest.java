@@ -1,17 +1,15 @@
 package com.guysfromusa.carsgame.v1.integration;
 
 import com.guysfromusa.carsgame.config.SpringContextConfiguration;
-import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.model.Direction;
 import com.guysfromusa.carsgame.repositories.CarRepository;
 import com.guysfromusa.carsgame.v1.CarApiAware;
 import com.guysfromusa.carsgame.v1.GameApiAware;
 import com.guysfromusa.carsgame.v1.MapApiAware;
-import com.guysfromusa.carsgame.v1.UndoMovementApiAware;
 import com.guysfromusa.carsgame.v1.model.Car;
 import com.guysfromusa.carsgame.v1.model.Map;
+import com.guysfromusa.carsgame.v1.model.Movement;
 import com.guysfromusa.carsgame.v1.model.Point;
-import io.vavr.collection.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,57 +19,70 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.guysfromusa.carsgame.entities.enums.CarType.NORMAL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
+import static com.guysfromusa.carsgame.model.Direction.NORTH;
+import static com.guysfromusa.carsgame.v1.model.Movement.Operation.*;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+
+/**
+ * Created by Sebastian Mikucki, 04.05.18
+ */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = DEFINED_PORT, classes = SpringContextConfiguration.class)
-public class UndoMovementIntegrationTest implements CarApiAware, MapApiAware, GameApiAware, UndoMovementApiAware {
-
-    private static final String gameName = "game1";
-    private static final String carName = "opel";
-    private static final String mapName = "map";
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
+public class UndoMovementIntegrationTest implements CarApiAware, MapApiAware, GameApiAware {
 
     @Inject
     private TestRestTemplate template;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Inject
     private AsyncTaskExecutor taskExecutor;
 
     @Inject
     private CarRepository carRepository;
 
+    public static final String MAP_CONTENT = "1,1,1,1,1\n" +
+            "1,1,1,1,1\n" +
+            "1,1,1,1,1\n" +
+            "1,1,1,1,1\n" +
+            "1,1,1,1,1\n";
+
     @Test
     @Sql("/sql/clean.sql")
-    public void shouldStartGameAndDoTwoSetpBack() {
+    public void shouldPerformUndo() {
         //given
-        final String mapContent = "0,1,1,0,0\n" +
-                "0,0,1,0,0\n" +
-                "0,0,1,0,0\n" +
-                "0,0,1,1,0\n" +
-                "0,0,0,1,0\n";
-
+        addNewMap(template, new Map("map", MAP_CONTENT));
+        addNewCar(template, "car", NORMAL);
+        startNewGame(template, "game", "map");
+        addCarToGame(template, "car", "game", new Point(2, 2));
+        moves("car", "game", FORWARD, RIGHT, FORWARD, LEFT);
 
         //when
-        addNewMap(template, new Map(mapName, mapContent));
-        addNewCar(template, carName, NORMAL);
-        startNewGame(template, gameName, mapName);
-        //todo do some move
+        undo(template, "game", "car", 4);
 
-        List<Future<Car>> addedCar = List.<Callable<Car>>of(
-                () -> addCarToGame(template, carName, gameName, new Point(2, 0)))
-                .map(taskExecutor::submit);
+        //then
+        await().atMost(15, SECONDS).until(() -> carIsInPoint(new Point(2, 2), NORTH));
+    }
 
+    private boolean carIsInPoint(Point point, Direction direction) {
+        return carRepository.findByName("car")
+                .filter(v -> v.getPositionX() == point.getX()
+                        && v.getPositionY() == point.getY()
+                        && v.getDirection().equals(direction))
+                .isPresent();
+    }
 
-
-        //then todo : finish it after all
-//        Optional<CarEntity> carAfterBack = carRepository.findByName(carName);
-//        assertThat(carAfterBack.isPresent());
-//        assertThat(carAfterBack.get()).extracting(CarEntity::getPositionX, CarEntity::getPositionY, CarEntity::getDirection).containsExactly(1, 2, Direction.SOUTH);
+    private List<List<Car>> moves(String zlomek, String gameName, Movement.Operation... operations) {
+        return Stream.of(operations)
+                .map(operation -> doCarMove(template, gameName, zlomek, new Movement(operation, 1)))
+                .collect(Collectors.toList());
     }
 }
