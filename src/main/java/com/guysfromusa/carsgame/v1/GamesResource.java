@@ -111,5 +111,14 @@ public class GamesResource {
         return conversionService.convert(status, GameStatusDto.class);
     }
 
+    @PostMapping(path= "{gameName}/end")
+    @ApiOperation(value = "Stop running game")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Status of the game"),
+            @ApiResponse(code = 404, message = "Game not found")
+
+    })
+    pu
+
 
 }

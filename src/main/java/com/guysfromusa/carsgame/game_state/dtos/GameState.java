@@ -8,11 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,6 +28,9 @@ public class GameState {
 
     @Getter
     private final Integer[][] gameMapContent;
+
+    @Getter @Setter
+    private long lastMovetimeStampMillis = Instant.now().getEpochSecond();
 
     @Getter
     private final Queue<Command> commandsQueue = new ConcurrentLinkedQueue<>();
@@ -96,7 +96,19 @@ public class GameState {
         carsStatesMemory.get(carName).getCar().setUndoInProcess(value);
     }
 
+    public void updateLastMoveTimeStamp(CompletableFuture future){
+        boolean isMoveSuccess = !future.isCompletedExceptionally() && !future.isCancelled() && future.isDone();
+        if(isMoveSuccess){
+            lastMovetimeStampMillis = Instant.now().getEpochSecond();
+        }
+    }
+
     public void removeCar(String carName) {
         carsStatesMemory.remove(carName);
+    }
+
+    public boolean isGameToBeFinished(){
+        long currentTimeStamp = Instant.now().getEpochSecond();
+        return currentTimeStamp - lastMovetimeStampMillis > 3;
     }
 }

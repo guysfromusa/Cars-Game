@@ -55,4 +55,10 @@ public class GameService {
         return gameEntity.getGameStatus();
     }
 
+    @Transactional
+    public void removeGame(String gameName){
+        final GameEntity gameEntity = gameRepository.findByName(gameName)
+                .orElseThrow(() -> new EntityNotFoundException("Game '" + gameName + "' not found"));
+        gameEntity.setGameStatus(GameStatus.ARCHIVED);
+    }
 }

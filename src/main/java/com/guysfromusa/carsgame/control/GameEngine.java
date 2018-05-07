@@ -52,6 +52,7 @@ public class GameEngine {
                     //TODO catch errors and completeExceptionally
                     carMoveHandler.handleMoveCommand(moveData._2);
                     moveData._1.complete(gameState.getAllCars());
+                    gameState.updateLastMoveTimeStamp(moveData._1);
                 });
 
 
@@ -83,6 +84,22 @@ public class GameEngine {
                         }));
 
         gameState.setRoundInProgress(false);
+        applicationEventPublisher.publishEvent(new CommandEvent(this));
+    }
+
+    @Async
+    public void handleGameWatchCommand(List<Command> commands, String gameName){
+        GameState gameState = activeGamesContainer.getGameState(gameName);
+
+        commands.stream()
+                .map(command -> (LastMoveWachCommand) command)
+                .forEach(lastMoveWachCommand -> {
+                    if(gameState.isGameToBeFinished()){
+
+                    }
+
+                });
+
         applicationEventPublisher.publishEvent(new CommandEvent(this));
     }
 }
