@@ -1,5 +1,6 @@
-package com.guysfromusa.carsgame.control;
+package com.guysfromusa.carsgame.control.commands;
 
+import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.v1.model.Point;
 import lombok.Builder;

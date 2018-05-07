@@ -1,8 +1,8 @@
 package com.guysfromusa.carsgame.v1;
 
 
-import com.guysfromusa.carsgame.control.AddCarToGameCommand;
 import com.guysfromusa.carsgame.control.CommandProducer;
+import com.guysfromusa.carsgame.control.commands.AddCarToGameCommand;
 import com.guysfromusa.carsgame.entities.CarEntity;
 import com.guysfromusa.carsgame.entities.enums.CarType;
 import com.guysfromusa.carsgame.services.CarService;

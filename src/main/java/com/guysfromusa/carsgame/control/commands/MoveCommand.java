@@ -1,5 +1,6 @@
-package com.guysfromusa.carsgame.control;
+package com.guysfromusa.carsgame.control.commands;
 
+import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Builder;

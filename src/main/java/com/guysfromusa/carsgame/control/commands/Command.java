@@ -1,5 +1,6 @@
-package com.guysfromusa.carsgame.control;
+package com.guysfromusa.carsgame.control.commands;
 
+import com.guysfromusa.carsgame.control.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

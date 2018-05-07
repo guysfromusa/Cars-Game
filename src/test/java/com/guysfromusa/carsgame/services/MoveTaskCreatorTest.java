@@ -1,9 +1,8 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
