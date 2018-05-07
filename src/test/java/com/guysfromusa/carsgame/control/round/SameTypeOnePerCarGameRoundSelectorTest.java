@@ -12,6 +12,7 @@ import java.util.LinkedList;
 
 import static com.guysfromusa.carsgame.control.MessageType.ADD_CAR_TO_GAME;
 import static com.guysfromusa.carsgame.control.MessageType.MOVE;
+import static com.guysfromusa.carsgame.control.MessageType.STOP_GAME;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.Operation;
 import static com.guysfromusa.carsgame.game_state.dtos.MovementDto.newMovementDto;
 import static java.util.Arrays.asList;
@@ -70,6 +71,24 @@ public class SameTypeOnePerCarGameRoundSelectorTest {
         assertThat(gameRound).isEqualTo(new GameRound("game", asList(firstMoveCarOne, firstMoveCarTwo), MOVE));
 
         assertThat(queue).containsOnly(secondMoveCarOne);
+    }
+
+    @Test
+    public void shouldSelectOneStopGameCommand() {
+        MoveCommand firstStopGame = new MoveCommand("game", null, STOP_GAME, newMovementDto(Operation.LEFT), false);
+        MoveCommand secondStopGame = new MoveCommand("game", null, STOP_GAME, newMovementDto(Operation.LEFT), false);
+        MoveCommand secondMoveCarOne = new MoveCommand("game", "1", MOVE, newMovementDto(Operation.LEFT), false);
+
+        LinkedList<Command> queue = new LinkedList<>();
+        queue.add(firstStopGame);
+        queue.add(secondStopGame);
+        queue.add(secondMoveCarOne);
+
+        GameRound gameRound = selector.selectCommand(queue, "game");
+
+        assertThat(gameRound).isEqualTo(new GameRound("game", asList(firstStopGame), STOP_GAME));
+
+        assertThat(queue).containsOnly(firstStopGame);
     }
 
 }
