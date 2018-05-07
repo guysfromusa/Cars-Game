@@ -118,11 +118,10 @@ public class GameEngine {
 
     @Async
     public void handleGameWatchCommand(List<Command> commands, String gameName){
+        log.debug("Handle interrupt commands: {}", commands);
         commands.stream()
                 .map(command -> (LastMoveWachCommand) command)
-                .forEach(lastMoveWachCommand -> {
-                    gameMoveWatcher.watchLastGameMoves(gameName);
-                });
+                .forEach(lastMoveWachCommand -> gameMoveWatcher.watchLastGameMoves(gameName));
 
         applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleGameWatchCommand"));
     }

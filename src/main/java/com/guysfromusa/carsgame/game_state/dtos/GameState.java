@@ -116,6 +116,7 @@ public class GameState {
     public boolean isGameToBeFinished(){
         long currentTimeStamp = Instant.now().getEpochSecond();
         //TODO configurable to make tests faster
-        return currentTimeStamp - lastMovetimeStampMillis > 30;
+        //FIXME revert to 30
+        return currentTimeStamp - lastMovetimeStampMillis > 3;
     }
 }

@@ -5,10 +5,15 @@ import com.guysfromusa.carsgame.control.commands.Command;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 import static com.guysfromusa.carsgame.control.MessageType.STOP_GAME;
-import static java.util.Objects.*;
+import static java.util.Objects.nonNull;
 
 /**
  * Created by Robert Mycek, 2018-05-05

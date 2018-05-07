@@ -2,7 +2,8 @@ package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -13,7 +14,8 @@ import static org.apache.commons.lang3.Validate.notNull;
  * Created by Konrad Rys, 07.05.2018
  */
 
-@Component
+@Service
+@Slf4j
 public class GameMoveWatcher {
 
     private final CarService carService;
@@ -42,6 +44,7 @@ public class GameMoveWatcher {
     }
 
     private void removeGame(String gameName) {
+        log.debug("Interrupting game: {}", gameName);
         carService.removeAllCarsFromGame(gameName);
         gameService.removeGame(gameName);
         activeGamesContainer.removeGame(gameName);
