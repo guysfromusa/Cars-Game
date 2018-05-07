@@ -1,0 +1,1 @@
+insert into MAP (id, name, content, active) values (-1, 'map2', '1,1,1\n0,0,1\n0,0,1', 'ACTIVE');
