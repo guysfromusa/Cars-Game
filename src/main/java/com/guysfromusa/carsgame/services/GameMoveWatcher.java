@@ -34,6 +34,16 @@ public class GameMoveWatcher {
     @Transactional
     public void watchLastGameMoves(String gameName){
         GameState gameState = activeGamesContainer.getGameState(gameName);
+        boolean gameToBeFinished = gameState.isGameToBeFinished();
+        if(!gameToBeFinished){
+            return;
+        }
+        removeGame(gameName);
+    }
 
+    private void removeGame(String gameName) {
+        carService.removeAllCarsFromGame(gameName);
+        gameService.removeGame(gameName);
+        activeGamesContainer.removeGame(gameName);
     }
 }

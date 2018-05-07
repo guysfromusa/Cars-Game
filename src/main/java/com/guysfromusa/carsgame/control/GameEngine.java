@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.control;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.services.GameMoveWatcher;
 import io.vavr.Tuple;
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +31,19 @@ public class GameEngine {
 
     private final CarMoveHandler carMoveHandler;
 
+    private final GameMoveWatcher gameMoveWatcher;
+
     @Inject
     public GameEngine(ActiveGamesContainer activeGamesContainer,
                       ApplicationEventPublisher applicationEventPublisher,
                       CarService carService,
-                      CarMoveHandler carMoveHandler) {
+                      CarMoveHandler carMoveHandler,
+                      GameMoveWatcher gameMoveWatcher) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
         this.carService = notNull(carService);
         this.carMoveHandler = notNull(carMoveHandler);
+        this.gameMoveWatcher = notNull(gameMoveWatcher);
     }
 
     @Async
@@ -94,10 +99,7 @@ public class GameEngine {
         commands.stream()
                 .map(command -> (LastMoveWachCommand) command)
                 .forEach(lastMoveWachCommand -> {
-                    if(gameState.isGameToBeFinished()){
-
-                    }
-
+                    gameMoveWatcher.watchLastGameMoves(gameName);
                 });
 
         applicationEventPublisher.publishEvent(new CommandEvent(this));

@@ -44,6 +44,13 @@ public class ActiveGamesContainer {
         return this.gameStateMap.get(gameName);
     }
 
+    public void removeGame(String gameName){
+        if(!this.gameStateMap.containsKey(gameName)){
+            return;
+        }
+        this.gameStateMap.remove(gameName);
+    }
+
     public Collection<GameState> getGameStates(){
         return gameStateMap.values();
     }
