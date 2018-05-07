@@ -1,6 +1,6 @@
 package com.guysfromusa.carsgame.game_state.dtos;
 
-import com.guysfromusa.carsgame.control.Command;
+import com.guysfromusa.carsgame.control.commands.Command;
 
 import java.util.Arrays;
 

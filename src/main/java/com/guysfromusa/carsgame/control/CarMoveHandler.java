@@ -62,25 +62,34 @@ public class CarMoveHandler {
                 .accept(moveData);
     }
 
+    //TODO refactor: extract to other class
     private Consumer<MoveData> checkCarAbilityToMove(){
         return moveData -> {
             CarDto car = moveData.getCar();
             Match(car).of(
-                    Case($(Predicates.isNull()), () -> run(() ->
+                    Case($(Predicates.isNull()), () -> run(() -> {
+                                log.error("Car not in game");
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME))
+                                        .completeExceptionally(new IllegalArgumentException(CAR_NOT_IN_GAME));
+                            }
                     )),
-                    Case($(CarDto::isCrashed), () -> run(() ->
+                    Case($(CarDto::isCrashed), () -> run(() -> {
+                                log.error("Car '{}' is crashed", car.getName());
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE))
+                                        .completeExceptionally(new IllegalArgumentException(CAR_CRASHED_MESSAGE));
+                            }
                     )),
-                    Case($(CarDto::isUndoInProcess), () -> run(() ->
+                    Case($(c -> c.isUndoInProcess() != moveData.isUndo()), () -> run(() -> {
+                                log.error("Car '{}' is moving undo", car.getName());
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS))
+                                        .completeExceptionally(new IllegalArgumentException(CAR_IN_UNDO_PROCESS));
+                            }
                     )),
-                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() ->
+                    Case($(c -> !c.getType().isValidStepsPerMove(moveData.getForwardSteps())), () -> run(() -> {
+                                log.error("Car '{}' cannot perform such number of steps '{}'", car.getName(), moveData.getForwardSteps());
                                 moveData.getFuture()
-                                        .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS))
+                                        .completeExceptionally(new IllegalArgumentException(CAR_CANNOT_PERFORM_MOVE_DUE_TO_STEPS));
+                            }
                     )),
                     Case($(), () -> run(() -> {
                         //do nothing in case car is able to perform move

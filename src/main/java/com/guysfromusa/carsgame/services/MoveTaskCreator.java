@@ -1,16 +1,21 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.control.CommandProducer;
-import com.guysfromusa.carsgame.control.MoveCommand;
+import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.CarDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
+@Slf4j
 public class MoveTaskCreator {
 
     private final CommandProducer commandProducer;
@@ -19,25 +24,43 @@ public class MoveTaskCreator {
 
     @Autowired
     public MoveTaskCreator(CommandProducer commandProducer, UndoMovementPreparerService undoMovementPreparerService, ScheduledExecutorService scheduler) {
-        this.commandProducer = commandProducer;
-        this.undoMovementPreparerService = undoMovementPreparerService;
-        this.scheduler = scheduler;
+        this.commandProducer = notNull(commandProducer);
+        this.undoMovementPreparerService = notNull(undoMovementPreparerService);
+        this.scheduler = notNull(scheduler);
     }
 
-    public void schedule(UndoState undoState) {
+    public void schedule(long delayInMillis, UndoState undoState) {
         Runnable task = () -> performMoveAndScheduleNext(undoState);
-        //todo : timestamp
-        scheduler.schedule(task, 1, TimeUnit.SECONDS);
+        scheduler.schedule(task, delayInMillis, MILLISECONDS);
     }
 
-    private void performMoveAndScheduleNext(UndoState undoState) {
+    void performMoveAndScheduleNext(UndoState undoState) {
+        long start = System.nanoTime();
         MoveCommand undoMove = undoState.createNextMove();
-        //TODO check if this is correct
-        List<CarDto> carDto = commandProducer.scheduleCommand(undoMove);
-        if (carDto.stream().anyMatch(CarDto::isCrashed) || undoState.isLast()) {
+
+        List<CarDto> result = commandProducer.scheduleCommand(undoMove);
+
+        log.debug("Move: {}", undoMove);
+        log.debug("Result: {}", result);
+
+        boolean isCrashed = result.stream()
+                .filter(c -> undoState.getCarName().equals(c.getName()))
+                .map(CarDto::isCrashed)
+                .findFirst()
+                .orElse(true);
+
+        if (isCrashed || undoState.isLast()) {
+            log.debug("Car '{}' finished undo: crashed: {}, last: {}", undoState.getCarName(), isCrashed, undoState.isLast());
             undoMovementPreparerService.setUndoProcessFlag(undoState.getGameName(), undoState.getCarName(), false);
         } else {
-            schedule(undoState);
+            long delayInMillis = getDelayInMillis(start, System.nanoTime());
+            schedule(delayInMillis, undoState);
         }
+    }
+
+    long getDelayInMillis(long start, long end) {
+        long elapsed = NANOSECONDS.toMillis(end - start);
+        long delay = 1000L - elapsed;
+        return Math.max(0, delay); // scheduler accept negative delay but let be strict here
     }
 }
