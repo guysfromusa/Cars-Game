@@ -37,7 +37,10 @@ public class CommandConsumer {
 
     @EventListener(CommandEvent.class)
     public synchronized void handle(@SuppressWarnings("unused") CommandEvent event) {
-        log.debug("Handle command event");
+        if(log.isDebugEnabled()){
+            log.debug("Handle command event: {}", event);
+            log.debug("ActiveGames: {}", activeGamesContainer);
+        }
         boolean queuesNotEmpty = true;
 
         while (queuesNotEmpty) {
@@ -46,7 +49,7 @@ public class CommandConsumer {
                     .filter(state -> !state.getCommandsQueue().isEmpty())
                     .findAny();
 
-            log.debug("GameState: {}", gameToPlayRoundOptional);
+            log.debug("GameStateToPlayRound: {}", gameToPlayRoundOptional);
 
             queuesNotEmpty = gameToPlayRoundOptional.isPresent();
 

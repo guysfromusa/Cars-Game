@@ -4,6 +4,7 @@ import com.guysfromusa.carsgame.control.MessageType;
 import com.guysfromusa.carsgame.control.commands.MoveCommand;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class UndoMovementService {
 
         //todo : add command which set flag as true and return List<movmentDto>
         List<MovementDto> movementDtos = undoMovementPreparerService.prepareBackPath(gameId, carName, numberOfStepBack);
-        log.debug("Movements: {}", movementDtos);
+        log.debug("BackPath: {}", movementDtos);
         undoMovementPreparerService.setUndoProcessFlag(gameId, carName, true);
         moveTaskCreator.schedule(1000L, new UndoState(gameId, carName, movementDtos));
 
@@ -37,6 +38,7 @@ public class UndoMovementService {
     }
 }
 
+@ToString
 class UndoState {
 
     @Getter

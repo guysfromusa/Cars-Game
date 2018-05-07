@@ -43,7 +43,7 @@ public class CommandProducer {
         return Optional.ofNullable(activeGamesContainer.getGameState(move.getGameName())) //could be the game is already finished
                 .map(state -> {
                     CompletableFuture<List<CarDto>> result = state.addCommandToExecute(move, Collections::emptyList);
-                    applicationEventPublisher.publishEvent(new CommandEvent(this));
+                    applicationEventPublisher.publishEvent(new CommandEvent("CommandProducer:scheduleCommand(MoveCommand)"));
                     return result;
                 })
                 .map(Futures::getUnchecked)
@@ -56,7 +56,7 @@ public class CommandProducer {
         return Optional.ofNullable(activeGamesContainer.getGameState(addCmd.getGameName()))
                 .map(gameState -> {
                     CompletableFuture<CarEntity> result = gameState.addCommandToExecute(addCmd, CarEntity::new);
-                    applicationEventPublisher.publishEvent(new CommandEvent(this));
+                    applicationEventPublisher.publishEvent(new CommandEvent("CommandProducer:scheduleCommand(AddCarToGameCommand)"));
                     return result;
                 })
                 .map(Futures::getUnchecked)
@@ -68,7 +68,7 @@ public class CommandProducer {
         return Optional.ofNullable(activeGamesContainer.getGameState(undoCommand.getGameName()))
                 .map(gameState -> {
                     CompletableFuture<List<MovementDto>> result = gameState.addCommandToExecute(undoCommand, Collections::emptyList);
-                    applicationEventPublisher.publishEvent(new CommandEvent(this));
+                    applicationEventPublisher.publishEvent(new CommandEvent("CommandProducer:scheduleCommand(UndoCommand)"));
                     return result;
                 })
                 .map(Futures::getUnchecked)
