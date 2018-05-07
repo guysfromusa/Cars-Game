@@ -56,4 +56,13 @@ public class CommandProducer {
                 .orElse(null);
     }
 
+    public void scheduleCommand(LastMoveWachCommand lastMoveWachCommand) {
+        activeGamesContainer.getGameStates()
+                .stream().forEach(gameState -> {
+                    gameState.addCommandToExecute(lastMoveWachCommand, Optional::empty);
+
+            applicationEventPublisher.publishEvent(new CommandEvent(this));
+        });
+    }
+
 }

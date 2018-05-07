@@ -94,8 +94,6 @@ public class GameEngine {
 
     @Async
     public void handleGameWatchCommand(List<Command> commands, String gameName){
-        GameState gameState = activeGamesContainer.getGameState(gameName);
-
         commands.stream()
                 .map(command -> (LastMoveWachCommand) command)
                 .forEach(lastMoveWachCommand -> {

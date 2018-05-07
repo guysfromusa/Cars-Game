@@ -1,6 +1,8 @@
 package com.guysfromusa.carsgame.services;
 
 import com.guysfromusa.carsgame.control.CommandProducer;
+import com.guysfromusa.carsgame.control.LastMoveWachCommand;
+import com.guysfromusa.carsgame.control.MessageType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,9 @@ public class StopGameTask {
 
     @Scheduled(fixedRate = 1000)
     public void doGameStateCheck(){
-        this.commandProducer.scheduleCommand()//TODO
+        LastMoveWachCommand command = LastMoveWachCommand.builder()
+                .messageType(MessageType.STOP_GAME)
+                .build();
+        this.commandProducer.scheduleCommand(command);
     }
 }
