@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.services.GameMoveWatcher;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +40,9 @@ public class GameEngineTest {
 
     @Mock
     private CarMoveHandler carMoveHandler;
+
+    @Mock
+    private GameMoveWatcher gameMoveWatcher;
 
     @InjectMocks
     private GameEngine gameEngine;
