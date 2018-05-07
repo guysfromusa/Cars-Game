@@ -96,6 +96,7 @@ public class GameEngine {
 
     @Async
     public void handleUndo(List<Command> commands, String gameName) {
+        GameState gameState = activeGamesContainer.getGameState(gameName);
         log.debug("Handle undo commands: {}", commands);
         commands.stream()
                 .map(command -> (UndoCommand) command)
@@ -105,7 +106,7 @@ public class GameEngine {
                     tuple2._1.complete(tuple2._2);
                 });
 
-        //do we need this
-//        applicationEventPublisher.publishEvent(new CommandEvent(this));
+        gameState.setRoundInProgress(false);
+        applicationEventPublisher.publishEvent(new CommandEvent(this));
     }
 }
