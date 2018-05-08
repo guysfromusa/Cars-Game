@@ -30,7 +30,7 @@ public class StopGameTask {
         this.commandProducer = notNull(commandProducer);
     }
 
-    @Scheduled(fixedRate = 4000)
+    @Scheduled(fixedRate = 1000)
     public void doGameStateCheck(){
         log.debug("Check game state");
         LastMoveWachCommand command = LastMoveWachCommand.builder()
