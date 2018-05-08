@@ -74,4 +74,13 @@ public class CommandProducer {
                 .map(Futures::getUnchecked)
                 .orElse(emptyList());
     }
+
+    public void scheduleCommand(LastMoveWachCommand lastMoveWachCommand) {
+        log.debug("Schedule command: {}", lastMoveWachCommand);
+        activeGamesContainer.getGameStates().forEach(gameState -> {
+            gameState.addCommandToExecute(lastMoveWachCommand, () -> "error");
+            applicationEventPublisher.publishEvent(new CommandEvent("CommandProducer:scheduleCommand(LastMoveWachCommand)"));
+        });
+    }
+
 }

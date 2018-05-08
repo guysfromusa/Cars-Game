@@ -6,6 +6,7 @@ import com.guysfromusa.carsgame.entities.GameEntity;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.services.GameMoveWatcher;
 import com.guysfromusa.carsgame.services.UndoMovementService;
 import com.guysfromusa.carsgame.v1.model.Point;
 import org.junit.Test;
@@ -45,6 +46,9 @@ public class GameEngineTest {
     @Mock
     private UndoMovementService undoMovementService;
 
+    @Mock
+    private GameMoveWatcher gameMoveWatcher;
+
     @InjectMocks
     private GameEngine gameEngine;
 
@@ -69,7 +73,7 @@ public class GameEngineTest {
         addedCar.setGame(gameEntity);
 
 
-        GameState gameState = new GameState("game1", null);
+        GameState gameState = new GameState("game1", null, 30);
         when(carService.addCarToGame("car1", gameState, new Point(1, 1)))
                 .thenReturn(addedCar);
 

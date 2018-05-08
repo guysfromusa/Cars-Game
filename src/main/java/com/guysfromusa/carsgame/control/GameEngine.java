@@ -7,6 +7,7 @@ import com.guysfromusa.carsgame.control.commands.UndoCommand;
 import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.services.CarService;
+import com.guysfromusa.carsgame.services.GameMoveWatcher;
 import com.guysfromusa.carsgame.services.UndoMovementService;
 import io.vavr.Tuple;
 import io.vavr.control.Try;
@@ -37,17 +38,21 @@ public class GameEngine {
 
     private final UndoMovementService undoMovementService;
 
+    private final GameMoveWatcher gameMoveWatcher;
+
     @Inject
     public GameEngine(ActiveGamesContainer activeGamesContainer,
                       ApplicationEventPublisher applicationEventPublisher,
                       CarService carService,
                       CarMoveHandler carMoveHandler,
-                      UndoMovementService undoMovementService) {
+                      UndoMovementService undoMovementService,
+                      GameMoveWatcher gameMoveWatcher) {
         this.activeGamesContainer = notNull(activeGamesContainer);
         this.applicationEventPublisher = notNull(applicationEventPublisher);
         this.carService = notNull(carService);
         this.carMoveHandler = notNull(carMoveHandler);
         this.undoMovementService = notNull(undoMovementService);
+        this.gameMoveWatcher = notNull(gameMoveWatcher);
     }
 
     @Async
@@ -60,6 +65,7 @@ public class GameEngine {
                 .forEach(moveData -> {
                     carMoveHandler.handleMoveCommand(moveData._2);
                     moveData._1.complete(gameState.getAllCars());
+                    gameState.updateLastMoveTimeStamp(moveData._1);
                 });
 
 
@@ -108,5 +114,18 @@ public class GameEngine {
 
         gameState.setRoundInProgress(false);
         applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleUndo"));
+    }
+
+    @Async
+    public void handleGameWatchCommand(List<Command> commands, String gameName){
+        log.debug("Handle interrupt commands: {}", commands);
+        commands.stream()
+                .map(command -> (LastMoveWachCommand) command)
+                .forEach(lastMoveWachCommand -> {
+                    gameMoveWatcher.watchLastGameMoves(gameName);
+                    lastMoveWachCommand.getFuture().complete("OK");
+                });
+
+        applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleGameWatchCommand"));
     }
 }

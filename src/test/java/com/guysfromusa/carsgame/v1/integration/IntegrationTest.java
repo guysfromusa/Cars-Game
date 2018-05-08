@@ -57,6 +57,7 @@ public class IntegrationTest implements CarApiAware, MapApiAware, GameApiAware {
 
     @Test
     @Sql("/sql/clean.sql")
+    //TODO make more readable
     public void shouldStartGameFromZero() {
         //given
         final String mapName = "map1";

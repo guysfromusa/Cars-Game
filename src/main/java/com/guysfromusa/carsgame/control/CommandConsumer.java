@@ -77,6 +77,9 @@ public class CommandConsumer {
             case UNDO:
                 gameEngine.handleUndo(commands, gameName);
                 break;
+            case STOP_GAME:
+                gameEngine.handleGameWatchCommand(commands, gameName);
+                break;
             default:
                 throw new IllegalStateException("Undefined message type");
         }

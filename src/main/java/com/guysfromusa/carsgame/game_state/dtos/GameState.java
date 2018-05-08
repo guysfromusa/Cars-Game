@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,11 @@ public class GameState {
     @Getter
     private final Integer[][] gameMapContent;
 
+    private long interruptAfter;
+
+    @Getter @Setter
+    private long lastMovetimeStampMillis = Instant.now().getEpochSecond();
+
     @Getter
     private final Queue<Command> commandsQueue = new ConcurrentLinkedQueue<>();
 
@@ -42,9 +48,10 @@ public class GameState {
 
     private Map<String, CarState> carsStatesMemory = new ConcurrentHashMap<>();
 
-    public GameState(String gameName, Integer[][] gameMapContent) {
+    public GameState(String gameName, Integer[][] gameMapContent, long interruptAfter) {
         this.gameName = gameName;
         this.gameMapContent = gameMapContent;
+        this.interruptAfter = interruptAfter;
     }
 
     public <T> CompletableFuture<T> addCommandToExecute(Command command, Supplier<T> errorCallback) {
@@ -98,7 +105,20 @@ public class GameState {
         carsStatesMemory.get(carName).getCar().setUndoInProcess(value);
     }
 
+    public void updateLastMoveTimeStamp(CompletableFuture future){
+        boolean isMoveSuccess = !future.isCompletedExceptionally() && !future.isCancelled() && future.isDone();
+        if(isMoveSuccess){
+            lastMovetimeStampMillis = Instant.now().getEpochSecond();
+        }
+    }
+
     public void removeCar(String carName) {
         carsStatesMemory.remove(carName);
+    }
+
+    public boolean isGameToBeFinished(){
+        long currentTimeStamp = Instant.now().getEpochSecond();
+        log.debug("last move: {}s ago", currentTimeStamp - lastMovetimeStampMillis);
+        return currentTimeStamp - lastMovetimeStampMillis > interruptAfter;
     }
 }

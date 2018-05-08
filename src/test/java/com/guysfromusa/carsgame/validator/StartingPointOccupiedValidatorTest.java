@@ -39,7 +39,7 @@ public class StartingPointOccupiedValidatorTest {
 
         Point startingPoint = new Point(0, 2);
 
-        GameState gameState = new GameState("game1", null);
+        GameState gameState = new GameState("game1", null, 30);
         gameState.addNewCar(carInGame1);
         gameState.addNewCar(carInGame2);
 
@@ -75,7 +75,7 @@ public class StartingPointOccupiedValidatorTest {
 
         Point startingPoint = new Point(0, 0);
 
-        GameState gameState = new GameState("game1", null);
+        GameState gameState = new GameState("game1", null, 30);
         gameState.addNewCar(carInGame1);
         gameState.addNewCar(carInGame2);
 

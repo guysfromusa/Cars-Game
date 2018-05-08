@@ -103,15 +103,23 @@ public class CarService {
                 .orElseThrow(() -> new EntityNotFoundException("Car '" + car.getName() + "' not found"));
 
         carEntity.setCrashed(true);
+        removeCarFromGame(carEntity);
+    }
+
+    public void removeAllCarsFromGame(String gameName) {
+        carRepository.findByGame(gameName).forEach(this::removeCarFromGame);
+    }
+
+    private void removeCarFromGame(CarEntity carEntity){
         carEntity.setGame(null);
         carEntity.setPositionX(null);
         carEntity.setPositionY(null);
     }
 
     public CarEntity repairCar(String name) {
-        CarEntity car = carRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Car with name " + name + " does not exist"));
+        CarEntity car = carRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Car with name " + name + " does not exist"));
         car.setCrashed(false);
-
         return car;
     }
 }

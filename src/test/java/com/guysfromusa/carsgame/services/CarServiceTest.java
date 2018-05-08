@@ -113,7 +113,7 @@ public class CarServiceTest {
         carEntity.setName(carName);
         GameEntity gameEntity = new GameEntity();
         gameEntity.setName("game1");
-        GameState gameState = new GameState(carGame, null);
+        GameState gameState = new GameState(carGame, null, 30);
 
         when(gameRepository.findByName(any())).thenReturn(Optional.of(new GameEntity()));
         when(carRepository.findByName(eq(carName))).thenReturn(Optional.of(carEntity));
@@ -159,4 +159,5 @@ public class CarServiceTest {
         assertThat(carEntity.getPositionX()).isNull();
         assertThat(carEntity.getPositionY()).isNull();
     }
+
 }
