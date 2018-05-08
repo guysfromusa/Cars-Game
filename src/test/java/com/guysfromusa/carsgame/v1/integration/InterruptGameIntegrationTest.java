@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -38,6 +39,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringContextConfiguration.class)
+@TestPropertySource("classpath:application-test.properties")
 public class InterruptGameIntegrationTest implements CarApiAware, MapApiAware, GameApiAware {
 
     @Inject
@@ -57,7 +59,7 @@ public class InterruptGameIntegrationTest implements CarApiAware, MapApiAware, G
 
     @Test
     @Sql("/sql/clean.sql")
-    public void shouldInterruptGameWhenNoMoreMoves() throws InterruptedException {
+    public void shouldInterruptGameWhenNoMoreMoves() {
         //given
         addNewMap(template, new Map("map", MAP_CONTENT));
         addNewCar(template, "car", NORMAL);

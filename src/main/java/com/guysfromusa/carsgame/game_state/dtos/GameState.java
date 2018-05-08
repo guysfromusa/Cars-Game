@@ -35,6 +35,8 @@ public class GameState {
     @Getter
     private final Integer[][] gameMapContent;
 
+    private long interruptAfter;
+
     @Getter @Setter
     private long lastMovetimeStampMillis = Instant.now().getEpochSecond();
 
@@ -46,9 +48,10 @@ public class GameState {
 
     private Map<String, CarState> carsStatesMemory = new ConcurrentHashMap<>();
 
-    public GameState(String gameName, Integer[][] gameMapContent) {
+    public GameState(String gameName, Integer[][] gameMapContent, long interruptAfter) {
         this.gameName = gameName;
         this.gameMapContent = gameMapContent;
+        this.interruptAfter = interruptAfter;
     }
 
     public <T> CompletableFuture<T> addCommandToExecute(Command command, Supplier<T> errorCallback) {
@@ -115,9 +118,7 @@ public class GameState {
 
     public boolean isGameToBeFinished(){
         long currentTimeStamp = Instant.now().getEpochSecond();
-        //TODO configurable to make tests faster
-        //FIXME revert to 30
         log.debug("last move: {}s ago", currentTimeStamp - lastMovetimeStampMillis);
-        return currentTimeStamp - lastMovetimeStampMillis > 3;
+        return currentTimeStamp - lastMovetimeStampMillis > interruptAfter;
     }
 }

@@ -73,7 +73,7 @@ public class GameEngineTest {
         addedCar.setGame(gameEntity);
 
 
-        GameState gameState = new GameState("game1", null);
+        GameState gameState = new GameState("game1", null, 30);
         when(carService.addCarToGame("car1", gameState, new Point(1, 1)))
                 .thenReturn(addedCar);
 

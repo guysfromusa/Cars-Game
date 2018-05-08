@@ -5,6 +5,7 @@ import com.guysfromusa.carsgame.game_state.dtos.GameState;
 import com.guysfromusa.carsgame.game_state.dtos.MovementDto;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -24,10 +25,13 @@ import static java.util.Collections.emptyList;
 @ToString
 public class ActiveGamesContainer {
 
+    @Value("${cars.game.interrupt.lastmoveInSeconds}")
+    private long lastMoveToInterruptGameInSeconds;
+
     private Map<String, GameState> gameStateMap = new ConcurrentHashMap<>();
 
     public void addNewGame(String gameName, Integer[][] mapMatrixFromContent){
-        this.gameStateMap.put(gameName, new GameState(gameName, mapMatrixFromContent));
+        this.gameStateMap.put(gameName, new GameState(gameName, mapMatrixFromContent, lastMoveToInterruptGameInSeconds));
         log.info("Game: {} added to container", gameName);
     }
 

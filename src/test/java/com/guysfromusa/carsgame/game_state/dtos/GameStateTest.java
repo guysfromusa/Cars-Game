@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GameStateTest {
 
-    private GameState gameState = new GameState("game1", null);
+    private GameState gameState = new GameState("game1", null, 30);
 
     @Test
     public void shouldAddNewCarWithEmptyMovements(){
