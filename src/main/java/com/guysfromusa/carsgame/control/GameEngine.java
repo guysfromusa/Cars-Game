@@ -121,7 +121,10 @@ public class GameEngine {
         log.debug("Handle interrupt commands: {}", commands);
         commands.stream()
                 .map(command -> (LastMoveWachCommand) command)
-                .forEach(lastMoveWachCommand -> gameMoveWatcher.watchLastGameMoves(gameName));
+                .forEach(lastMoveWachCommand -> {
+                    gameMoveWatcher.watchLastGameMoves(gameName);
+                    lastMoveWachCommand.getFuture().complete("OK");
+                });
 
         applicationEventPublisher.publishEvent(new CommandEvent("GameEngine:handleGameWatchCommand"));
     }

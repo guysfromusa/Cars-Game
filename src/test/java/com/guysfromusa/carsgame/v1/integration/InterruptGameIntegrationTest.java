@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,7 +58,7 @@ public class InterruptGameIntegrationTest implements CarApiAware, MapApiAware, G
 
     @Test
     @Sql("/sql/clean.sql")
-    public void shouldInterruptGameWhenNoMoreMoves() {
+    public void shouldInterruptGameWhenNoMoreMoves() throws InterruptedException {
         //given
         addNewMap(template, new Map("map", MAP_CONTENT));
         addNewCar(template, "car", NORMAL);
@@ -65,7 +66,9 @@ public class InterruptGameIntegrationTest implements CarApiAware, MapApiAware, G
         addCarToGame(template, "car", "game", new Point(2, 2));
         moves("car", "game", FORWARD, RIGHT);
 
-        await().atMost(5, SECONDS).until(this::gameIsArchived);
+        TimeUnit.MINUTES.sleep(10);
+
+        await().atMost(15, SECONDS).until(this::gameIsArchived);
 
         assertThat(carRepository.findByName("car")).get()
                 .extracting(CarEntity::getGame, CarEntity::getPositionX, CarEntity::getPositionY)

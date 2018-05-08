@@ -3,6 +3,7 @@ package com.guysfromusa.carsgame.services;
 import com.guysfromusa.carsgame.control.CommandProducer;
 import com.guysfromusa.carsgame.control.LastMoveWachCommand;
 import com.guysfromusa.carsgame.control.MessageType;
+import com.guysfromusa.carsgame.game_state.ActiveGamesContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class StopGameTask {
 
     private final CommandProducer commandProducer;
+
+    @Inject
+    private ActiveGamesContainer activeGamesContainer;
 
     @Inject
     public StopGameTask(CommandProducer commandProducer) {

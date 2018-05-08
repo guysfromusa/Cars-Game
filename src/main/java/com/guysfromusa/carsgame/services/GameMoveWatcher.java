@@ -35,9 +35,11 @@ public class GameMoveWatcher {
 
     @Transactional
     public void watchLastGameMoves(String gameName){
+        log.debug("Trying to interrupt game: {}", gameName);
         GameState gameState = activeGamesContainer.getGameState(gameName);
         boolean gameToBeFinished = gameState.isGameToBeFinished();
         if(!gameToBeFinished){
+            gameState.setRoundInProgress(false);
             return;
         }
         removeGame(gameName);

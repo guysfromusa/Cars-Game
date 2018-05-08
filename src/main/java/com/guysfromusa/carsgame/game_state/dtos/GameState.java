@@ -117,6 +117,9 @@ public class GameState {
         long currentTimeStamp = Instant.now().getEpochSecond();
         //TODO configurable to make tests faster
         //FIXME revert to 30
+        log.debug("current: {}", currentTimeStamp);
+        log.debug("lastMove: {}", lastMovetimeStampMillis);
+        log.debug("result: {}", currentTimeStamp - lastMovetimeStampMillis);
         return currentTimeStamp - lastMovetimeStampMillis > 3;
     }
 }
