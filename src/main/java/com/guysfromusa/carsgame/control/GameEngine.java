@@ -58,7 +58,7 @@ public class GameEngine {
     @Async
     public void handleMoves(List<Command> commands, String gameName) {
         GameState gameState = activeGamesContainer.getGameState(gameName);
-
+        //TODO to have full multi collision rewrite this to calculate all moves first and then resolve collisions
         commands.stream()
                 .map(command -> (MoveCommand)command)
                 .map(moveCmd -> Tuple.of(moveCmd.getFuture(), new MoveData(gameState, moveCmd)))
